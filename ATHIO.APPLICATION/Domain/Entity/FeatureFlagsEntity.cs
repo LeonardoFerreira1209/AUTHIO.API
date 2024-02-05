@@ -1,13 +1,17 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
-using Microsoft.AspNetCore.Identity;
 
 namespace AUTHIO.APPLICATION.Domain.Entity;
 
 /// <summary>
-/// Classe de entidade de roles.
+/// Feature Flags entity
 /// </summary>
-public class RoleEntity : IdentityRole<Guid>, IEntityBase, IEntityTenant
+public class FeatureFlagsEntity : IEntityBase
 {
+    /// <summary>
+    /// Id da Flag.
+    /// </summary>
+    public Guid Id { get; set; }
+
     /// <summary>
     /// Data de criação.
     /// </summary>
@@ -24,12 +28,12 @@ public class RoleEntity : IdentityRole<Guid>, IEntityBase, IEntityTenant
     public Status Status { get; set; }
 
     /// <summary>
-    /// Id do tenant.
+    /// Nome
     /// </summary>
-    public Guid TenantId { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
-    /// Tenant.
+    /// Está ativa
     /// </summary>
-    public virtual TenantEntity Tenant { get; private set; }
+    public bool IsEnabled { get; set; }
 }

@@ -58,7 +58,6 @@ public static class SwaggerExtensions
                 Version = apiVersion,
                 Title = $"{apiDescription} - {apiVersion}",
                 Description = description,
-
                 Contact = new OpenApiContact
                 {
                     Name = "HYPER.IO DESENVOLVIMENTOS LTDA",
@@ -69,7 +68,7 @@ public static class SwaggerExtensions
                     Name = "HYPER.IO LICENSE",
 
                 },
-                TermsOfService = new Uri(uriMyGit)
+                TermsOfService = new Uri(uriMyGit),
             });
 
             swagger.DocumentFilter<HealthCheckSwagger>();

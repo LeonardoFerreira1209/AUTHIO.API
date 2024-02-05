@@ -1,6 +1,4 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace AUTHIO.APPLICATION.Domain.Entity;
 

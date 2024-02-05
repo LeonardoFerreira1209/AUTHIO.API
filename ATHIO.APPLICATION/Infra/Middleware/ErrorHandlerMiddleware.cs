@@ -9,19 +9,14 @@ namespace AUTHIO.APPLICATION.Infra.Middleware;
 /// <summary>
 /// Middleware de erros.
 /// </summary>
-public class ErrorHandlerMiddleware
+/// <remarks>
+/// ctor
+/// </remarks>
+/// <param name="requestDelegate"></param>
+public class ErrorHandlerMiddleware(
+    RequestDelegate requestDelegate)
 {
-    private readonly RequestDelegate _requestDelegate;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="requestDelegate"></param>
-    public ErrorHandlerMiddleware(
-        RequestDelegate requestDelegate)
-    {
-        _requestDelegate = requestDelegate;
-    }
+    private readonly RequestDelegate _requestDelegate = requestDelegate;
 
     /// <summary>
     /// Método de invocação de Handler.
@@ -29,7 +24,7 @@ public class ErrorHandlerMiddleware
     /// <param name="context"></param>
     /// <returns></returns>
     public async Task InvokeAsync(
-        HttpContext context)
+        HttpContext context) 
     {
         try
         {
@@ -48,8 +43,7 @@ public class ErrorHandlerMiddleware
     /// <param name="exception"></param>
     /// <returns></returns>
     protected static Task HandleExceptionAsync(
-        HttpContext context, Exception exception)
-    {
+        HttpContext context, Exception exception) {
         context.Response.ContentType = "application/json";
 
         var (statusCode, json) =
@@ -66,17 +60,13 @@ public class ErrorHandlerMiddleware
     /// <param name="exception"></param>
     /// <returns></returns>
     private static (HttpStatusCode statusCode, string json) GenerateResponse(Exception exception)
-        => exception switch
-        {
+        => exception switch {
             BaseException customEx => (customEx.Response.StatusCode,
                                                            JsonSerializer.Serialize(customEx.Response)),
-
-            _ => (HttpStatusCode.InternalServerError, JsonSerializer.Serialize(new
-            {
+            _ => (HttpStatusCode.InternalServerError, JsonSerializer.Serialize(new {
                 StatusCode = HttpStatusCode.InternalServerError,
                 Sucesso = false,
-                Dados = new
-                {
+                Dados = new {
                     exception.StackTrace,
                     exception.Message,
                     InnerException = exception.InnerException?.ToString(),

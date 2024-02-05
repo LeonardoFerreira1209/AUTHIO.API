@@ -1,6 +1,5 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
-using System;
 
 namespace AUTHIO.APPLICATION.Domain.Entity;
 

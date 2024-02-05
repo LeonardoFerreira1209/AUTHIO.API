@@ -1,7 +1,6 @@
 ﻿using AUTHIO.APPLICATION.Domain.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -31,6 +30,11 @@ public class AuthIoContext
     /// Tabela de Tenants.
     /// </summary>
     public DbSet<TenantEntity> Tenants => Set<TenantEntity>();
+
+    /// <summary>
+    /// Tabela de FeatureFlags.
+    /// </summary>
+    public DbSet<FeatureFlagsEntity> FeatureFlags => Set<FeatureFlagsEntity>();
 
     /// <summary>
     /// On model creating.
