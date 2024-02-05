@@ -58,9 +58,9 @@ try
     }
     else
     {
-        builder.Services
-            .ConfigureTelemetry(configurations)
-                .ConfigureApplicationInsights(configurations);
+        //builder.Services
+        //    .ConfigureTelemetry(configurations)
+        //        .ConfigureApplicationInsights(configurations);
     }
 
     var applicationbuilder = builder.Build();
