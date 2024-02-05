@@ -1,0 +1,7 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./AUTHIO.API/Dockerfile"
+
+[deploy]
+startCommand = "dotnet AUTHIO.API.dll"
+restartPolicyType = "never"
