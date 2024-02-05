@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace AUTHIO.APPLICATION.Application.Configurations.Extensions.Initializers;
 
@@ -20,6 +19,6 @@ public static class DatabaseExtensions
     public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         => services.AddDbContext<AuthIoContext>(options =>
         {
-            options.UseLazyLoadingProxies().UseSqlServer(configuration.GetConnectionString("Database")).LogTo(Console.WriteLine, LogLevel.Debug);
+            options.UseLazyLoadingProxies().UseMySQL(configuration.GetConnectionString("Database")).LogTo(Console.WriteLine, LogLevel.Debug);
         }, ServiceLifetime.Scoped);
 }

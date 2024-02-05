@@ -1,7 +1,7 @@
 ﻿using AUTHIO.APPLICATION.Domain.Dtos.Configurations;
 using Dapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
+using MySqlConnector;
 using System.Data;
 
 namespace AUTHIO.APPLICATION.Infra.Repository.Base;
@@ -21,7 +21,7 @@ public class BaseRepository
         if (_commandTimeout == 0) _commandTimeout = 900;
     }
 
-    protected IDbConnection GerarConexaoConnect() => new SqlConnection(_configuracoes.Value.ConnectionStrings.DataBase);
+    protected IDbConnection GerarConexaoConnect() => new MySqlConnection(_configuracoes.Value.ConnectionStrings.DataBase);
 
     public virtual async Task<IEnumerable<T>> DbQueryAsync<T>(IDbConnection dbCon, string sql, object parameters = null)
     {

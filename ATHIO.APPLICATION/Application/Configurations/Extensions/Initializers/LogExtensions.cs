@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
-using Serilog.Sinks.MSSqlServer;
 
 namespace AUTHIO.APPLICATION.Application.Configurations.Extensions.Initializers;
 
@@ -39,11 +38,7 @@ public static class LogExtensions
                 .Enrich.WithThreadName()
                 .WriteTo.Console()
                 .WriteTo.ApplicationInsights(_telemetryConfig, TelemetryConverter.Traces, LogEventLevel.Information)
-                .WriteTo.MSSqlServer(configurations.GetValue<string>("ConnectionStrings:DataBase"), new MSSqlServerSinkOptions
-                {
-                    AutoCreateSqlDatabase = true,
-                    TableName = "Logs"
-                })
+                .WriteTo.MySQL(configurations.GetValue<string>("ConnectionStrings:DataBase"))
                 .CreateLogger();
 
         var applicationInsightsServiceOptions = new ApplicationInsightsServiceOptions

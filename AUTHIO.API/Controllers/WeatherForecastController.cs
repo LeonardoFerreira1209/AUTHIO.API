@@ -42,12 +42,12 @@ namespace AUTHIO.API.Controllers
 
             var user = new UserEntity
             {
-                Email = "Leo.fgfgfdgdfgfd@outlook.com",
+                Email = "Leo.15@outlook.com",
                 Name = "Leo",
                 LastName = "Almeida",
                 Status = APPLICATION.Domain.Enums.Status.Ativo,
                 EmailConfirmed = true,
-                UserName = $"Leo.Almeida_{DateTime.Now}",
+                UserName = $"Leo.Almeida",
                 TenantId = tentant.Entity.Id
             };
 
