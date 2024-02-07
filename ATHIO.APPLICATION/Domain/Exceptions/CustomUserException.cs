@@ -228,4 +228,32 @@ public class CustomUserException
                (HttpStatusCode.BadRequest, dados, notificacoes);
         }
     }
+
+    public class CreateUserFailedException : BaseException
+    {
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        public CreateUserFailedException(
+            object dados)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.BadRequest, dados, [
+                   new("Falha na criação do usuário!")
+               ]);
+        }
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        /// <param name="notificacoes"></param>
+        public CreateUserFailedException(
+            object dados, List<DadosNotificacao> notificacoes)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.BadRequest, dados, notificacoes);
+        }
+    }
 }

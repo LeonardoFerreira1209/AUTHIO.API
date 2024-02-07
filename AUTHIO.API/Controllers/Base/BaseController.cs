@@ -17,7 +17,7 @@ namespace AUTHIO.API.Controllers.Base;
 /// </remarks>
 /// <param name="featureFlags"></param>
 /// <param name=""></param>
-public class BaseControllercs(
+public class BaseController(
     IFeatureFlags featureFlags, IUnitOfWork unitOfWork) : ControllerBase
 {
     private readonly IFeatureFlags _featureFlags = featureFlags;

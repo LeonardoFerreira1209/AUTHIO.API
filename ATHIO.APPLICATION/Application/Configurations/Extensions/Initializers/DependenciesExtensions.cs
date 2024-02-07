@@ -1,4 +1,9 @@
-﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+﻿using AUTHIO.APPLICATION.Application.Services;
+using AUTHIO.APPLICATION.Domain.Contracts.Repository;
+using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+using AUTHIO.APPLICATION.Domain.Contracts.Services;
+using AUTHIO.APPLICATION.Infra.FeaturesFlags;
+using AUTHIO.APPLICATION.Infra.Repository;
 using AUTHIO.APPLICATION.Infra.Repository.Base;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +25,15 @@ public static class DependenciesExtensions
     {
         services
             .AddSingleton(serviceProvider => configurations)
-
         // Services
-
+            .AddScoped<ITenantService, TenantService>()
         // Repository
             .AddScoped<IUnitOfWork, UnitOfWork>()
-            .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>));
+            .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
+            .AddScoped<ITenantRepository, TenantRepository>()
         // Infra
+            .AddScoped<IFeatureFlags, FeatureFlagsProvider>();
+
 
         return services;
     }

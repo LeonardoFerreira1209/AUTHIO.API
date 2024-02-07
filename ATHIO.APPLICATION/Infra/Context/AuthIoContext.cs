@@ -12,7 +12,6 @@ namespace AUTHIO.APPLICATION.Infra.Context;
 public class AuthIoContext
     : IdentityDbContext<UserEntity, RoleEntity, Guid>
 {
-
     private readonly Guid _tenantId;
 
     /// <summary>
@@ -70,12 +69,17 @@ public class AuthIoContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<TenantUserAdminEntity>()
-            .HasKey(ta => new { ta.UserId, ta.TenantId });
+            .HasKey(tua => new { tua.UserId, tua.TenantId });
 
         modelBuilder.Entity<TenantUserAdminEntity>()
-            .HasOne(ta => ta.Tenant)
+           .HasOne(tua => tua.User)
+           .WithMany() 
+           .HasForeignKey(tua => tua.UserId);
+
+        modelBuilder.Entity<TenantUserAdminEntity>()
+            .HasOne(tua => tua.Tenant)
             .WithMany(t => t.UserAdmins)
-            .HasForeignKey(ta => ta.TenantId);
+            .HasForeignKey(tua => tua.TenantId);
     }
 
     /// <summary>

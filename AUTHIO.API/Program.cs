@@ -48,20 +48,16 @@ try
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 
+    builder.Services
+           .ConfigureSwagger(configurations);
+
     /// <sumary>
     /// Configura as configurações de inicialização que só devem ser usadas em Produção.
     /// </sumary>
-    if (builder.Environment.IsDevelopment())
-    {
-        builder.Services
-            .ConfigureSwagger(configurations);
-    }
-    else
-    {
-        //builder.Services
-        //    .ConfigureTelemetry(configurations)
-        //        .ConfigureApplicationInsights(configurations);
-    }
+    //if (builder.Environment.IsProduction())
+    //    builder.Services
+    //        .ConfigureTelemetry(configurations)
+    //            .ConfigureApplicationInsights(configurations);
 
     var applicationbuilder = builder.Build();
 
@@ -79,14 +75,10 @@ try
 
 
     if (applicationbuilder.Environment.IsProduction())
-    {
         applicationbuilder.UseHsts();
-    }
-    else
-    {
-        applicationbuilder
-            .UseSwaggerConfigurations(configurations);
-    }
+
+    applicationbuilder
+        .UseSwaggerConfigurations(configurations);
 
     applicationbuilder.UseHttpsRedirection();
 

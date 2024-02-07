@@ -1,21 +1,17 @@
-﻿using AUTHIO.APPLICATION.Domain.Enums;
+﻿using AUTHIO.APPLICATION.Domain.Entity;
+using AUTHIO.APPLICATION.Domain.Enums;
 
-namespace AUTHIO.APPLICATION.Domain.Entity;
+namespace AUTHIO.APPLICATION.Domain.Dtos.Response;
 
 /// <summary>
-/// Classe de entidade de tenant.
+/// Classe de response de Tenant.
 /// </summary>
-public class TenantEntity : IEntityBase
+public class TenantResponse
 {
-    public TenantEntity() {
-        Users = new HashSet<UserEntity>();
-        Roles = new HashSet<RoleEntity>();
-    }
-
     /// <summary>
     /// Id.
     /// </summary>
-    public Guid Id { get ; set; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Data de criação.
@@ -45,15 +41,15 @@ public class TenantEntity : IEntityBase
     /// <summary>
     /// Users vinculados ao tenant.
     /// </summary>
-    public virtual ICollection<UserEntity> Users { get; private set; }
-    
+    public ICollection<UserResponse> Users { get; set; }
+
     /// <summary>
     /// Users Admins vinculados ao tenant.
     /// </summary>
-    public virtual ICollection<TenantUserAdminEntity> UserAdmins { get; private set; }
+    public ICollection<TenantUserAdminResponse> UserAdmins { get; set; }
 
     /// <summary> 
     /// Roles vinculadas ao tenant.
     /// </summary>
-    public virtual ICollection<RoleEntity> Roles { get; private set; }
+    public ICollection<RoleEntity> Roles { get; set; }
 }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Request de criação de Tenant.
 /// </summary>
-public sealed class TenantCreateRequest
+public sealed class TenantProvisionRequest
 {
     /// <summary>
     /// Nomde do tenant.

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.APPLICATION.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240205164202_INITIAL")]
+    [Migration("20240207024133_INITIAL")]
     partial class INITIAL
     {
         /// <inheritdoc />

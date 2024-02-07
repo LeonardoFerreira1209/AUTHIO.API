@@ -9,8 +9,18 @@ namespace AUTHIO.APPLICATION.Infra.Repository;
 /// Repositorio de Tenants.
 /// </summary>
 public sealed class TenantRepository(
-    AuthIoContext context) 
+    AuthIoContext context)
         : GenericEntityCoreRepository<TenantEntity>(context), ITenantRepository
 {
-   
+    private readonly AuthIoContext _context = context;
+
+    /// <summary>
+    /// Vincula um usuário admin e um tenant.
+    /// </summary>
+    /// <param name="tenantId"></param>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task LinkTenantWithUserAdminAsync(Guid tenantId, Guid userId)
+        => await _context.AddAsync(
+            new TenantUserAdminEntity { TenantId = tenantId, UserId = userId });
 }
