@@ -4,6 +4,7 @@ using AUTHIO.APPLICATION.Domain.Entity;
 using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.Domain.Exceptions.Base;
 using AUTHIO.APPLICATION.Domain.Utils;
+using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -18,10 +19,10 @@ namespace AUTHIO.API.Controllers.Base;
 /// <param name="featureFlags"></param>
 /// <param name=""></param>
 public class BaseController(
-    IFeatureFlags featureFlags, IUnitOfWork unitOfWork) : ControllerBase
+    IFeatureFlags featureFlags, IUnitOfWork<AuthIoContext> unitOfWork) : ControllerBase
 {
     private readonly IFeatureFlags _featureFlags = featureFlags;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IUnitOfWork<AuthIoContext> _unitOfWork = unitOfWork;
 
     /// <summary>
     /// Método que verifica se o endpoint está ativado.

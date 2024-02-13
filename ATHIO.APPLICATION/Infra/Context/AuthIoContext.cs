@@ -12,7 +12,7 @@ namespace AUTHIO.APPLICATION.Infra.Context;
 public class AuthIoContext
     : IdentityDbContext<UserEntity, RoleEntity, Guid>
 {
-    private readonly Guid _tenantId;
+    private readonly Guid? _tenantId;
 
     /// <summary>
     /// ctor
@@ -21,17 +21,17 @@ public class AuthIoContext
     public AuthIoContext(
         DbContextOptions<AuthIoContext> options) : base(options)
     {
-        _tenantId = Guid.Parse("8A7CD46D-87B5-498A-15F4-08DC236A8A23");
+        _tenantId = null;//Guid.Parse("8A7CD46D-87B5-498A-15F4-08DC236A8A23");
         Database.EnsureCreated();
     }
 
     /// <summary>
     /// Tabela de Tenants.
     /// </summary>
-    public DbSet<TenantEntity> Tenants => Set<TenantEntity>();
-
+    public DbSet<TenantEntity> Tenants => Set<TenantEntity>(); 
+    
     /// <summary>
-    /// Tabela de FeatureFlags.
+    /// Tabela de Feature Flags.
     /// </summary>
     public DbSet<FeatureFlagsEntity> FeatureFlags => Set<FeatureFlagsEntity>();
 

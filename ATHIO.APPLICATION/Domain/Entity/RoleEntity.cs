@@ -26,10 +26,15 @@ public class RoleEntity : IdentityRole<Guid>, IEntityBase, IEntityTenant
     /// <summary>
     /// Id do tenant.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid? TenantId { get; set; }
 
     /// <summary>
     /// Tenant.
     /// </summary>
     public virtual TenantEntity Tenant { get; private set; }
+
+    /// <summary>
+    /// Role do sistema.
+    /// </summary>
+    public bool System { get; set; }
 }

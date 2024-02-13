@@ -1,5 +1,4 @@
 ﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
-using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -12,10 +11,10 @@ namespace AUTHIO.APPLICATION.Infra.Repository.Base;
 /// ctor.
 /// </remarks>
 /// <param name="context"></param>
-public class UnitOfWork(
-    AuthIoContext context) : IUnitOfWork
+public class UnitOfWork<TContext>(
+    TContext context) : IUnitOfWork<TContext> where TContext : DbContext 
 {
-    private readonly AuthIoContext _context = context;
+    private readonly DbContext _context = context;
 
     /// <summary>
     /// Comita a transação.

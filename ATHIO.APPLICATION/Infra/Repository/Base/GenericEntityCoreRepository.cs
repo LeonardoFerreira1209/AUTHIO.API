@@ -1,9 +1,7 @@
 ﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
 using AUTHIO.APPLICATION.Domain.Entity;
-using AUTHIO.APPLICATION.Infra.Context;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using System.Linq.Expressions;
 
 namespace AUTHIO.APPLICATION.Infra.Repository.Base;
@@ -16,10 +14,10 @@ namespace AUTHIO.APPLICATION.Infra.Repository.Base;
 /// ctor
 /// </remarks>
 /// <param name="context"></param>
-public class GenericEntityCoreRepository<T>(AuthIoContext context) 
+public class GenericEntityCoreRepository<T>(DbContext context) 
     : IGenerictEntityCoreRepository<T> where T : class, IEntityBase
 {
-    private readonly AuthIoContext _context = context;
+    private readonly DbContext _context = context;
 
     /// <summary>
     /// Criar.
@@ -99,39 +97,4 @@ public class GenericEntityCoreRepository<T>(AuthIoContext context)
 
         return await query.ToListAsync();
     }
-
-    /// <summary>
-    /// Começar uma transação no banco de dados.
-    /// </summary>
-    /// <returns></returns>
-    public async Task<IDbContextTransaction> BeginTransactAsync()
-        => await _context.Database.BeginTransactionAsync();
-
-    /// <summary>
-    /// Fechar uma conexão com o banco de dados.
-    /// </summary>
-    /// <returns></returns>
-    public async Task CloseConnectionAsync()
-        => await _context.Database.CloseConnectionAsync();
-
-    /// <summary>
-    /// Commitar e finalizar uma transação no banco de dados.
-    /// </summary>
-    /// <returns></returns>
-    public async Task CommitTransactAsync(IDbContextTransaction dbContextTransaction)
-        => await dbContextTransaction.CommitAsync();
-
-    /// <summary>
-    /// Abrir uma conexão com o banco de dados.
-    /// </summary>
-    /// <returns></returns>
-    public async Task OpenConnectAsync()
-        => await _context.Database.OpenConnectionAsync();
-
-    /// <summary>
-    /// Resetar uma transação.
-    /// </summary>
-    /// <returns></returns>
-    public async Task RollBackTransactionAsync(IDbContextTransaction dbContextTransaction)
-        => await dbContextTransaction.RollbackAsync();
 }

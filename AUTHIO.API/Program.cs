@@ -73,7 +73,6 @@ try
         .UseAuthentication()
         .UseHealthChecks();
 
-
     if (applicationbuilder.Environment.IsProduction())
         applicationbuilder.UseHsts();
 

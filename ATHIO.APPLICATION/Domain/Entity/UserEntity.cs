@@ -9,24 +9,24 @@ namespace AUTHIO.APPLICATION.Domain.Entity;
 public class UserEntity : IdentityUser<Guid>, IEntityBase, IEntityTenant
 {
     /// <summary>
+    /// Nome do usuário.
+    /// </summary>
+    public string FirstName { get; set; }
+
+    /// <summary>
+    /// Ultimo nome do usuário.
+    /// </summary>
+    public string LastName { get; set; }
+
+    /// <summary>
     /// Id do tenant responsavel.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid? TenantId { get; set; }
 
     /// <summary>
     /// Tenant.
     /// </summary>
     public virtual TenantEntity Tenant { get; private set; }
-
-    /// <summary>
-    /// Nome do usuário.
-    /// </summary>
-    public string Name { get; set; } = null;
-
-    /// <summary>
-    /// Ultimo nome do usuário.
-    /// </summary>
-    public string LastName { get; set; } = null;
 
     /// <summary>
     /// Data de criação.
@@ -42,4 +42,9 @@ public class UserEntity : IdentityUser<Guid>, IEntityBase, IEntityTenant
     /// Status do cadastro.
     /// </summary>
     public Status Status { get; set; }
+
+    /// <summary>
+    /// Usuário do sistema.
+    /// </summary>
+    public bool System { get; set; }
 }

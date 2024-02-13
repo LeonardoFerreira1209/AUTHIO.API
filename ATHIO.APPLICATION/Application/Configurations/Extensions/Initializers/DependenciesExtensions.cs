@@ -1,10 +1,12 @@
-﻿using AUTHIO.APPLICATION.Application.Services;
+﻿using AUTHIO.APPLICATION.Application.Services.System;
 using AUTHIO.APPLICATION.Domain.Contracts.Repository;
 using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
-using AUTHIO.APPLICATION.Domain.Contracts.Services;
-using AUTHIO.APPLICATION.Infra.FeaturesFlags;
+using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
+using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.REPOSITORY;
 using AUTHIO.APPLICATION.Infra.Repository;
 using AUTHIO.APPLICATION.Infra.Repository.Base;
+using AUTHIO.APPLICATION.INFRA.FEATUREFLAGS;
+using AUTHIO.APPLICATION.INFRA.REPOSITORY;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,9 +28,11 @@ public static class DependenciesExtensions
         services
             .AddSingleton(serviceProvider => configurations)
         // Services
-            .AddScoped<ITenantService, TenantService>()
+            .AddScoped<IAuthenticationService, AuthenticationService>()
+            //.AddScoped<ITenantService, TenantService>()
         // Repository
-            .AddScoped<IUnitOfWork, UnitOfWork>()
+            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+            .AddScoped<IUserRepository, UserRepository>()
             .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
             .AddScoped<ITenantRepository, TenantRepository>()
         // Infra

@@ -15,6 +15,7 @@ namespace AUTHIO.APPLICATION.Application.Configurations.Extensions.Initializers;
 public static class HealthCheckExtensions
 {
     private static readonly string HealthCheckEndpoint = "/application/healthcheck";
+    private static readonly string[] tags = ["Core", "MySql"];
 
     /// <summary>
     /// Configuração do HealthChecks do sistema.
@@ -25,7 +26,7 @@ public static class HealthCheckExtensions
     public static IServiceCollection ConfigureHealthChecks(this IServiceCollection services, IConfiguration configurations)
     {
         services
-           .AddHealthChecks().AddSqlServer(configurations.GetConnectionString("DataBase"), name: "Base de dados padrão.", tags: new string[] { "Core", "SQL Server" });
+           .AddHealthChecks().AddMySql(configurations.GetConnectionString("DataBase"), name: "Base de dados padrão.", tags: tags);
 
         return services;
     }

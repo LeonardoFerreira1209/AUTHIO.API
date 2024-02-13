@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
 
-public interface IUnitOfWork
+public interface IUnitOfWork<TContext> where TContext : DbContext
 {
     /// <summary>
     /// Commita a transação.

@@ -1,5 +1,7 @@
 ﻿using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Entity;
+using AUTHIO.APPLICATION.Domain.Enums;
+using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
 
 namespace AUTHIO.APPLICATION.Domain.Utils.Extensions;
 
@@ -9,6 +11,23 @@ namespace AUTHIO.APPLICATION.Domain.Utils.Extensions;
 public static class UserExtensions
 {
     /// <summary>
+    /// Converte uma request em uma entidade.
+    /// </summary>
+    /// <param name="registerSystemUserRequest"></param>
+    /// <returns></returns>
+    public static UserEntity ToEntity(this RegisterUserRequest registerUserRequest)
+        => new()
+        {
+            FirstName = registerUserRequest.FirstName,
+            LastName = registerUserRequest.LastName,
+            Email = registerUserRequest.Email,
+            Created = DateTime.Now,
+            Status = Status.Ativo,
+            UserName = registerUserRequest.UserName,
+            System = true
+        };
+
+    /// <summary>
     /// Converte uma entidade em um Response.
     /// </summary>
     /// <param name="userEntity"></param>
@@ -17,7 +36,7 @@ public static class UserExtensions
         => new()
         {
             Id = userEntity.Id,
-            Name = userEntity.Name,
+            Name = userEntity.FirstName,
             LastName = userEntity.LastName,
             Email = userEntity.Email,
             Created = userEntity.Created,
@@ -25,5 +44,6 @@ public static class UserExtensions
             Status = userEntity.Status,
             TenantId = userEntity.TenantId,
             UserName = userEntity.UserName,
+            System = userEntity.System
         };
 }

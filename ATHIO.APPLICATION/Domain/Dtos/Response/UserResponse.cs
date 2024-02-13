@@ -15,7 +15,7 @@ public class UserResponse
     /// <summary>
     /// Id do tenant responsavel.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid? TenantId { get; set; }
 
     /// <summary>
     /// Username
@@ -56,4 +56,9 @@ public class UserResponse
     /// Status do cadastro.
     /// </summary>
     public Status Status { get; set; }
+
+    /// <summary>
+    /// Usuário do sistema.
+    /// </summary>
+    public bool System {  get; set; }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.APPLICATION.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240207024133_INITIAL")]
+    [Migration("20240208185949_INITIAL")]
     partial class INITIAL
     {
         /// <inheritdoc />
@@ -75,7 +75,10 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TenantId")
+                    b.Property<bool>("System")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid?>("TenantId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("Updated")
@@ -156,6 +159,9 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("LastName")
                         .HasColumnType("longtext");
 
@@ -164,9 +170,6 @@ namespace AUTHIO.APPLICATION.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -191,7 +194,10 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TenantId")
+                    b.Property<bool>("System")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<Guid?>("TenantId")
                         .HasColumnType("char(36)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -326,8 +332,7 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasOne("AUTHIO.APPLICATION.Domain.Entity.TenantEntity", "Tenant")
                         .WithMany("Roles")
                         .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Tenant");
                 });
@@ -356,8 +361,7 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasOne("AUTHIO.APPLICATION.Domain.Entity.TenantEntity", "Tenant")
                         .WithMany("Users")
                         .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Tenant");
                 });

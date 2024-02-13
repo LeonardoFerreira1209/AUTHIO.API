@@ -3,12 +3,12 @@
 namespace AUTHIO.APPLICATION.Domain.Entity;
 
 /// <summary>
-/// interface de Tenant.
+/// interfpORpOace de Tenant.
 /// </summary>
 public interface IEntityTenant
 {
     /// <summary>
     /// Id do tenant.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid? TenantId { get; set; }
 }

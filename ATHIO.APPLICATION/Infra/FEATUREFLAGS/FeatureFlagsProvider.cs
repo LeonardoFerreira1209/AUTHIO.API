@@ -4,7 +4,7 @@ using AUTHIO.APPLICATION.Infra.Context;
 using AUTHIO.APPLICATION.Infra.Repository.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace AUTHIO.APPLICATION.Infra.FeaturesFlags;
+namespace AUTHIO.APPLICATION.INFRA.FEATUREFLAGS;
 
 /// <summary>
 /// Feature flags provider

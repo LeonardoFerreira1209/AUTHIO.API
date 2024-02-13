@@ -27,7 +27,7 @@ public static class TenantExtensions
         {
             Created = DateTime.Now,
             UserName = tenantProvisionRequest.UserAdmin.Username,
-            Name = tenantProvisionRequest.UserAdmin.Name,
+            FirstName = tenantProvisionRequest.UserAdmin.Name,
             LastName = tenantProvisionRequest.UserAdmin.LastName,
             PhoneNumber = tenantProvisionRequest.UserAdmin.PhoneNumber,
             Email = tenantProvisionRequest.UserAdmin.Email,
