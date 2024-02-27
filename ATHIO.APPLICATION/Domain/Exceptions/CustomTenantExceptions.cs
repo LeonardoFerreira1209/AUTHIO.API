@@ -41,6 +41,37 @@ public sealed class CustomTenantExceptions
     }
 
     /// <summary>
+    /// Exception para tenant já cadastrado.
+    /// </summary>
+    public sealed class DuplicatedTenantException : BaseException
+    {
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        public DuplicatedTenantException(
+            object dados)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.Ambiguous, dados, [
+                   new("Tenant com o mesmo nome já cadastrado!")
+               ]);
+        }
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        /// <param name="notificacoes"></param>
+        public DuplicatedTenantException(
+            object dados, List<DadosNotificacao> notificacoes)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.Ambiguous, dados, notificacoes);
+        }
+    }
+
+    /// <summary>
     /// Exception para tenant com falha na criação.
     /// </summary>
     public sealed class CreateTenantFailedException : BaseException

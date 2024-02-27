@@ -1,4 +1,5 @@
-﻿using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
+﻿using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;
+using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AUTHIO.APPLICATION.Domain.Contracts.Services.System;
@@ -15,4 +16,11 @@ public interface IAuthenticationService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> RegisterAsync(RegisterUserRequest registerUserRequest, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Método responsável por fazer a autenticação do usuário
+    /// </summary>
+    /// <param name="loginRequest"></param>
+    /// <returns></returns>
+    Task<ObjectResult> AuthenticationAsync(LoginRequest loginRequest);
 }

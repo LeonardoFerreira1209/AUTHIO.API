@@ -10,20 +10,20 @@ public interface IEntityBase
     /// <summary>
     /// Chave primaria.
     /// </summary>
-    public Guid Id { get; set; }
+    public Guid Id { get; }
 
     /// <summary>
     /// Data de criação.
     /// </summary>
-    public DateTime Created { get; set; }
+    public DateTime Created { get; }
 
     /// <summary>
     /// Data de atualização.
     /// </summary>
-    public DateTime? Updated { get; set; }
+    public DateTime? Updated { get; }
 
     /// <summary>
     /// Status do cadastro.
     /// </summary>
-    public Status Status { get; set; }
+    public Status Status { get; }
 }

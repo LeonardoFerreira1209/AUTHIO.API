@@ -71,18 +71,11 @@ try
         .UseResponseCaching()
         .UseAuthorization()
         .UseAuthentication()
-        .UseHealthChecks();
+        .UseHealthChecks()
+        .UseSwaggerConfigurations(configurations);
 
     if (applicationbuilder.Environment.IsProduction())
         applicationbuilder.UseHsts();
-
-    applicationbuilder
-        .UseSwaggerConfigurations(configurations);
-
-    applicationbuilder.UseHttpsRedirection();
-
-    applicationbuilder.UseAuthentication();
-    applicationbuilder.UseAuthorization();
 
     applicationbuilder.MapControllers();
 

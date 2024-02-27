@@ -10,5 +10,5 @@ public interface IEntityTenant
     /// <summary>
     /// Id do tenant.
     /// </summary>
-    public Guid? TenantId { get; set; }
+    public Guid? TenantId { get; }
 }

@@ -9,10 +9,10 @@ namespace AUTHIO.APPLICATION.Domain.Contracts.Services;
 public interface ITenantService
 {
     /// <summary>
-    /// Método responsável por criar e configurar um tenant.
+    /// Método responsável por criar um tenant.
     /// </summary>
-    /// <param name="tenantProvisionRequest"></param>
+    /// <param name="createTenantRequest"></param>
     /// <returns></returns>
-    Task<ObjectResult> TenantProvisionAsync(
-        TenantProvisionRequest tenantProvisionRequest);
+    Task<ObjectResult> CreateAsync(
+        CreateTenantRequest createTenantRequest, CancellationToken cancellationToken);
 }

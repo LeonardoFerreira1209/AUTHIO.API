@@ -3,19 +3,16 @@ using System;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AUTHIO.APPLICATION.Migrations
+namespace AUTHIO.APPLICATION.INFRA.CONTEXT.MIGRATIONS
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240208185949_INITIAL")]
-    partial class INITIAL
+    partial class AuthIoContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,6 +112,9 @@ namespace AUTHIO.APPLICATION.Migrations
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 

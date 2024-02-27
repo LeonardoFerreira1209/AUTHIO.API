@@ -36,6 +36,7 @@ public static class AuthenticationExtensions
 
             options.TokenValidationParameters = new TokenValidationParameters
             {
+                LogValidationExceptions = true,
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateLifetime = true,
@@ -49,12 +50,6 @@ public static class AuthenticationExtensions
 
             options.Events = new JwtBearerEvents
             {
-                OnMessageReceived = context =>
-                {
-                    //Log.Information($"[LOG INFORMATION] {nameof(JwtBearerEvents)} - OnMessageReceived - {JsonConvert.SerializeObject(context)}\n");
-
-                    return Task.CompletedTask;
-                },
                 OnAuthenticationFailed = context =>
                 {
                     Log.Error($"[LOG ERROR] {nameof(JwtBearerEvents)} - METHOD OnAuthenticationFailed - {context.Exception.Message}\n");

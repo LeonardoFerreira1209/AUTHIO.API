@@ -85,6 +85,14 @@ public class GenericEntityCoreRepository<T>(DbContext context)
         => _context.Set<T>().FirstOrDefaultAsync(entity => entity.Id.Equals(id));
 
     /// <summary>
+    /// Recupera um registro do tipo T. Um predicado fornecido para filtrar o registro.
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null) 
+        => await _context.Set<T>().FirstOrDefaultAsync(predicate);
+
+    /// <summary>
     /// Recupera todos os registros do tipo T. Um predicado opcional pode ser fornecido para filtrar os registros.
     /// </summary>
     /// <param name="predicate">Um predicado opcional para filtrar os registros recuperados.</param>

@@ -4,12 +4,15 @@ using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
+using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.TOKEN;
+using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace AUTHIO.API.Controllers;
 
@@ -42,6 +45,30 @@ public class AuthenticationController(
         {
             return await ExecuteAsync(nameof(RegisterAsync),
                  () => _authenticationService.RegisterAsync(registerUserRequest, cancellationToken), "Registrar usuário no sistema.");
+        }
+    }
+
+    /// <summary>
+    /// Endpoint responsável por fazer a autenticação do usuário, é retornado um token JWT (Json Web Token).
+    /// </summary>
+    /// <param name="username"></param>
+    /// <param name="password"></param>
+    /// <returns></returns>
+    [HttpGet("authetication")]
+    [SwaggerOperation(Summary = "Autenticação do usuário", Description = "Endpoint responsável por fazer a autenticação do usuário, é retornado um token JWT (Json Web Token).")]
+    [ProducesResponseType(typeof(ApiResponse<TokenJWT>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status423Locked)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AuthenticationAsync([FromHeader][Required] string username, [FromHeader][Required] string password)
+    {
+        using (LogContext.PushProperty("Controller", "UserController"))
+        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(new { username, password })))
+        using (LogContext.PushProperty("Metodo", "Authentication"))
+        {
+            return await ExecuteAsync(nameof(AuthenticationAsync),
+                () => _authenticationService.AuthenticationAsync(new LoginRequest(username, password)), "Autenticar usuário");
         }
     }
 }

@@ -18,6 +18,11 @@ public class TenantEntity : IEntityBase
     public Guid Id { get ; set; }
 
     /// <summary>
+    /// Usuário de criação.
+    /// </summary>
+    public Guid UserId { get; set; }
+
+    /// <summary>
     /// Data de criação.
     /// </summary>
     public DateTime Created { get; set; }

@@ -11,28 +11,19 @@ namespace AUTHIO.APPLICATION.Domain.Utils.Extensions;
 public static class TenantExtensions
 {
     /// <summary>
-    /// Transforma Provision request to entities.
+    /// Transforma created request para entity.
     /// </summary>
     /// <param name="tenantProvisionRequest"></param>
     /// <returns></returns>
-    public static (TenantEntity tenant, UserEntity user) ToEntities(this TenantProvisionRequest tenantProvisionRequest)
-        => (new ()
+    public static TenantEntity ToEntity(this CreateTenantRequest createTenantRequest, Guid userId)
+        => new()
         {
+            Name = createTenantRequest.Name,
+            Description = createTenantRequest.Description,
+            Status = Status.Ativo,
             Created = DateTime.Now,
-            Name = tenantProvisionRequest.Name,
-            Description = tenantProvisionRequest.Description,
-            Status = Status.Ativo
-
-        }, new ()
-        {
-            Created = DateTime.Now,
-            UserName = tenantProvisionRequest.UserAdmin.Username,
-            FirstName = tenantProvisionRequest.UserAdmin.Name,
-            LastName = tenantProvisionRequest.UserAdmin.LastName,
-            PhoneNumber = tenantProvisionRequest.UserAdmin.PhoneNumber,
-            Email = tenantProvisionRequest.UserAdmin.Email,
-            Status = Status.Ativo
-        });
+            UserId = userId,
+        };
 
     public static TenantResponse ToResponse(this TenantEntity tenantEntity) 
         => new() 

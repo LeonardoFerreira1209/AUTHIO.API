@@ -1,4 +1,5 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
+using AUTHIO.APPLICATION.DOMAIN.ENTITY;
 using Microsoft.AspNetCore.Identity;
 
 namespace AUTHIO.APPLICATION.Domain.Entity;
@@ -6,22 +7,43 @@ namespace AUTHIO.APPLICATION.Domain.Entity;
 /// <summary>
 /// Classe de entidade de usuário.
 /// </summary>
-public class UserEntity : IdentityUser<Guid>, IEntityBase, IEntityTenant
+public class UserEntity 
+    : IdentityUser<Guid>, IEntityBase, IEntityTenant, IEntitySystem
 {
+    /// <summary>
+    /// ctor
+    /// </summary>
+    public UserEntity(string firstName, string lastName, 
+        string userName, string email, string phoneNumber, Status status,
+        DateTime created, bool emailConfirmed, DateTime? updated = null, Guid? tenantId = null, bool system = false)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        UserName = userName;
+        Email = email;
+        PhoneNumber = phoneNumber;
+        Status = status;
+        Created = created;
+        Updated = updated;
+        EmailConfirmed = emailConfirmed;
+        TenantId = tenantId;
+        System = system;
+    }
+
     /// <summary>
     /// Nome do usuário.
     /// </summary>
-    public string FirstName { get; set; }
+    public string FirstName { get; private set; }
 
     /// <summary>
     /// Ultimo nome do usuário.
     /// </summary>
-    public string LastName { get; set; }
+    public string LastName { get; private set; }
 
     /// <summary>
     /// Id do tenant responsavel.
     /// </summary>
-    public Guid? TenantId { get; set; }
+    public Guid? TenantId { get; private set; }
 
     /// <summary>
     /// Tenant.
@@ -31,20 +53,20 @@ public class UserEntity : IdentityUser<Guid>, IEntityBase, IEntityTenant
     /// <summary>
     /// Data de criação.
     /// </summary>
-    public DateTime Created { get; set; }
+    public DateTime Created { get; private set; }
 
     /// <summary>
     /// Data de atualização.
     /// </summary>
-    public DateTime? Updated { get; set; } = null;
+    public DateTime? Updated { get; private set; }
 
     /// <summary>
     /// Status do cadastro.
     /// </summary>
-    public Status Status { get; set; }
+    public Status Status { get; private set; }
 
     /// <summary>
-    /// Usuário do sistema.
+    /// Pertence ao sistema.
     /// </summary>
-    public bool System { get; set; }
+    public bool System {get; private set; }
 }

@@ -31,6 +31,13 @@ public interface IGenericRepository<T> where T : class, IEntityBase
     Task<T> GetByIdAsync(Guid id);
 
     /// <summary>
+    /// Recuperar por uma regra custom.
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    Task<T> GetAsync(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
     /// Recuperar todos.
     /// </summary>
     /// <returns></returns>
