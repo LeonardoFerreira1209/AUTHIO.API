@@ -4,10 +4,12 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace AUTHIO.APPLICATION.INFRA.CONTEXT.MIGRATIONS
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace AUTHIO.APPLICATION.Migrations
 {
     /// <inheritdoc />
-    public partial class NomeDaMigration : Migration
+    public partial class INITIAL : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -250,6 +252,22 @@ namespace AUTHIO.APPLICATION.INFRA.CONTEXT.MIGRATIONS
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
+                values: new object[] { new Guid("9128d086-42a2-41ba-96a2-e80d126f6231"), null, new DateTime(2024, 2, 28, 0, 24, 39, 505, DateTimeKind.Local).AddTicks(6938), "System", null, 1, true, null, null });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoleClaims",
+                columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "Tenant", "Post", new Guid("9128d086-42a2-41ba-96a2-e80d126f6231") },
+                    { 2, "Tenant", "Get", new Guid("9128d086-42a2-41ba-96a2-e80d126f6231") },
+                    { 3, "Tenant", "Patch", new Guid("9128d086-42a2-41ba-96a2-e80d126f6231") },
+                    { 4, "Tenant", "Put", new Guid("9128d086-42a2-41ba-96a2-e80d126f6231") }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

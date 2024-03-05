@@ -19,7 +19,7 @@ public sealed class CustomTenantExceptions
         /// </summary>
         /// <param name="dados"></param>
         public NotFoundTenantException(
-            object dados)
+            object dados = null)
         {
             Response = new ErrorResponse
                (HttpStatusCode.NotFound, dados, [
@@ -50,7 +50,7 @@ public sealed class CustomTenantExceptions
         /// </summary>
         /// <param name="dados"></param>
         public DuplicatedTenantException(
-            object dados)
+            object dados = null)
         {
             Response = new ErrorResponse
                (HttpStatusCode.Ambiguous, dados, [
@@ -81,7 +81,7 @@ public sealed class CustomTenantExceptions
         /// </summary>
         /// <param name="dados"></param>
         public CreateTenantFailedException(
-            object dados)
+            object dados = null)
         {
             Response = new ErrorResponse
                (HttpStatusCode.BadRequest, dados, [

@@ -19,6 +19,8 @@ public static class DatabaseExtensions
     public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         => services.AddDbContext<AuthIoContext>(options =>
         {
-            options.UseLazyLoadingProxies().UseMySQL(configuration.GetConnectionString("Database")).LogTo(Console.WriteLine, LogLevel.Debug);
+            options.UseLazyLoadingProxies().UseMySQL(configuration
+                    .GetConnectionString("Database")).LogTo(Console.WriteLine, LogLevel.Debug);
+
         }, ServiceLifetime.Scoped);
 }

@@ -7,9 +7,12 @@ namespace AUTHIO.APPLICATION.Domain.Entity;
 /// </summary>
 public class TenantEntity : IEntityBase
 {
+    /// <summary>
+    /// ctor
+    /// </summary>
     public TenantEntity() {
-        Users = new HashSet<UserEntity>();
-        Roles = new HashSet<RoleEntity>();
+        Users = [];
+        Roles = [];
     }
 
     /// <summary>

@@ -3,16 +3,19 @@ using System;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace AUTHIO.APPLICATION.INFRA.CONTEXT.MIGRATIONS
+namespace AUTHIO.APPLICATION.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    partial class AuthIoContextModelSnapshot : ModelSnapshot
+    [Migration("20240228032456_INITIAL")]
+    partial class INITIAL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,6 +93,16 @@ namespace AUTHIO.APPLICATION.INFRA.CONTEXT.MIGRATIONS
                     b.HasIndex("TenantId");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231"),
+                            Created = new DateTime(2024, 2, 28, 0, 24, 39, 505, DateTimeKind.Local).AddTicks(6938),
+                            Name = "System",
+                            Status = 1,
+                            System = true
+                        });
                 });
 
             modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entity.TenantEntity", b =>
@@ -244,6 +257,36 @@ namespace AUTHIO.APPLICATION.INFRA.CONTEXT.MIGRATIONS
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "Tenant",
+                            ClaimValue = "Post",
+                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "Tenant",
+                            ClaimValue = "Get",
+                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "Tenant",
+                            ClaimValue = "Patch",
+                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "Tenant",
+                            ClaimValue = "Put",
+                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>

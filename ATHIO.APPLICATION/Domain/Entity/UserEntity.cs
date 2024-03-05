@@ -1,6 +1,9 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.DOMAIN.ENTITY;
+using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace AUTHIO.APPLICATION.Domain.Entity;
 
@@ -8,14 +11,22 @@ namespace AUTHIO.APPLICATION.Domain.Entity;
 /// Classe de entidade de usuário.
 /// </summary>
 public class UserEntity 
-    : IdentityUser<Guid>, IEntityBase, IEntityTenant, IEntitySystem
+    : IdentityUser<Guid>, IEntityBase, IEntityTenantNullAble, IEntitySystem, IFilterableEntity<UserEntity>
 {
+    /// <summary>
+    /// ctor
+    /// </summary>
+    public UserEntity() {
+
+    }
+
     /// <summary>
     /// ctor
     /// </summary>
     public UserEntity(string firstName, string lastName, 
         string userName, string email, string phoneNumber, Status status,
-        DateTime created, bool emailConfirmed, DateTime? updated = null, Guid? tenantId = null, bool system = false)
+        DateTime created, bool emailConfirmed, 
+        DateTime? updated = null, Guid? tenantId = null, bool system = false)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -69,4 +80,13 @@ public class UserEntity
     /// Pertence ao sistema.
     /// </summary>
     public bool System {get; private set; }
+
+    /// <summary>
+    /// Filtragem global da entidade.
+    /// </summary>
+    /// <param name="contextService"></param>
+    /// <returns></returns>
+    public Expression<Func<UserEntity, bool>> GetFilterExpression([FromServices] AuthIoContext authIoContext)
+         => entidade => (entidade.TenantId == authIoContext._tenantId && !entidade.System)
+                    || (entidade.TenantId == null && entidade.System);
 }

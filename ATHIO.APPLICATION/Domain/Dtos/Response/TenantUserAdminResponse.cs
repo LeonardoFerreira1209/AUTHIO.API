@@ -18,7 +18,7 @@ public class TenantUserAdminResponse
     /// <summary>
     /// Id do tenant responsavel.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid? TenantId { get; set; }
 
     /// <summary>
     /// Tenant.

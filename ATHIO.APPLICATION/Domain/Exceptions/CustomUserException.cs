@@ -56,18 +56,41 @@ public class CustomUserException
 
     }
 
+
+    /// <summary>
+    /// Exception para usuário não auenticado não encontrado.
+    /// </summary>
+    public class AuthenticatedUserNotFoundException : BaseException
+    {
+        public AuthenticatedUserNotFoundException(
+            object dados = null)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.NotFound, dados, [
+                   new("Não há usuário autenticado!")
+               ]);
+        }
+
+        public AuthenticatedUserNotFoundException(
+            object dados, List<DadosNotificacao> notificacoes)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.NotFound, dados, notificacoes);
+        }
+    }
+
     /// <summary>
     /// Exception para usuário não encontrado.
     /// </summary>
     public class NotFoundUserException : BaseException
     {
         public NotFoundUserException(
-            object dados)
+            object dados = null)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.NotFound, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.NotFound, dados, [
                    new("Dados do usuário não encontrado!")
-               });
+               ]);
         }
 
         public NotFoundUserException(
@@ -250,6 +273,34 @@ public class CustomUserException
         /// <param name="dados"></param>
         /// <param name="notificacoes"></param>
         public CreateUserFailedException(
+            object dados, List<DadosNotificacao> notificacoes)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.BadRequest, dados, notificacoes);
+        }
+    }
+
+    public class UserToRoleFailedException : BaseException
+    {
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        public UserToRoleFailedException(
+            object dados)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.BadRequest, dados, [
+                   new("Falha ao adicionar role ao usuário!")
+               ]);
+        }
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        /// <param name="notificacoes"></param>
+        public UserToRoleFailedException(
             object dados, List<DadosNotificacao> notificacoes)
         {
             Response = new ErrorResponse

@@ -3,10 +3,13 @@ using AUTHIO.APPLICATION.Domain.Contracts.Repository;
 using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services;
 using AUTHIO.APPLICATION.Domain.Dtos.Request;
+using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 using AUTHIO.APPLICATION.Domain.Entity;
+using AUTHIO.APPLICATION.Domain.Exceptions;
 using AUTHIO.APPLICATION.Domain.Utils.Extensions;
 using AUTHIO.APPLICATION.Domain.Validators;
+using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.REPOSITORY;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +29,9 @@ namespace AUTHIO.APPLICATION.APPLICATION.SERVICES;
 /// </remarks>
 public class TenantService(
     IUnitOfWork<AuthIoContext> unitOfWork,
-    ITenantRepository tenantRepository, IContextService contextService)
+    ITenantRepository tenantRepository,
+    IContextService contextService,
+    IUserRepository userRepository)
         : ITenantService
 {
     private readonly IUnitOfWork<AuthIoContext>
@@ -37,6 +42,9 @@ public class TenantService(
 
     private readonly IContextService
         _contextService = contextService;
+
+    private readonly IUserRepository
+        _userRepository = userRepository;
 
     /// <summary>
     /// 
@@ -59,14 +67,15 @@ public class TenantService(
                     {
                         var validation = validationTask.Result;
 
-                        if (validation.IsValid is false) await validation.GetValidationErrors();
+                        if (validation.IsValid is false)
+                            await validation.GetValidationErrors();
 
                     }).Unwrap();
 
             return await _tenantRepository.GetAsync(tenant => tenant.Name == createTenantRequest.Name)
                 .ContinueWith(async (tenantResult) =>
                 {
-                    if(tenantResult.Result is not null) 
+                    if (tenantResult.Result is not null)
                         throw new DuplicatedTenantException(createTenantRequest);
 
                     return await _tenantRepository.CreateAsync(
@@ -82,11 +91,67 @@ public class TenantService(
                                     new ApiResponse<TenantEntity>(
                                         true,
                                         HttpStatusCode.Created,
-                                        tenant, [new DadosNotificacao("Tenant criado com sucesso!")]));
+                                        tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")]));
 
                             }).Unwrap();
 
                 }).Unwrap();
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+        }
+    }
+
+    /// <summary>
+    /// Método responsável por criar um usuário no tenant.
+    /// </summary>
+    /// <param name="registerTenantUserRequest"></param>
+    /// <param name="tenantId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="CreateUserFailedException"></exception>
+    public async Task<ObjectResult> RegisterTenantUserAsync(
+        RegisterTenantUserRequest registerTenantUserRequest, Guid tenantId, CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(RegisterTenantUserAsync)}\n");
+
+        try
+        {
+            await new RegisterTenantUserRequestValidator()
+                .ValidateAsync(registerTenantUserRequest, cancellationToken)
+                    .ContinueWith(async (validationTask) =>
+                    {
+                        var validation = validationTask.Result;
+
+                        if (validation.IsValid is false)
+                            await validation.GetValidationErrors();
+
+                    }).Unwrap();
+
+            var userEntity
+                    = registerTenantUserRequest.ToUserTenantEntity(tenantId);
+
+            return await _userRepository.CreateUserAsync(
+                 userEntity, registerTenantUserRequest.Password)
+                    .ContinueWith(identityResultTask =>
+                    {
+                        var identityResult
+                                = identityResultTask.Result;
+
+                        if (identityResult.Succeeded is false)
+                            throw new CreateUserFailedException(
+                                registerTenantUserRequest, identityResult.Errors.Select((e)
+                                    => new DadosNotificacao(e.Code.CustomExceptionMessage())).ToList());
+
+                        return new OkObjectResult(
+                            new ApiResponse<UserResponse>(
+                                identityResult.Succeeded,
+                                HttpStatusCode.Created,
+                                userEntity.ToResponse(), [
+                                    new DadosNotificacao("Usuário criado com sucesso e vinculado ao Tenant!")]));
+                    });
         }
         catch (Exception exception)
         {

@@ -25,6 +25,11 @@ public static class TenantExtensions
             UserId = userId,
         };
 
+    /// <summary>
+    /// Transforma um Tenant Entity em response.
+    /// </summary>
+    /// <param name="tenantEntity"></param>
+    /// <returns></returns>
     public static TenantResponse ToResponse(this TenantEntity tenantEntity) 
         => new() 
         {
@@ -34,10 +39,10 @@ public static class TenantExtensions
             Name = tenantEntity.Name,
             Description = tenantEntity.Description,
             Status = tenantEntity.Status,
-            UserAdmins = tenantEntity?.UserAdmins.Select(userA => new TenantUserAdminResponse {
-                TenantId = userA.TenantId,
-                UserId = userA.TenantId,
+            UserAdmins = tenantEntity?.UserAdmins?.Select(user => new TenantUserAdminResponse {
+                TenantId = user.TenantId,
+                UserId = user.UserId,
             }).ToList(),
-            Users = tenantEntity?.Users.Select(user => user?.ToResponse()).ToList(),
+            Users = tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList(),
         };
 }

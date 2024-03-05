@@ -1,6 +1,7 @@
 ﻿using AUTHIO.APPLICATION.Application.Configurations.Extensions;
 using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
+using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 using AUTHIO.APPLICATION.Domain.Exceptions;
 using AUTHIO.APPLICATION.Domain.Utils.Extensions;
@@ -65,11 +66,16 @@ public sealed class AuthenticationService(
 
                     }).Unwrap();
 
-            var userEntity
-                = registerUserRequest.ToEntity();
+            var transaction =
+                await _unitOfWork.BeginTransactAsync();
 
-            return await _userRepository
-                    .CreateUserAsync(userEntity, registerUserRequest.Password).ContinueWith(identityResultTask =>
+            try
+            {
+                var userEntity
+                    = registerUserRequest.ToUserSystemEntity();
+
+                return await _userRepository
+                    .CreateUserAsync(userEntity, registerUserRequest.Password).ContinueWith(async (identityResultTask) =>
                     {
                         var identityResult
                                 = identityResultTask.Result;
@@ -79,14 +85,33 @@ public sealed class AuthenticationService(
                                 registerUserRequest, identityResult.Errors.Select((e)
                                     => new DadosNotificacao(e.Code.CustomExceptionMessage())).ToList());
 
-                        return new OkObjectResult(
-                            new ApiResponse<object>(
-                                identityResult.Succeeded,
-                                HttpStatusCode.Created,
-                                userEntity.ToResponse(),
-                                [new DadosNotificacao("Usuário criado com sucesso!")]));
+                        return await _userRepository
+                            .AddToUserRoleAsync(userEntity, "System").ContinueWith(identityResultTask =>
+                            {
+                                var identityResult
+                                        = identityResultTask.Result;
 
-                    });
+                                if (identityResult.Succeeded is false)
+                                    throw new UserToRoleFailedException(
+                                        registerUserRequest, identityResult.Errors.Select((e)
+                                            => new DadosNotificacao(e.Code.CustomExceptionMessage())).ToList());
+
+                                transaction.CommitAsync();
+
+                                return new OkObjectResult(
+                                    new ApiResponse<UserResponse>(
+                                        identityResult.Succeeded,
+                                        HttpStatusCode.Created,
+                                        userEntity.ToResponse(), [
+                                            new DadosNotificacao("Usuário criado com sucesso!")]));
+                            });
+
+                    }).Unwrap();
+            }
+            catch 
+            {
+                transaction.Rollback(); throw;
+            }
         }
         catch (Exception exception)
         {
@@ -128,7 +153,8 @@ public sealed class AuthenticationService(
                         {
                             var signInResult = signInResultTask.Result;
 
-                            if (signInResult.Succeeded is false) ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
+                            if (signInResult.Succeeded is false)
+                                ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
                         });
 
                     Log.Information(
@@ -146,9 +172,8 @@ public sealed class AuthenticationService(
 
                             return new OkObjectResult(
                                 new ApiResponse<TokenJWT>(
-                                    true, HttpStatusCode.Created, tokenJWT, new List<DadosNotificacao>  {
-                                        new("Token criado com sucesso!")
-                                    }));
+                                    true, HttpStatusCode.Created, tokenJWT, [
+                                        new("Token criado com sucesso!")]));
                         });
 
                 }).Unwrap();
@@ -165,9 +190,8 @@ public sealed class AuthenticationService(
     /// <param name="loginRequest"></param>
     /// <returns></returns>
     /// <exception cref="CustomException"></exception>
-    private async Task<TokenJWT> GenerateTokenJwtAsync(LoginRequest loginRequest)
-    {
-        return await _tokenService.CreateJsonWebToken(loginRequest.Username).ContinueWith((tokenTask) =>
+    private async Task<TokenJWT> GenerateTokenJwtAsync(LoginRequest loginRequest) 
+        => await _tokenService.CreateJsonWebToken(loginRequest.Username).ContinueWith((tokenTask) => 
         {
             var tokenJwt =
                 tokenTask.Result
@@ -175,7 +199,6 @@ public sealed class AuthenticationService(
 
             return tokenJwt;
         });
-    }
 
     /// <summary>
     /// Método responsável por tratar os erros de autenticação.

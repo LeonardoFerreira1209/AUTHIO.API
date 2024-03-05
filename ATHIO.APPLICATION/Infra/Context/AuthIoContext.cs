@@ -1,8 +1,10 @@
 ﻿using AUTHIO.APPLICATION.Domain.Entity;
+using AUTHIO.APPLICATION.Domain.Enums;
+using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace AUTHIO.APPLICATION.Infra.Context;
 
@@ -12,24 +14,24 @@ namespace AUTHIO.APPLICATION.Infra.Context;
 public class AuthIoContext
     : IdentityDbContext<UserEntity, RoleEntity, Guid>
 {
-    private readonly Guid? _tenantId;
+    public readonly Guid? _tenantId;   
 
     /// <summary>
     /// ctor
     /// </summary>
     /// <param name="options"></param>
     public AuthIoContext(
-        DbContextOptions<AuthIoContext> options) : base(options)
+        DbContextOptions<AuthIoContext> options, IContextService contextService) : base(options)
     {
-        _tenantId = null;//Guid.Parse("8A7CD46D-87B5-498A-15F4-08DC236A8A23");
-        Database.EnsureCreated();
+        _tenantId = contextService.GetCurrentTenantId();
+        //Database.EnsureCreated();
     }
 
     /// <summary>
     /// Tabela de Tenants.
     /// </summary>
-    public DbSet<TenantEntity> Tenants => Set<TenantEntity>(); 
-    
+    public DbSet<TenantEntity> Tenants => Set<TenantEntity>();
+
     /// <summary>
     /// Tabela de Feature Flags.
     /// </summary>
@@ -43,16 +45,17 @@ public class AuthIoContext
     {
         base.OnModelCreating(modelBuilder);
 
-        foreach (var entity in modelBuilder.Model.GetEntityTypes()) {
-            var type = entity.ClrType;
-            if (typeof(IEntityTenant).IsAssignableFrom(type)) {
-                var method = typeof(AuthIoContext)
-                    .GetMethod(nameof(TenantFilterExpression), 
-                    BindingFlags.NonPublic | BindingFlags.Static
-                        )?.MakeGenericMethod(type);
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            var entityClrType = entityType.ClrType;
+            var filterableInterfaceType = typeof(IFilterableEntity<>).MakeGenericType(entityClrType);
+            if (filterableInterfaceType.IsAssignableFrom(entityClrType))
+            {
+                var instance = Activator.CreateInstance(entityClrType);
+                var methodInfo = filterableInterfaceType.GetMethod("GetFilterExpression");
+                var filterExpression = methodInfo.Invoke(instance, [this]);
 
-                var expression = method?.Invoke(null, new object[] { this })!;
-                entity.SetQueryFilter((LambdaExpression)expression);
+                modelBuilder.Entity(entityClrType).HasQueryFilter((LambdaExpression)filterExpression);
             }
         }
 
@@ -63,7 +66,7 @@ public class AuthIoContext
             .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<UserEntity>()
-            .HasOne(u => u.Tenant) 
+            .HasOne(u => u.Tenant)
             .WithMany(t => t.Users)
             .HasForeignKey(u => u.TenantId)
             .OnDelete(DeleteBehavior.Restrict);
@@ -73,28 +76,55 @@ public class AuthIoContext
 
         modelBuilder.Entity<TenantUserAdminEntity>()
            .HasOne(tua => tua.User)
-           .WithMany() 
+           .WithMany()
            .HasForeignKey(tua => tua.UserId);
 
         modelBuilder.Entity<TenantUserAdminEntity>()
             .HasOne(tua => tua.Tenant)
             .WithMany(t => t.UserAdmins)
             .HasForeignKey(tua => tua.TenantId);
-    }
 
-    /// <summary>
-    /// Prepara a expressão de filtragem global por tenantId.
-    /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <param name="authIoContext"></param>
-    /// <returns></returns>
-    private static Expression<Func<TEntity, bool>> TenantFilterExpression<TEntity>(
-            AuthIoContext authIoContext)
-            where TEntity : class, IEntityTenant 
-    {
-        Expression<Func<TEntity, bool>> expression 
-            = x => x.TenantId == authIoContext._tenantId;
+        var roleEntity = new RoleEntity
+        {
+            Id = Guid.NewGuid(),
+            Name = "System",
+            System = true,
+            Created = DateTime.Now,
+            Status = Status.Ativo,
+        };
 
-        return expression;
+        modelBuilder.Entity<RoleEntity>().HasData(
+            [
+                roleEntity
+            ]);
+
+        modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasData(
+            [
+                new IdentityRoleClaim<Guid>{
+
+                    Id = 1,
+                    RoleId = roleEntity.Id,
+                    ClaimType = "Tenant",
+                    ClaimValue = "Post"
+                },
+                 new IdentityRoleClaim<Guid>{
+                    Id = 2,
+                    RoleId = roleEntity.Id,
+                    ClaimType = "Tenant",
+                    ClaimValue = "Get"
+                },
+                 new IdentityRoleClaim<Guid>{
+                    Id = 3,
+                    RoleId = roleEntity.Id,
+                    ClaimType = "Tenant",
+                    ClaimValue = "Patch"
+                },
+                 new IdentityRoleClaim<Guid>{
+                    Id = 4,
+                    RoleId = roleEntity.Id,
+                    ClaimType = "Tenant",
+                    ClaimValue = "Put"
+                }
+            ]);
     }
 }
