@@ -32,8 +32,7 @@ namespace AUTHIO.APPLICATION.Application.Services.System;
 public sealed class AuthenticationService(
     ITokenService tokenService,
     IUserRepository userRepository,
-    IUnitOfWork<AuthIoContext> unitOfWork
-    ) : IAuthenticationService
+    IUnitOfWork<AuthIoContext> unitOfWork) : IAuthenticationService
 {
     private readonly ITokenService _tokenService = tokenService;
 

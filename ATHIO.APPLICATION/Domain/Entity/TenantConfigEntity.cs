@@ -6,7 +6,7 @@ namespace AUTHIO.APPLICATION.DOMAIN.ENTITY;
 /// <summary>
 /// Classe de configuração de Tenanty.
 /// </summary>
-public sealed class TenantConfigEntity : 
+public class TenantConfigEntity : 
     IEntityBase, IEntityTenant
 {
     /// <summary>

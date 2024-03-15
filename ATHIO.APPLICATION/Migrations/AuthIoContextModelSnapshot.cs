@@ -16,7 +16,7 @@ namespace AUTHIO.APPLICATION.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -94,8 +94,8 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231"),
-                            Created = new DateTime(2024, 2, 28, 0, 24, 39, 505, DateTimeKind.Local).AddTicks(6938),
+                            Id = new Guid("f21856bc-b00b-420b-a0db-27caa572b3a6"),
+                            Created = new DateTime(2024, 3, 15, 1, 29, 30, 661, DateTimeKind.Local).AddTicks(7205),
                             Name = "System",
                             Status = 1,
                             System = true
@@ -261,28 +261,28 @@ namespace AUTHIO.APPLICATION.Migrations
                             Id = 1,
                             ClaimType = "Tenant",
                             ClaimValue = "Post",
-                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                            RoleId = new Guid("f21856bc-b00b-420b-a0db-27caa572b3a6")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenant",
                             ClaimValue = "Get",
-                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                            RoleId = new Guid("f21856bc-b00b-420b-a0db-27caa572b3a6")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenant",
                             ClaimValue = "Patch",
-                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                            RoleId = new Guid("f21856bc-b00b-420b-a0db-27caa572b3a6")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenant",
                             ClaimValue = "Put",
-                            RoleId = new Guid("9128d086-42a2-41ba-96a2-e80d126f6231")
+                            RoleId = new Guid("f21856bc-b00b-420b-a0db-27caa572b3a6")
                         });
                 });
 

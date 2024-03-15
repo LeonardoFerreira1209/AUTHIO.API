@@ -31,12 +31,12 @@ try
         .AddEndpointsApiExplorer()
         .AddOptions()
         .ConfigureLanguage()
+        .ConfigureDependencies(configurations)
         .ConfigureDatabase(configurations)
         .ConfigureIdentityServer(configurations)
         .AddAuthorization()
         .ConfigureAuthentication(configurations)
         .ConfigureApplicationCookie()
-        .ConfigureDependencies(configurations)
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
         .AddControllers(options =>

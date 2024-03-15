@@ -1,5 +1,4 @@
-﻿using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
-using AUTHIO.APPLICATION.Infra.Context;
+﻿using AUTHIO.APPLICATION.Infra.Context;
 using System.Linq.Expressions;
 
 namespace AUTHIO.APPLICATION.Domain.Entity;

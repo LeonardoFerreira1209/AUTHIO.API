@@ -2,7 +2,6 @@
 using AUTHIO.APPLICATION.DOMAIN.ENTITY;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 
 namespace AUTHIO.APPLICATION.Domain.Entity;
@@ -16,9 +15,7 @@ public class UserEntity
     /// <summary>
     /// ctor
     /// </summary>
-    public UserEntity() {
-
-    }
+    public UserEntity() { }
 
     /// <summary>
     /// ctor
@@ -32,11 +29,11 @@ public class UserEntity
         LastName = lastName;
         UserName = userName;
         Email = email;
+        EmailConfirmed = emailConfirmed;
         PhoneNumber = phoneNumber;
         Status = status;
         Created = created;
         Updated = updated;
-        EmailConfirmed = emailConfirmed;
         TenantId = tenantId;
         System = system;
     }
@@ -86,7 +83,7 @@ public class UserEntity
     /// </summary>
     /// <param name="contextService"></param>
     /// <returns></returns>
-    public Expression<Func<UserEntity, bool>> GetFilterExpression([FromServices] AuthIoContext authIoContext)
+    public Expression<Func<UserEntity, bool>> GetFilterExpression(AuthIoContext authIoContext)
          => entidade => (entidade.TenantId == authIoContext._tenantId && !entidade.System)
                     || (entidade.TenantId == null && entidade.System);
 }

@@ -56,7 +56,6 @@ public static class AuthenticationExtensions
 
                     throw new Exception("Erro na autenticação");
                 },
-
                 OnTokenValidated = context =>
                 {
                     Log.Information($"[LOG INFORMATION] {nameof(JwtBearerEvents)} - OnTokenValidated - {context.SecurityToken}\n");

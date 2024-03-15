@@ -23,18 +23,19 @@ public class ContextService(
     /// <returns></returns>
     public Guid? GetCurrentTenantId()
     {
-        if (IsAuthenticated) {
+        if (IsAuthenticated)
+        {
             var tenantId
                 = _httpContextAccessor.HttpContext?.User?
                     .FindFirstValue("TenantId");
 
-            if (tenantId is not null) 
-                return Guid.Parse(tenantId); 
+            if (tenantId is not null)
+                return Guid.Parse(tenantId);
         }
         else
         {
             var code = _httpContextAccessor.HttpContext.Request?.Headers
-                  .FirstOrDefault(header => header.Key.Equals("code")).Value;
+                  .FirstOrDefault(header => header.Key.Equals("tenantid")).Value;
 
             if (!string.IsNullOrEmpty(code))
                 return Guid.Parse(code);
@@ -43,6 +44,9 @@ public class ContextService(
         return null;
     }
 
+    /// <summary>
+    /// Verifica se o usuário esta logado.
+    /// </summary>
     public bool IsAuthenticated
         => _httpContextAccessor.HttpContext
             ?.User?.Identity?.IsAuthenticated ?? false;

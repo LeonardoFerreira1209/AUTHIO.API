@@ -11,21 +11,16 @@ namespace AUTHIO.APPLICATION.Infra.Context;
 /// <summary>
 /// Classe de contexto.
 /// </summary>
-public class AuthIoContext
-    : IdentityDbContext<UserEntity, RoleEntity, Guid>
+/// <remarks>
+/// ctor
+/// </remarks>
+/// <param name="options"></param>
+public class AuthIoContext(
+    DbContextOptions<AuthIoContext> options, IContextService contextService)
+        : IdentityDbContext<UserEntity, RoleEntity, Guid>(options)
 {
-    public readonly Guid? _tenantId;   
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="options"></param>
-    public AuthIoContext(
-        DbContextOptions<AuthIoContext> options, IContextService contextService) : base(options)
-    {
-        _tenantId = contextService.GetCurrentTenantId();
-        //Database.EnsureCreated();
-    }
+    public readonly Guid? _tenantId 
+        = contextService.GetCurrentTenantId();
 
     /// <summary>
     /// Tabela de Tenants.

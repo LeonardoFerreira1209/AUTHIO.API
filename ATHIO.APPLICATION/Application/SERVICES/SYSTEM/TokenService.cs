@@ -17,24 +17,23 @@ namespace AUTHIO.APPLICATION.APPLICATION.SERVICES.SYSTEM;
 /// <summary>
 /// Token service
 /// </summary>
-public class TokenService : ITokenService
+/// <remarks>
+/// ctor
+/// </remarks>
+/// <param name="userManager"></param>
+/// <param name="roleManager"></param>
+/// <param name="appsettings"></param>
+public class TokenService(UserManager<UserEntity> userManager, 
+    RoleManager<RoleEntity> roleManager, IOptions<AppSettings> appsettings) : ITokenService
 {
-    private readonly UserManager<UserEntity> _userManager;
-    private readonly RoleManager<RoleEntity> _roleManager;
-    private readonly IOptions<AppSettings> _appsettings;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="userManager"></param>
-    /// <param name="roleManager"></param>
-    /// <param name="appsettings"></param>
-    public TokenService(UserManager<UserEntity> userManager, RoleManager<RoleEntity> roleManager, IOptions<AppSettings> appsettings)
-    {
+    private readonly UserManager<UserEntity> 
         _userManager = userManager;
+
+    private readonly RoleManager<RoleEntity> 
         _roleManager = roleManager;
+
+    private readonly IOptions<AppSettings> 
         _appsettings = appsettings;
-    }
 
     /// <summary>
     /// Cria o JWT TOKEN
