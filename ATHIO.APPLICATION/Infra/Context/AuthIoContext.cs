@@ -1,4 +1,4 @@
-﻿using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using Microsoft.AspNetCore.Identity;

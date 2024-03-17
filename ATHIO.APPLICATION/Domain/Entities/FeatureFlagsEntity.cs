@@ -1,6 +1,6 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
 
-namespace AUTHIO.APPLICATION.Domain.Entity;
+namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Feature Flags entity

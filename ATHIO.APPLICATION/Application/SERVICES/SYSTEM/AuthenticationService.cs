@@ -1,12 +1,12 @@
 ﻿using AUTHIO.APPLICATION.Application.Configurations.Extensions;
-using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
+using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 using AUTHIO.APPLICATION.Domain.Exceptions;
 using AUTHIO.APPLICATION.Domain.Utils.Extensions;
 using AUTHIO.APPLICATION.Domain.Validators;
-using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.REPOSITORY;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.TOKEN;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;

@@ -1,7 +1,7 @@
-﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository;
-using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
+using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Infra.Context;
-using AUTHIO.APPLICATION.Infra.Repository.Base;
+using AUTHIO.APPLICATION.Infra.Repositories.BASE;
 using Microsoft.EntityFrameworkCore;
 
 namespace AUTHIO.APPLICATION.INFRA.FEATUREFLAGS;

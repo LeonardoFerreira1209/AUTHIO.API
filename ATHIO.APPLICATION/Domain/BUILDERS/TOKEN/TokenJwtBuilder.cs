@@ -1,4 +1,4 @@
-﻿using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.TOKEN;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;

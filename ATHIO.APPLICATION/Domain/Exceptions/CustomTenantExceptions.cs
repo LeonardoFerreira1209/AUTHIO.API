@@ -39,66 +39,97 @@ public sealed class CustomTenantExceptions
                (HttpStatusCode.NotFound, dados, notificacoes);
         }
     }
+}
 
+/// <summary>
+/// Exception para usuarios sem permissões a um tenant.
+/// </summary>
+public sealed class NotPermissionTenantException : BaseException
+{
     /// <summary>
-    /// Exception para tenant já cadastrado.
+    /// ctor
     /// </summary>
-    public sealed class DuplicatedTenantException : BaseException
+    /// <param name="dados"></param>
+    public NotPermissionTenantException(
+        object dados = null)
     {
-        /// <summary>
-        /// ctor
-        /// </summary>
-        /// <param name="dados"></param>
-        public DuplicatedTenantException(
-            object dados = null)
-        {
-            Response = new ErrorResponse
-               (HttpStatusCode.Ambiguous, dados, [
-                   new("Tenant com o mesmo nome já cadastrado!")
-               ]);
-        }
-
-        /// <summary>
-        /// ctor
-        /// </summary>
-        /// <param name="dados"></param>
-        /// <param name="notificacoes"></param>
-        public DuplicatedTenantException(
-            object dados, List<DadosNotificacao> notificacoes)
-        {
-            Response = new ErrorResponse
-               (HttpStatusCode.Ambiguous, dados, notificacoes);
-        }
+        Response = new ErrorResponse
+           (HttpStatusCode.Unauthorized, dados, [
+               new("Tenant não pose ser manipulado por esse usuário!")
+           ]);
     }
 
     /// <summary>
-    /// Exception para tenant com falha na criação.
+    /// ctor
     /// </summary>
-    public sealed class CreateTenantFailedException : BaseException
+    /// <param name="dados"></param>
+    /// <param name="notificacoes"></param>
+    public NotPermissionTenantException(
+        object dados, List<DadosNotificacao> notificacoes)
     {
-        /// <summary>
-        /// ctor
-        /// </summary>
-        /// <param name="dados"></param>
-        public CreateTenantFailedException(
-            object dados = null)
-        {
-            Response = new ErrorResponse
-               (HttpStatusCode.BadRequest, dados, [
-                   new("Falha na criação do Tenant!")
-               ]);
-        }
+        Response = new ErrorResponse
+           (HttpStatusCode.NotFound, dados, notificacoes);
+    }
+}
 
-        /// <summary>
-        /// ctor
-        /// </summary>
-        /// <param name="dados"></param>
-        /// <param name="notificacoes"></param>
-        public CreateTenantFailedException(
-            object dados, List<DadosNotificacao> notificacoes)
-        {
-            Response = new ErrorResponse
-               (HttpStatusCode.BadRequest, dados, notificacoes);
-        }
+/// <summary>
+/// Exception para tenant já cadastrado.
+/// </summary>
+public sealed class DuplicatedTenantException : BaseException
+{
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="dados"></param>
+    public DuplicatedTenantException(
+        object dados = null)
+    {
+        Response = new ErrorResponse
+           (HttpStatusCode.Ambiguous, dados, [
+               new("Tenant com o mesmo nome já cadastrado!")
+           ]);
+    }
+
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="dados"></param>
+    /// <param name="notificacoes"></param>
+    public DuplicatedTenantException(
+        object dados, List<DadosNotificacao> notificacoes)
+    {
+        Response = new ErrorResponse
+           (HttpStatusCode.Ambiguous, dados, notificacoes);
+    }
+}
+
+/// <summary>
+/// Exception para tenant com falha na criação.
+/// </summary>
+public sealed class CreateTenantFailedException : BaseException
+{
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="dados"></param>
+    public CreateTenantFailedException(
+        object dados = null)
+    {
+        Response = new ErrorResponse
+           (HttpStatusCode.BadRequest, dados, [
+               new("Falha na criação do Tenant!")
+           ]);
+    }
+
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="dados"></param>
+    /// <param name="notificacoes"></param>
+    public CreateTenantFailedException(
+        object dados, List<DadosNotificacao> notificacoes)
+    {
+        Response = new ErrorResponse
+           (HttpStatusCode.BadRequest, dados, notificacoes);
     }
 }

@@ -1,8 +1,8 @@
-﻿using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace AUTHIO.APPLICATION.DOMAIN.CONTRACTS.REPOSITORY;
+namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories;
 
 /// <summary>
 /// Interface de repositório de usuários.

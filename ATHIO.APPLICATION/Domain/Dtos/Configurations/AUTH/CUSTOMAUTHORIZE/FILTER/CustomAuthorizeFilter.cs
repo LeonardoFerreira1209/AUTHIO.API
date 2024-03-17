@@ -29,7 +29,8 @@ public class CustomAuthorizeFilter(
         var claimsPrincipal =
             context.HttpContext.User;
 
-        if ((isAuthenticated && HasClaims(claimsPrincipal)) is false) throw new UnauthorizedUserException(null);
+        if ((isAuthenticated && HasClaims(claimsPrincipal)) is false) 
+            throw new UnauthorizedUserException(null);
     }
 
     /// <summary>

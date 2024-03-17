@@ -1,6 +1,6 @@
 ﻿using AUTHIO.APPLICATION.Domain.Dtos.Request;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
-using AUTHIO.APPLICATION.Domain.Entity;
+using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Domain.Enums;
 
 namespace AUTHIO.APPLICATION.Domain.Utils.Extensions;

@@ -1,4 +1,4 @@
-﻿using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

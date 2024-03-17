@@ -1,10 +1,10 @@
-﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
-using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
+using AUTHIO.APPLICATION.Domain.Entities;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AUTHIO.APPLICATION.Infra.Repository.Base;
+namespace AUTHIO.APPLICATION.Infra.Repositories.BASE;
 
 /// <summary>
 /// Repositório genérico com Entity.
@@ -14,7 +14,7 @@ namespace AUTHIO.APPLICATION.Infra.Repository.Base;
 /// ctor
 /// </remarks>
 /// <param name="context"></param>
-public class GenericEntityCoreRepository<T>(DbContext context) 
+public class GenericEntityCoreRepository<T>(DbContext context)
     : IGenerictEntityCoreRepository<T> where T : class, IEntityBase
 {
     private readonly DbContext _context = context;
@@ -89,7 +89,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null) 
+    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null)
         => await _context.Set<T>().FirstOrDefaultAsync(predicate);
 
     /// <summary>

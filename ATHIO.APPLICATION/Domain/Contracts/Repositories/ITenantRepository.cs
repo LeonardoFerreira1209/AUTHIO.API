@@ -1,13 +1,13 @@
-﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
-using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
+using AUTHIO.APPLICATION.Domain.Entities;
 
-namespace AUTHIO.APPLICATION.Domain.Contracts.Repository;
+namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories;
 
 /// <summary>
 /// Repositorio de Tenants.
 /// </summary>
-public interface ITenantRepository 
-    : IGenerictEntityCoreRepository<TenantEntity> 
+public interface ITenantRepository
+    : IGenerictEntityCoreRepository<TenantEntity>
 {
     /// <summary>
     /// Vincula um usuário admin e um tenant.

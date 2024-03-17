@@ -1,4 +1,4 @@
-﻿namespace AUTHIO.APPLICATION.Domain.Entity;
+﻿namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Classe de vinculo entre usuário admin e tenant.

@@ -1,9 +1,9 @@
-﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository;
-using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
+using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Infra.Context;
-using AUTHIO.APPLICATION.Infra.Repository.Base;
+using AUTHIO.APPLICATION.Infra.Repositories.BASE;
 
-namespace AUTHIO.APPLICATION.Infra.Repository;
+namespace AUTHIO.APPLICATION.Infra.Repositories;
 
 /// <summary>
 /// Repositorio de Tenants.

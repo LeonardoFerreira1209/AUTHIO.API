@@ -1,16 +1,14 @@
 ﻿using AUTHIO.APPLICATION.Application.Services.System;
 using AUTHIO.APPLICATION.APPLICATION.SERVICES;
 using AUTHIO.APPLICATION.APPLICATION.SERVICES.SYSTEM;
-using AUTHIO.APPLICATION.Domain.Contracts.Repository;
-using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
+using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services;
 using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
-using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.REPOSITORY;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
-using AUTHIO.APPLICATION.Infra.Repository;
-using AUTHIO.APPLICATION.Infra.Repository.Base;
+using AUTHIO.APPLICATION.Infra.Repositories;
+using AUTHIO.APPLICATION.Infra.Repositories.BASE;
 using AUTHIO.APPLICATION.INFRA.FEATUREFLAGS;
-using AUTHIO.APPLICATION.INFRA.REPOSITORY;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

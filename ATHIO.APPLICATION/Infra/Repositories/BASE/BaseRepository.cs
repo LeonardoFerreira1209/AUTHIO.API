@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using MySqlConnector;
 using System.Data;
 
-namespace AUTHIO.APPLICATION.Infra.Repository.Base;
+namespace AUTHIO.APPLICATION.Infra.Repositories.BASE;
 
 public class BaseRepository
 {

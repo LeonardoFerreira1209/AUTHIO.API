@@ -1,7 +1,7 @@
 ﻿using AUTHIO.APPLICATION.Infra.Context;
 using System.Linq.Expressions;
 
-namespace AUTHIO.APPLICATION.Domain.Entity;
+namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Interface de filtragem de entidade.

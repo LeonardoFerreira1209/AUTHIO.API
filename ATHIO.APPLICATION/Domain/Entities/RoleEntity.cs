@@ -1,10 +1,9 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
-using AUTHIO.APPLICATION.DOMAIN.ENTITY;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
 
-namespace AUTHIO.APPLICATION.Domain.Entity;
+namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Classe de entidade de roles.
@@ -48,7 +47,7 @@ public class RoleEntity : IdentityRole<Guid>,
     /// <param name="contextService"></param>
     /// <returns></returns>
     public Expression<Func<RoleEntity, bool>> GetFilterExpression(AuthIoContext authIoContext)
-        => entidade => (entidade.TenantId 
-                == authIoContext._tenantId && !entidade.System) 
-                    || (entidade.TenantId == null && entidade.System);
+        => entidade => entidade.TenantId
+                == authIoContext._tenantId && !entidade.System
+                    || entidade.TenantId == null && entidade.System;
 }

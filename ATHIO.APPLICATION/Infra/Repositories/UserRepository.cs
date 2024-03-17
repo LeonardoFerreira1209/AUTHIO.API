@@ -1,15 +1,15 @@
-﻿using AUTHIO.APPLICATION.Domain.Dtos.Configurations;
-using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
+using AUTHIO.APPLICATION.Domain.Dtos.Configurations;
+using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Domain.Utils.Extensions;
-using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.REPOSITORY;
 using AUTHIO.APPLICATION.Infra.Context;
-using AUTHIO.APPLICATION.Infra.Repository.Base;
+using AUTHIO.APPLICATION.Infra.Repositories.BASE;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
-namespace AUTHIO.APPLICATION.INFRA.REPOSITORY;
+namespace AUTHIO.APPLICATION.Infra.Repositories;
 
 /// <summary>
 /// Repositório de usuários.

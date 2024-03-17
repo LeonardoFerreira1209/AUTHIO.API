@@ -1,8 +1,8 @@
-﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace AUTHIO.APPLICATION.Infra.Repository.Base;
+namespace AUTHIO.APPLICATION.Infra.Repositories.BASE;
 
 /// <summary>
 /// Unidade de trabalho de banco de daods e controle de transações.
@@ -12,7 +12,7 @@ namespace AUTHIO.APPLICATION.Infra.Repository.Base;
 /// </remarks>
 /// <param name="context"></param>
 public class UnitOfWork<TContext>(
-    TContext context) : IUnitOfWork<TContext> where TContext : DbContext 
+    TContext context) : IUnitOfWork<TContext> where TContext : DbContext
 {
     private readonly DbContext _context = context;
 

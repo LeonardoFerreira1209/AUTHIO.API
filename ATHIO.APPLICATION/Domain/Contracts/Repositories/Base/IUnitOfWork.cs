@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 
 public interface IUnitOfWork<TContext> where TContext : DbContext
 {

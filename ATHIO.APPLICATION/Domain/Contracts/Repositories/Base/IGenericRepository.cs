@@ -1,7 +1,7 @@
-﻿using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 
 /// <summary>
 /// Repositório genérico.

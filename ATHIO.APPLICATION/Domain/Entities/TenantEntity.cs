@@ -1,6 +1,6 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
 
-namespace AUTHIO.APPLICATION.Domain.Entity;
+namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Classe de entidade de tenant.
@@ -10,7 +10,8 @@ public class TenantEntity : IEntityBase
     /// <summary>
     /// ctor
     /// </summary>
-    public TenantEntity() {
+    public TenantEntity()
+    {
         Users = [];
         Roles = [];
     }
@@ -18,7 +19,7 @@ public class TenantEntity : IEntityBase
     /// <summary>
     /// Id.
     /// </summary>
-    public Guid Id { get ; set; }
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Usuário de criação.
@@ -54,7 +55,7 @@ public class TenantEntity : IEntityBase
     /// Users vinculados ao tenant.
     /// </summary>
     public virtual ICollection<UserEntity> Users { get; private set; }
-    
+
     /// <summary>
     /// Users Admins vinculados ao tenant.
     /// </summary>

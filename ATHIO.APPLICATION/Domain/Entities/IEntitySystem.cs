@@ -1,4 +1,4 @@
-﻿namespace AUTHIO.APPLICATION.DOMAIN.ENTITY;
+﻿namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Interface do sistema.

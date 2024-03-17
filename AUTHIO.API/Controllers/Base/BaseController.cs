@@ -1,6 +1,6 @@
-﻿using AUTHIO.APPLICATION.Domain.Contracts.Repository;
-using AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
-using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
+using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
+using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.Domain.Exceptions.Base;
 using AUTHIO.APPLICATION.Domain.Utils;

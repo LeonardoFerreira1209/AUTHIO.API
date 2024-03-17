@@ -1,12 +1,11 @@
-﻿using AUTHIO.APPLICATION.Domain.Entity;
-using AUTHIO.APPLICATION.Domain.Enums;
+﻿using AUTHIO.APPLICATION.Domain.Enums;
 
-namespace AUTHIO.APPLICATION.DOMAIN.ENTITY;
+namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Classe de configuração de Tenanty.
 /// </summary>
-public class TenantConfigEntity : 
+public class TenantConfigEntity :
     IEntityBase, IEntityTenant
 {
     /// <summary>

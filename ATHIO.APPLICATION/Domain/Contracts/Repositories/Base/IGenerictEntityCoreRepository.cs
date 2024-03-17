@@ -1,6 +1,6 @@
-﻿using AUTHIO.APPLICATION.Domain.Entity;
+﻿using AUTHIO.APPLICATION.Domain.Entities;
 
-namespace AUTHIO.APPLICATION.Domain.Contracts.Repository.Base;
+namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 
 public interface IGenerictEntityCoreRepository<T> : IGenericRepository<T> where T : class, IEntityBase
 {

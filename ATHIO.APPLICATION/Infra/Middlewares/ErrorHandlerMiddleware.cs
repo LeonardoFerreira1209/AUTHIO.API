@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Text.Json;
 
-namespace AUTHIO.APPLICATION.Infra.Middleware;
+namespace AUTHIO.APPLICATION.Infra.Middlewares;
 
 /// <summary>
 /// Middleware de erros.
@@ -24,7 +24,7 @@ public class ErrorHandlerMiddleware(
     /// <param name="context"></param>
     /// <returns></returns>
     public async Task InvokeAsync(
-        HttpContext context) 
+        HttpContext context)
     {
         try
         {
@@ -43,7 +43,8 @@ public class ErrorHandlerMiddleware(
     /// <param name="exception"></param>
     /// <returns></returns>
     protected static Task HandleExceptionAsync(
-        HttpContext context, Exception exception) {
+        HttpContext context, Exception exception)
+    {
         context.Response.ContentType = "application/json";
 
         var (statusCode, json) =
@@ -60,13 +61,16 @@ public class ErrorHandlerMiddleware(
     /// <param name="exception"></param>
     /// <returns></returns>
     private static (HttpStatusCode statusCode, string json) GenerateResponse(Exception exception)
-        => exception switch {
+        => exception switch
+        {
             BaseException customEx => (customEx.Response.StatusCode,
                                                            JsonSerializer.Serialize(customEx.Response)),
-            _ => (HttpStatusCode.InternalServerError, JsonSerializer.Serialize(new {
+            _ => (HttpStatusCode.InternalServerError, JsonSerializer.Serialize(new
+            {
                 StatusCode = HttpStatusCode.InternalServerError,
                 Sucesso = false,
-                Dados = new {
+                Dados = new
+                {
                     exception.StackTrace,
                     exception.Message,
                     InnerException = exception.InnerException?.ToString(),

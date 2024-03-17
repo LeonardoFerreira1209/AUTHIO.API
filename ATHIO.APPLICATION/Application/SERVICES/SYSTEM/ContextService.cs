@@ -11,8 +11,7 @@ namespace AUTHIO.APPLICATION.APPLICATION.SERVICES.SYSTEM;
 /// ctor
 /// </remarks>
 public class ContextService(
-    IHttpContextAccessor httpContextAccessor)
-        : IContextService
+    IHttpContextAccessor httpContextAccessor) : IContextService
 {
     private readonly IHttpContextAccessor
         _httpContextAccessor = httpContextAccessor;
@@ -48,14 +47,12 @@ public class ContextService(
     /// Verifica se o usuário esta logado.
     /// </summary>
     public bool IsAuthenticated
-        => _httpContextAccessor.HttpContext
-            ?.User?.Identity?.IsAuthenticated ?? false;
+        => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
 
     /// <summary>
     /// Recupera o id do usuário logado.
     /// </summary>
     /// <returns></returns>
     public Guid GetCurrentUserId()
-        => Guid.Parse(_httpContextAccessor.HttpContext?
-        .User.FindFirstValue(ClaimTypes.NameIdentifier));
+        => Guid.Parse(_httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
 }
