@@ -2,6 +2,7 @@
 using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
 using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
+using AUTHIO.APPLICATION.Domain.Dtos.Request;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 using AUTHIO.APPLICATION.Domain.Exceptions;
@@ -10,7 +11,6 @@ using AUTHIO.APPLICATION.Domain.Validators;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.TOKEN;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;
-using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
 using AUTHIO.APPLICATION.DOMAIN.VALIDATORS;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Mvc;

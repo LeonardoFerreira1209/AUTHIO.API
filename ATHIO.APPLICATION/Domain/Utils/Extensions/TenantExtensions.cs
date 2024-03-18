@@ -22,7 +22,7 @@ public static class TenantExtensions
             Description = createTenantRequest.Description,
             Status = Status.Ativo,
             Created = DateTime.Now,
-            UserId = userId,
+            UserId = userId
         };
 
     /// <summary>
@@ -43,6 +43,6 @@ public static class TenantExtensions
                 TenantId = user.TenantId,
                 UserId = user.UserId,
             }).ToList(),
-            Users = tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList(),
+            Users = tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList()
         };
 }

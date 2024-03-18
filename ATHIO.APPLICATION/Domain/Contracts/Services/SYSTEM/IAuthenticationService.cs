@@ -1,5 +1,5 @@
-﻿using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;
-using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
+﻿using AUTHIO.APPLICATION.Domain.Dtos.Request;
+using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AUTHIO.APPLICATION.Domain.Contracts.Services.System;

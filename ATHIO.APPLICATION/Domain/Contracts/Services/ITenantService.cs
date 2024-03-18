@@ -19,10 +19,10 @@ public interface ITenantService
     /// <summary>
     /// Método responsável por criar um usuário no tenant.
     /// </summary>
-    /// <param name="registerTenantUserRequest"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="registerUserRequest"></param>
+    /// <param name="apiKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> RegisterTenantUserAsync(
-        RegisterTenantUserRequest registerTenantUserRequest, Guid tenantId, CancellationToken cancellationToken);
+        RegisterUserRequest registerUserRequest, string apiKey, CancellationToken cancellationToken);
 }

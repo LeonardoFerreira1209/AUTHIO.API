@@ -5,8 +5,7 @@ namespace AUTHIO.APPLICATION.Domain.Entities;
 /// <summary>
 /// Classe de configuração de Tenanty.
 /// </summary>
-public class TenantConfigEntity :
-    IEntityBase, IEntityTenant
+public class TenantConfigurationEntity : IEntityBase
 {
     /// <summary>
     /// Id.
@@ -24,12 +23,22 @@ public class TenantConfigEntity :
     public DateTime? Updated { get; set; }
 
     /// <summary>
+    /// Id do tenant.
+    /// </summary>
+    public Guid TenantId { get; set; }
+
+    /// <summary>
+    /// Entidade do tenant.
+    /// </summary>
+    public virtual TenantEntity Tenant { get; set; }
+
+    /// <summary>
     /// Status.
     /// </summary>
     public Status Status { get; set; }
 
     /// <summary>
-    /// Id do tenanty responsável.
+    /// Chave de acesso.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public string ApiKey { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
+﻿namespace AUTHIO.APPLICATION.Domain.Dtos.Request;
 
 /// <summary>
 /// Classe de registro de usuários do sistema.

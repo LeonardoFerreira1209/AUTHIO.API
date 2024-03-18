@@ -1,6 +1,6 @@
-﻿using AUTHIO.APPLICATION.Domain.Enums;
+﻿using AUTHIO.APPLICATION.Domain.Dtos.Request;
+using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.Domain.Utils.Extensions;
-using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST.SYSTEM;
 using FluentValidation;
 
 namespace AUTHIO.APPLICATION.Domain.Validators;

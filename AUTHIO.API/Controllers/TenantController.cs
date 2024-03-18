@@ -52,8 +52,8 @@ public class TenantController(
     /// <summary>
     /// Endpoint responsável pelo registro de usuário em um tenant.
     /// </summary>
-    /// <param name="registerTenantUserRequest"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="registerUserRequest"></param>
+    /// <param name="apiKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("register/user")]
@@ -62,14 +62,14 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RegisterTenantUserAsync([FromBody] RegisterTenantUserRequest registerTenantUserRequest, [FromHeader] Guid tenantId, CancellationToken cancellationToken)
+    public async Task<IActionResult> RegisterTenantUserAsync([FromBody] RegisterUserRequest registerUserRequest, [FromHeader] string apiKey, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
-        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(registerTenantUserRequest)))
+        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(registerUserRequest)))
         using (LogContext.PushProperty("Metodo", "RegisterTenantUserAsync"))
         {
             return await ExecuteAsync(nameof(RegisterTenantUserAsync),
-                 () => _tenantService.RegisterTenantUserAsync(registerTenantUserRequest, tenantId, cancellationToken), "Registrar usuário no tenant.");
+                 () => _tenantService.RegisterTenantUserAsync(registerUserRequest, apiKey, cancellationToken), "Registrar usuário no tenant.");
         }
     }
 }

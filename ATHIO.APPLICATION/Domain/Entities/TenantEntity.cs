@@ -52,6 +52,11 @@ public class TenantEntity : IEntityBase
     public string Description { get; set; } = null;
 
     /// <summary>
+    /// Comfiguração do Tenant.
+    /// </summary>
+    public virtual TenantConfigurationEntity TenantConfiguration { get; set; }
+
+    /// <summary>
     /// Users vinculados ao tenant.
     /// </summary>
     public virtual ICollection<UserEntity> Users { get; private set; }

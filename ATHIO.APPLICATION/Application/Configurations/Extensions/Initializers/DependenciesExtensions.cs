@@ -39,6 +39,7 @@ public static class DependenciesExtensions
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
             .AddScoped<ITenantRepository, TenantRepository>()
+            .AddScoped<ITenantConfigurationRepository, TenantConfigurationRepository>()
             .AddScoped<IUserRepository, UserRepository>()
         // Infra
             .AddScoped<IFeatureFlags, FeatureFlagsProvider>();
