@@ -1,4 +1,4 @@
-﻿using AUTHIO.APPLICATION.Domain.Builders;
+﻿using AUTHIO.APPLICATION.Domain.Builders.Creates;
 using AUTHIO.APPLICATION.Domain.Dtos.Request;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Entities;

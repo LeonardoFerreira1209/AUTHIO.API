@@ -26,6 +26,22 @@ public static class TenantExtensions
         };
 
     /// <summary>
+    /// Transforma Tenant config em tenant config response.
+    /// </summary>
+    /// <param name="tenantConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantConfigurationResponse ToResponse(this TenantConfigurationEntity tenantConfigurationEntity)
+        => new()
+        {
+            ApiKey = tenantConfigurationEntity.ApiKey,
+            Created = tenantConfigurationEntity.Created,
+            TenantId = tenantConfigurationEntity.TenantId,
+            Id = tenantConfigurationEntity.Id,
+            Status = tenantConfigurationEntity.Status,
+            Updated = tenantConfigurationEntity.Updated
+        };
+
+    /// <summary>
     /// Transforma um Tenant Entity em response.
     /// </summary>
     /// <param name="tenantEntity"></param>
@@ -43,6 +59,7 @@ public static class TenantExtensions
                 TenantId = user.TenantId,
                 UserId = user.UserId,
             }).ToList(),
-            Users = tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList()
+            Users = tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList(),
+            TenantConfiguration = tenantEntity?.TenantConfiguration?.ToResponse()
         };
 }

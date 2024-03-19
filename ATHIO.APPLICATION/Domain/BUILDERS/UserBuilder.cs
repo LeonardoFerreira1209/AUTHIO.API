@@ -6,8 +6,7 @@ namespace AUTHIO.APPLICATION.DOMAIN.BUILDERS;
 /// <summary>
 /// Classe responsavel por construir um usuário do systema.
 /// </summary>
-public class UserBuilder 
-    : IUserBuilder
+public class UserBuilder
 {
     private string firstName, userName, lastName, phoneNumber, email;
     private DateTime created;

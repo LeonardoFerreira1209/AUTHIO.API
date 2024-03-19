@@ -39,6 +39,11 @@ public class TenantResponse
     public string Description { get; set; } = null;
 
     /// <summary>
+    /// Configuração do tenant.
+    /// </summary>
+    public TenantConfigurationResponse TenantConfiguration { get; set; }
+
+    /// <summary>
     /// Users vinculados ao tenant.
     /// </summary>
     public ICollection<UserResponse> Users { get; set; }

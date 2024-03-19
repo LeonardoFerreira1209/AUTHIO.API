@@ -3,7 +3,7 @@ using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.DOMAIN.BUILDERS;
 
-namespace AUTHIO.APPLICATION.Domain.Builders;
+namespace AUTHIO.APPLICATION.Domain.Builders.Creates;
 
 /// <summary>
 /// Construtor de usuários.
@@ -15,7 +15,7 @@ public static class CreateUser
     /// </summary>
     /// <param name="registerUserRequest"></param>
     /// <returns></returns>
-    public static UserEntity CreateUserSystem(this RegisterUserRequest registerUserRequest)  
+    public static UserEntity CreateUserSystem(this RegisterUserRequest registerUserRequest)
         => new UserBuilder()
             .AddFirstName(registerUserRequest.FirstName)
                 .AddUserName(registerUserRequest.UserName)

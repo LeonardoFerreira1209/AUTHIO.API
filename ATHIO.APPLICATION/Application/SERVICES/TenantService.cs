@@ -93,7 +93,7 @@ public class TenantService(
                                    var tenant
                                        = tenantEntityTask.Result;
 
-                                   return await _tenantConfigurationRepository.CreateAsync(
+                                   await _tenantConfigurationRepository.CreateAsync(
                                        new TenantConfigurationEntity
                                        {
                                            TenantId = tenant.Id,
@@ -101,19 +101,19 @@ public class TenantService(
                                            Created = DateTime.Now,
                                            Status = Status.Ativo
 
-                                       }).ContinueWith(async (taskResult) =>
-                                       {
+                                       }).ContinueWith(async (taskResult) => {
+
                                            await _unitOfWork.CommitAsync();
 
-                                           await _transaction.CommitAsync();
-
-                                           return new OkObjectResult(
-                                               new ApiResponse<TenantEntity>(
-                                                   true,
-                                                   HttpStatusCode.Created,
-                                                   tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")]));
-
                                        }).Unwrap();
+
+                                   await _transaction.CommitAsync();
+
+                                   return new OkObjectResult(
+                                       new ApiResponse<TenantEntity>(
+                                           true,
+                                           HttpStatusCode.Created,
+                                           tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")]));
 
                                }).Unwrap();
                     }

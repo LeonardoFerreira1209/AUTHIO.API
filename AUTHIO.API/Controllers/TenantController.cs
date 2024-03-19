@@ -19,6 +19,8 @@ namespace AUTHIO.API.Controllers;
 /// Controller que cuida do fluxo de autenticação.
 /// </summary>
 /// <param name="featureFlags"></param>
+/// <param name="tenantService"></param>
+/// <param name="unitOfWork"></param>
 public class TenantController(
     IFeatureFlags featureFlags, ITenantService tenantService, IUnitOfWork<AuthIoContext> unitOfWork) 
         : BaseController(featureFlags, unitOfWork)
