@@ -17,6 +17,12 @@ public interface ITenantService
         CreateTenantRequest createTenantRequest, CancellationToken cancellationToken);
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    Task<ObjectResult> GetAllAsync(CancellationToken cancellationToken);
+
+    /// <summary>
     /// Método responsável por criar um usuário no tenant.
     /// </summary>
     /// <param name="registerUserRequest"></param>

@@ -62,10 +62,10 @@ public class AuthenticationController(
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status423Locked)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> AuthenticationAsync([FromHeader][Required] string username, [FromHeader][Required] string password, [FromHeader] string tenantId)
+    public async Task<IActionResult> AuthenticationAsync([FromHeader][Required] string username, [FromHeader][Required] string password, [FromHeader] string apiKey)
     {
         using (LogContext.PushProperty("Controller", "UserController"))
-        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(new { username, password, tenantId })))
+        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(new { username, password, apiKey })))
         using (LogContext.PushProperty("Metodo", "Authentication"))
         {
             return await ExecuteAsync(nameof(AuthenticationAsync),

@@ -133,6 +133,48 @@ public class TenantService(
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotFoundTenantException"></exception>
+    public async Task<ObjectResult> GetAllAsync(CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
+
+        try
+        {
+            return await _tenantRepository.GetAllAsync()
+                .ContinueWith(async (taskResut) =>
+                {
+                    var tenantEntity
+                      = taskResut.Result
+                         ?? throw new NotFoundTenantException();
+
+
+                    return await _tenantRepository.GetAllAsync()
+                            .ContinueWith(tenantsResult =>
+                            {
+                                var tenants
+                                        = tenantsResult.Result;
+
+                                return new OkObjectResult(
+                                    new ApiResponse<UserResponse>(
+                                        true,
+                                        HttpStatusCode.OK,
+                                        tenants, [
+                                            new DadosNotificacao("Tenants reuperados com sucesso!")]));
+                            });
+
+                }).Unwrap();
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+        }
+    }
+
+    /// <summary>
     ///  Método responsável por criar um usuário no tenant.
     /// </summary>
     /// <param name="registerUserRequest"></param>

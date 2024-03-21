@@ -41,5 +41,5 @@ public interface IGenericRepository<T> where T : class, IEntityBase
     /// Recuperar todos.
     /// </summary>
     /// <returns></returns>
-    public Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate);
+    public Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null);
 }

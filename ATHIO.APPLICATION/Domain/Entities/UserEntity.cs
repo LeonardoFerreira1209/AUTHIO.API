@@ -83,6 +83,13 @@ public class UserEntity
     /// <param name="contextService"></param>
     /// <returns></returns>
     public Expression<Func<UserEntity, bool>> GetFilterExpression(AuthIoContext authIoContext)
-         => entidade => entidade.TenantId == authIoContext._tenantId && !entidade.System
-                    || entidade.TenantId == null && entidade.System;
+         => entidade => 
+            (entidade.TenantId == authIoContext._tenantId && !entidade.System)
+                    || 
+            (entidade.TenantId == null && entidade.System) 
+                    || 
+             (entidade.TenantId != null 
+                    && authIoContext._apiKey != null 
+                    && entidade.Tenant.TenantConfiguration.ApiKey.Equals(authIoContext._apiKey)
+    );
 }

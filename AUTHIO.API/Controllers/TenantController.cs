@@ -51,6 +51,22 @@ public class TenantController(
         }
     }
 
+    [HttpPost("get-all")]
+    [CustomAuthorize(Claims.Tenants, "GET")]
+    [SwaggerOperation(Summary = "Buscar todos os tenants", Description = "Método responsável por buscar todos os tenants do usuário!")]
+    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+    {
+        using (LogContext.PushProperty("Controller", "TenantController"))
+        using (LogContext.PushProperty("Metodo", "CreateAsync"))
+        {
+            return await ExecuteAsync(nameof(GetAllAsync),
+                 () => _tenantService.GetAllAsync(cancellationToken), "Buscar todos os tenants.");
+        }
+    }
+
     /// <summary>
     /// Endpoint responsável pelo registro de usuário em um tenant.
     /// </summary>
