@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 
 namespace AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 
@@ -6,7 +7,8 @@ namespace AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 /// Retorno das APIS.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class ApiResponse<T> : BaseApiResponse
+public class ApiResponse<T> 
+    : BaseApiResponse where T : class
 {
     /// <summary>
     /// Construtor simples
@@ -20,7 +22,12 @@ public class ApiResponse<T> : BaseApiResponse
     /// <param name="sucesso"></param>
     /// <param name="statusCode"></param>
     /// <param name="notificacoes"></param>
-    public ApiResponse(bool sucesso, HttpStatusCode statusCode, List<DadosNotificacao> notificacoes = null) : base(statusCode, sucesso, notificacoes) { }
+    public ApiResponse(bool sucesso, HttpStatusCode statusCode, 
+        List<DadosNotificacao> notificacoes = null) 
+            : base(statusCode, sucesso, notificacoes)
+    {
+
+    }
 
     /// <summary>
     /// Construtor que recebe todos os itens.
@@ -29,5 +36,16 @@ public class ApiResponse<T> : BaseApiResponse
     /// <param name="statusCode"></param>
     /// <param name="dados"></param>
     /// <param name="notificacoes"></param>
-    public ApiResponse(bool sucesso, HttpStatusCode statusCode, object dados = null, List<DadosNotificacao> notificacoes = null) : base(statusCode, sucesso, dados, notificacoes) { }
+    public ApiResponse(bool sucesso, HttpStatusCode statusCode, 
+        T dados = null, List<DadosNotificacao> notificacoes = null) 
+            : base(statusCode, sucesso, notificacoes)  
+    {
+        Dados = dados;
+    }
+
+    /// <summary>
+    /// Dados a serem retornados na requisição.
+    /// </summary>
+    [JsonProperty(nameof(Dados))]
+    public T Dados { get; }
 }

@@ -1,12 +1,11 @@
 ﻿using AUTHIO.APPLICATION.Application.Configurations.Extensions;
+using AUTHIO.APPLICATION.Domain.Builders.Creates;
 using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
 using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services;
 using AUTHIO.APPLICATION.Domain.Dtos.Request;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
-using AUTHIO.APPLICATION.Domain.Entities;
-using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.Domain.Exceptions;
 using AUTHIO.APPLICATION.Domain.Utils.Extensions;
 using AUTHIO.APPLICATION.Domain.Validators;
@@ -40,7 +39,7 @@ public class TenantService(
     private readonly ITenantRepository
         _tenantRepository = tenantRepository;
 
-    private readonly ITenantConfigurationRepository 
+    private readonly ITenantConfigurationRepository
         _tenantConfigurationRepository = tenantConfigurationRepository;
 
     private readonly IContextService
@@ -81,7 +80,7 @@ public class TenantService(
                     if (tenantResult.Result is not null)
                         throw new DuplicatedTenantException(createTenantRequest);
 
-                    var _transaction 
+                    var _transaction
                         = await _unitOfWork.BeginTransactAsync();
 
                     try
@@ -94,30 +93,25 @@ public class TenantService(
                                        = tenantEntityTask.Result;
 
                                    await _tenantConfigurationRepository.CreateAsync(
-                                       new TenantConfigurationEntity
-                                       {
-                                           TenantId = tenant.Id,
-                                           ApiKey = $"{$"{Guid.NewGuid()}-HYPER.IO-{Random.Shared.NextInt64(1, 1000)}"}",
-                                           Created = DateTime.Now,
-                                           Status = Status.Ativo
+                                        CreateTenantConfiguration.CreateDefaultTenantConfiguration(
+                                            $"{$"{Guid.NewGuid()}-HYPER.IO-{Random.Shared.NextInt64(1, 1000)}"}", tenant.Id)).ContinueWith(
+                                               async (taskResult) =>
+                                               {
+                                                   await _unitOfWork.CommitAsync();
 
-                                       }).ContinueWith(async (taskResult) => {
-
-                                           await _unitOfWork.CommitAsync();
-
-                                       }).Unwrap();
+                                               }).Unwrap();
 
                                    await _transaction.CommitAsync();
 
                                    return new OkObjectResult(
-                                       new ApiResponse<TenantEntity>(
+                                       new ApiResponse<TenantResponse>(
                                            true,
                                            HttpStatusCode.Created,
                                            tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")]));
 
                                }).Unwrap();
                     }
-                    catch(Exception exception)
+                    catch (Exception exception)
                     {
                         Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
 
@@ -145,28 +139,18 @@ public class TenantService(
         try
         {
             return await _tenantRepository.GetAllAsync()
-                .ContinueWith(async (taskResut) =>
-                {
-                    var tenantEntity
-                      = taskResut.Result
-                         ?? throw new NotFoundTenantException();
+                    .ContinueWith(tenantsResult =>
+                    {
+                        var tenants
+                                = tenantsResult.Result;
 
-
-                    return await _tenantRepository.GetAllAsync()
-                            .ContinueWith(tenantsResult =>
-                            {
-                                var tenants
-                                        = tenantsResult.Result;
-
-                                return new OkObjectResult(
-                                    new ApiResponse<UserResponse>(
-                                        true,
-                                        HttpStatusCode.OK,
-                                        tenants, [
-                                            new DadosNotificacao("Tenants reuperados com sucesso!")]));
-                            });
-
-                }).Unwrap();
+                        return new OkObjectResult(
+                            new ApiResponse<IEnumerable<TenantResponse>>(
+                                true,
+                                HttpStatusCode.OK,
+                                tenants.Select(x => x.ToResponse()), [
+                                    new DadosNotificacao("Tenants reuperados com sucesso!")]));
+                    });
         }
         catch (Exception exception)
         {

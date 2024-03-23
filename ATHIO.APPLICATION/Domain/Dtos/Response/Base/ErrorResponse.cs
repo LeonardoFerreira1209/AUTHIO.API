@@ -1,13 +1,24 @@
-﻿using System.Net;
+﻿using Newtonsoft.Json;
+using System.Net;
 
 namespace AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 
 /// <summary>
 /// Retorno das APIS com erro.
 /// </summary>
-public class ErrorResponse : BaseApiResponse
+/// <remarks>
+/// Response de error.
+/// </remarks>
+/// <param name="statusCode"></param>
+/// <param name="notificacoes"></param>
+public class ErrorResponse(
+    HttpStatusCode statusCode, 
+    object dados, List<DadosNotificacao> notificacoes = null) 
+        : BaseApiResponse(statusCode, false, notificacoes)
 {
-    public ErrorResponse(HttpStatusCode statusCode, List<DadosNotificacao> notificacoes = null) : base(statusCode, false, notificacoes) { }
-
-    public ErrorResponse(HttpStatusCode statusCode, object dados = null, List<DadosNotificacao> notificacoes = null) : base(statusCode, false, dados, notificacoes) { }
+    /// <summary>
+    /// Dados a serem retornados na requisição.
+    /// </summary>
+    [JsonProperty(nameof(Dados))]
+    public object Dados {  get; } = dados;
 }

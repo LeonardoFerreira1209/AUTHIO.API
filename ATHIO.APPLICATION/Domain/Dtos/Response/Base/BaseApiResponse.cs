@@ -6,19 +6,17 @@ namespace AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 /// <summary>
 /// Dados a ser retornado em uma notificação do sistema.
 /// </summary>
-public class DadosNotificacao
+/// <remarks>
+/// ctor
+/// </remarks>
+/// <param name="mensagem"></param>
+public class DadosNotificacao(string mensagem)
 {
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="mensagem"></param>
-    public DadosNotificacao(string mensagem) { Mensagem = mensagem; }
-
     /// <summary>
     /// Mensagem da notificação.
     /// </summary>
     [JsonProperty(nameof(Mensagem))]
-    public string Mensagem { get; }
+    public string Mensagem { get; } = mensagem;
 }
 
 /// <summary>
@@ -30,7 +28,8 @@ public abstract class BaseApiResponse
     /// ctor recebendo o status.
     /// </summary>
     /// <param name="statusCode"></param>
-    public BaseApiResponse(HttpStatusCode statusCode)
+    public BaseApiResponse(
+        HttpStatusCode statusCode)
     {
         StatusCode = statusCode;
     }
@@ -41,25 +40,11 @@ public abstract class BaseApiResponse
     /// <param name="statusCode"></param>
     /// <param name="sucesso"></param>
     /// <param name="notificacoes"></param>
-    public BaseApiResponse(HttpStatusCode statusCode, bool sucesso, List<DadosNotificacao> notificacoes)
+    public BaseApiResponse(HttpStatusCode statusCode, 
+        bool sucesso, List<DadosNotificacao> notificacoes)
     {
         StatusCode = statusCode;
         Sucesso = sucesso;
-        Notificacoes = notificacoes;
-    }
-
-    /// <summary>
-    /// ctor completo.
-    /// </summary>
-    /// <param name="statusCode"></param>
-    /// <param name="sucesso"></param>
-    /// <param name="dados"></param>
-    /// <param name="notificacoes"></param>
-    public BaseApiResponse(HttpStatusCode statusCode, bool sucesso, object dados, List<DadosNotificacao> notificacoes)
-    {
-        StatusCode = statusCode;
-        Sucesso = sucesso;
-        Dados = dados;
         Notificacoes = notificacoes;
     }
 
@@ -74,12 +59,6 @@ public abstract class BaseApiResponse
     /// </summary>
     [JsonProperty(nameof(Sucesso))]
     public bool Sucesso { get; }
-
-    /// <summary>
-    /// Dados a serem retornados na requisição.
-    /// </summary>
-    [JsonProperty(nameof(Dados))]
-    public object Dados { get; }
 
     /// <summary>
     /// Notificações que retornam da requisição, sejam elas Sucesso, Erro, Informação.

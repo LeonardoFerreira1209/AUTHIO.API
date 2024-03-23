@@ -136,7 +136,8 @@ public sealed class AuthenticationService(
                 {
                     var validation = validationTask.Result;
 
-                    if (validation.IsValid is false) await validation.GetValidationErrors();
+                    if (validation.IsValid is false) 
+                        await validation.GetValidationErrors();
 
                 }).Unwrap();
 
@@ -220,8 +221,7 @@ public sealed class AuthenticationService(
         {
             Log.Information($"[LOG INFORMATION] - Falha ao autenticar usuário, não está confirmado.\n");
 
-            throw new IsNotAllowedAuthenticationException(new
-            {
+            throw new IsNotAllowedAuthenticationException(new {
                 userId,
                 isNotAllowed = true,
                 loginRequest

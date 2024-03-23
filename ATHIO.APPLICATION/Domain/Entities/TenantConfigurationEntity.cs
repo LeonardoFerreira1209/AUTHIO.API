@@ -8,6 +8,30 @@ namespace AUTHIO.APPLICATION.Domain.Entities;
 public class TenantConfigurationEntity : IEntityBase
 {
     /// <summary>
+    /// ctor
+    /// </summary>
+    public TenantConfigurationEntity() { }
+
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="apikey"></param>
+    /// <param name="tenantId"></param>
+    /// <param name="created"></param>
+    /// <param name="updated"></param>
+    /// <param name="status"></param>
+    public TenantConfigurationEntity(
+        string apikey, Guid tenantId, 
+        DateTime created, DateTime? updated, Status status)
+    {
+        ApiKey = apikey;
+        TenantId = tenantId;
+        Created = created;
+        Updated = updated;
+        Status = status;
+    }
+
+    /// <summary>
     /// Id.
     /// </summary>
     public Guid Id { get; set; }

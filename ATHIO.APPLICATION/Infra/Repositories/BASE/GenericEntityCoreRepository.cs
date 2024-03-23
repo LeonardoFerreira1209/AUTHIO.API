@@ -93,10 +93,23 @@ public class GenericEntityCoreRepository<T>(DbContext context)
         => await _context.Set<T>().FirstOrDefaultAsync(predicate);
 
     /// <summary>
-    /// Recupera todos os registros do tipo T. Um predicado opcional pode ser fornecido para filtrar os registros.
+    /// Quantidade total de itens na tabela.
     /// </summary>
-    /// <param name="predicate">Um predicado opcional para filtrar os registros recuperados.</param>
-    /// <returns>Uma tarefa que representa a operação de recuperação. O valor da tarefa é uma IQueryable<T> contendo todos os registros ou registros filtrados baseados no predicado.</returns>
+    /// <returns></returns>
+    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null)
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (predicate != null) query = query.Where(predicate);
+
+        return await query.CountAsync();
+    }
+
+    /// <summary>
+    ///  Recupera todos os registros do tipo T. Um predicado opcional pode ser fornecido para filtrar os registros.
+    /// </summary>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
     public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null)
     {
         IQueryable<T> query = _context.Set<T>();

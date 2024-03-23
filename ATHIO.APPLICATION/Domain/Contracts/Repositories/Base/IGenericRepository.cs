@@ -38,6 +38,12 @@ public interface IGenericRepository<T> where T : class, IEntityBase
     Task<T> GetAsync(Expression<Func<T, bool>> predicate);
 
     /// <summary>
+    /// Quantidade total de itens na tabela.
+    /// </summary>
+    /// <returns></returns>
+    Task<int> CountAsync(Expression<Func<T, bool>> predicate);
+
+    /// <summary>
     /// Recuperar todos.
     /// </summary>
     /// <returns></returns>
