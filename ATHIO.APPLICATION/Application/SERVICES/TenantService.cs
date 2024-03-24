@@ -127,10 +127,12 @@ public class TenantService(
     }
 
     /// <summary>
-    /// 
+    /// Recupera todos os dados de tenants.
     /// </summary>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    /// <exception cref="NotFoundTenantException"></exception>
     public async Task<ObjectResult> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         Log.Information(
@@ -150,9 +152,8 @@ public class TenantService(
                                 HttpStatusCode.OK,
                                 pagination.ConvertPaginationData
                                     (pagination.Items.Select(
-                                        tenant => tenant.ToResponse()).ToList())
-                                , [
-                                    new DadosNotificacao("Tenants reuperados com sucesso!")]));
+                                        tenant => tenant.ToResponse()).ToList()), [ 
+                                            new DadosNotificacao("Tenants reuperados com sucesso!")]));
                     });
         }
         catch (Exception exception)
