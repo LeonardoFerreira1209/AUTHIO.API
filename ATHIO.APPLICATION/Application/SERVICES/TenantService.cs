@@ -131,24 +131,27 @@ public class TenantService(
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotFoundTenantException"></exception>
-    public async Task<ObjectResult> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<ObjectResult> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
 
         try
         {
-            return await _tenantRepository.GetAllAsync()
-                    .ContinueWith(tenantsResult =>
+            return await _tenantRepository.GetAllAsyncPaginated(pageNumber, pageSize)
+                    .ContinueWith(taskResult =>
                     {
-                        var tenants
-                                = tenantsResult.Result;
+                        var pagination
+                                = taskResult.Result;
 
                         return new OkObjectResult(
-                            new ApiResponse<IEnumerable<TenantResponse>>(
+                            new PaginationApiResponse<TenantResponse>(
                                 true,
                                 HttpStatusCode.OK,
-                                tenants.Select(x => x.ToResponse()), [
+                                pagination.ConvertPaginationData
+                                    (pagination.Items.Select(
+                                        tenant => tenant.ToResponse()).ToList())
+                                , [
                                     new DadosNotificacao("Tenants reuperados com sucesso!")]));
                     });
         }
@@ -186,7 +189,6 @@ public class TenantService(
                             await validation.GetValidationErrors();
 
                     }).Unwrap();
-
 
             return await _tenantRepository.GetAsync(tenant => tenant.TenantConfiguration.ApiKey.Equals(apiKey))
                 .ContinueWith(async (taskResut) =>

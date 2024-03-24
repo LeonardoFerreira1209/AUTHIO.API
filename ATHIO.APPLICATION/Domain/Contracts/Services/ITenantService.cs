@@ -20,7 +20,7 @@ public interface ITenantService
     /// 
     /// </summary>
     /// <returns></returns>
-    Task<ObjectResult> GetAllAsync(CancellationToken cancellationToken);
+    Task<ObjectResult> GetAllAsync(int pageNumber, int PageSize, CancellationToken cancellationToken);
 
     /// <summary>
     /// Método responsável por criar um usuário no tenant.

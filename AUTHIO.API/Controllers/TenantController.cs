@@ -57,13 +57,13 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))
         {
             return await ExecuteAsync(nameof(GetAllAsync),
-                 () => _tenantService.GetAllAsync(cancellationToken), "Buscar todos os tenants.");
+                 () => _tenantService.GetAllAsync(pageNumber, pageSize, cancellationToken), "Buscar todos os tenants.");
         }
     }
 

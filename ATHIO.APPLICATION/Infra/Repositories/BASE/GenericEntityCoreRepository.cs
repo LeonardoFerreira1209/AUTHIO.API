@@ -1,4 +1,5 @@
 ﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
+using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Entities;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -110,12 +111,54 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null)
+    public async Task<IList<T>> GetAllAsync(
+        Expression<Func<T, bool>> predicate = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
-        if (predicate != null) query = query.Where(predicate);
+        if (predicate != null)
+            query = MountDynamicWhere(
+                query, predicate);
 
         return await query.ToListAsync();
     }
+
+    /// <summary>
+    /// Recupera todos paginado.
+    /// </summary>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    public async Task<PaginatedResponse<T>> GetAllAsyncPaginated(
+         int pageNumber, int pageSize, Expression <Func<T, bool>> predicate = null)
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (predicate != null)
+            query = MountDynamicWhere(
+                query, predicate);
+
+        int skip = (pageNumber - 1) * pageSize;
+        int totalCount = await query.CountAsync();
+
+        var items
+            = await query
+                .Skip(skip)
+                    .Take(pageSize).ToListAsync();
+
+        return new PaginatedResponse<T>(
+                items, totalCount, pageNumber, pageSize
+            );
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="query"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    private IQueryable<T> MountDynamicWhere(
+        IQueryable<T> query, 
+            Expression<Func<T, bool>> predicate) => query.Where(predicate);
 }

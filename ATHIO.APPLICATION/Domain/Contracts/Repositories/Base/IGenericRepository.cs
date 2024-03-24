@@ -1,4 +1,5 @@
-﻿using AUTHIO.APPLICATION.Domain.Entities;
+﻿using AUTHIO.APPLICATION.Domain.Dtos.Response;
+using AUTHIO.APPLICATION.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
@@ -38,14 +39,18 @@ public interface IGenericRepository<T> where T : class, IEntityBase
     Task<T> GetAsync(Expression<Func<T, bool>> predicate);
 
     /// <summary>
-    /// Quantidade total de itens na tabela.
-    /// </summary>
-    /// <returns></returns>
-    Task<int> CountAsync(Expression<Func<T, bool>> predicate);
-
-    /// <summary>
     /// Recuperar todos.
     /// </summary>
     /// <returns></returns>
-    public Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null);
+    public Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null);
+
+    /// <summary>
+    /// Recupera todos paginado.
+    /// </summary>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="predicate"></param>
+    /// <returns></returns>
+    Task<PaginatedResponse<T>> GetAllAsyncPaginated(
+         int pageNumber, int pageSize, Expression<Func<T, bool>> predicate = null);
 }

@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using System.Net;
+﻿using System.Net;
 
 namespace AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
 
 /// <summary>
-/// Retorno das APIS.
+/// Retorno das APIS paginada.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class PaginationApiResponse<T> 
@@ -33,47 +32,17 @@ public class PaginationApiResponse<T>
     /// </summary>
     /// <param name="sucesso"></param>
     /// <param name="statusCode"></param>
-    /// <param name="dados"></param>
+    /// <param name="paginatedResponse"></param>
     /// <param name="notificacoes"></param>
     public PaginationApiResponse(bool sucesso, HttpStatusCode statusCode, 
-        List<T> dados, int totalDados, int totalPaginas, 
-        int paginaAtual, int tamanhoPagina, List<DadosNotificacao> notificacoes = null)
-            : base(statusCode, sucesso, notificacoes)  
+        PaginatedResponse<T> paginatedResponse, List<DadosNotificacao> notificacoes = null)
+            : base(statusCode, sucesso, notificacoes) 
     {
-        Dados = dados;
-        TotalDados = totalDados;
-        PaginaAtual = paginaAtual;
-        TotalPaginas = totalPaginas;
-        TamanhoPagina = tamanhoPagina;
+       Paginacao = paginatedResponse;
     }
 
     /// <summary>
-    /// Tamanho da pagina.
+    /// Dados da paginação.
     /// </summary>
-    [JsonProperty(nameof(TamanhoPagina))]
-    public int TamanhoPagina { get; }
-
-    /// <summary>
-    /// Pagina atual.
-    /// </summary>
-    [JsonProperty(nameof(PaginaAtual))]
-    public int PaginaAtual { get; }
-
-    /// <summary>
-    /// Total de dados na pagina.
-    /// </summary>
-    [JsonProperty(nameof(TotalPaginas))]
-    public int TotalPaginas { get; }
-
-    /// <summary>
-    /// Total de dados na base.
-    /// </summary>
-    [JsonProperty(nameof(TotalDados))]
-    public int TotalDados { get; }
-
-    /// <summary>
-    /// Dados a serem retornados na requisição.
-    /// </summary>
-    [JsonProperty(nameof(Dados))]
-    public List<T> Dados { get; }
+    public PaginatedResponse<T> Paginacao { get; set; }
 }
