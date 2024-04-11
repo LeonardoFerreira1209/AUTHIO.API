@@ -1,4 +1,5 @@
-﻿using AUTHIO.APPLICATION.Domain.Entities;
+﻿using AUTHIO.APPLICATION.Application.Services.Custom;
+using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -16,40 +17,76 @@ public static class IdentityExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureIdentityServer(
+        this IServiceCollection services, IConfiguration configuration)
     {
         services
             .AddIdentity<UserEntity, RoleEntity>(options =>
             {
-                options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedEmail
+                    = configuration
+                        .GetValue<bool>("Signin:RequireConfirmedEmail");
 
-                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount
+                    = configuration
+                        .GetValue<bool>("Signin:RequireConfirmedAccount");
 
-                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.AllowedUserNameCharacters
+                    = configuration
+                        .GetValue<string>("User:AllowedUserNameCharacters");
 
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail
+                    = configuration
+                        .GetValue<bool>("Signin:RequireConfirmedEmail");
 
-                options.Stores.MaxLengthForKeys = 20;
+                options.Stores.MaxLengthForKeys
+                    = configuration
+                        .GetValue<int>("Stores:MaxLengthForKeys");
 
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                options.Lockout.DefaultLockoutTimeSpan
+                    = TimeSpan.FromMinutes(configuration
+                        .GetValue<int>("Lockout:DefaultLockoutTimeSpan"));
 
-                options.Lockout.MaxFailedAccessAttempts = 3;
+                options.Lockout.MaxFailedAccessAttempts
+                    = configuration
+                        .GetValue<int>("Lockout:MaxFailedAccessAttempts");
 
-                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.AllowedForNewUsers
+                    = configuration
+                        .GetValue<bool>("Lockout:AllowedForNewUsers");
 
-                options.Password.RequireDigit = true;
+                options.Password.RequireDigit
+                    = configuration
+                        .GetValue<bool>("Password:RequireDigit");
 
-                options.Password.RequireLowercase = true;
+                options.Password.RequireLowercase
+                    = configuration
+                        .GetValue<bool>("Password:RequireLowercase");
 
-                options.Password.RequireUppercase = true;
+                options.Password.RequireUppercase
+                    = configuration
+                        .GetValue<bool>("Password:RequireUppercase");
 
-                options.Password.RequiredLength = configuration.GetValue<int>("Auth:Password:RequiredLength");
+                options.Password.RequiredLength
+                    = configuration
+                        .GetValue<int>("Password:RequiredLength");
 
-                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireNonAlphanumeric
+                    = configuration
+                        .GetValue<bool>("Password:RequireNonAlphanumeric");
 
-                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequiredUniqueChars
+                    = configuration
+                        .GetValue<int>("Password:RequiredUniqueChars");
 
-            }).AddEntityFrameworkStores<AuthIoContext>().AddDefaultTokenProviders();
+            })
+              .AddEntityFrameworkStores<AuthIoContext>()
+              .AddDefaultTokenProviders()
+              .AddSignInManager<CustomSignInManager>()
+              .AddUserManager<CustomUserManager<UserEntity>>()
+              .AddUserValidator<CustomUserValidator<UserEntity>>();
+
+        services.AddScoped<CustomUserValidator<UserEntity>>();
 
         return services;
     }

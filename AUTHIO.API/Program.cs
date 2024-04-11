@@ -20,6 +20,11 @@ try
                 .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
                     .AddEnvironmentVariables();
 
+    configurations
+        .SetBasePath(builder.Environment.ContentRootPath)
+           .AddJsonFile("identitysettings.json", true, true)
+                   .AddEnvironmentVariables();
+
     /// <sumary>
     /// Configura as configurações de inicialização da aplicação.
     /// </sumary>
@@ -31,6 +36,7 @@ try
         .AddEndpointsApiExplorer()
         .AddOptions()
         .ConfigureLanguage()
+        .ConfigureFixedRateLimit()
         .ConfigureDependencies(configurations)
         .ConfigureDatabase(configurations)
         .ConfigureIdentityServer(configurations)
@@ -64,6 +70,7 @@ try
     applicationbuilder
         .UseMiddleware<ErrorHandlerMiddleware>()
         .UseHttpsRedirection()
+        .UseRateLimiter()
         .UseDefaultFiles()
         .UseStaticFiles()
         .UseCookiePolicy()

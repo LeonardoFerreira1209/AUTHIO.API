@@ -1,6 +1,7 @@
 ﻿using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Domain.Enums;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
+using AUTHIO.APPLICATION.Infra.Context.EntityTypeConfigurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -65,35 +66,11 @@ public class AuthIoContext(
             }
         }
 
-        modelBuilder.Entity<RoleEntity>()
-            .HasOne(x => x.Tenant)
-            .WithMany(t => t.Roles)
-            .HasForeignKey(x => x.TenantId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<UserEntity>()
-            .HasOne(u => u.Tenant)
-            .WithMany(t => t.Users)
-            .HasForeignKey(u => u.TenantId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<TenantEntity>()
-            .HasOne(t => t.TenantConfiguration)
-            .WithOne(tc => tc.Tenant)
-            .HasForeignKey<TenantConfigurationEntity>(tc => tc.TenantId);
-
-        modelBuilder.Entity<TenantUserAdminEntity>()
-            .HasKey(tua => new { tua.UserId, tua.TenantId });
-
-        modelBuilder.Entity<TenantUserAdminEntity>()
-           .HasOne(tua => tua.User)
-           .WithMany()
-           .HasForeignKey(tua => tua.UserId);
-
-        modelBuilder.Entity<TenantUserAdminEntity>()
-            .HasOne(tua => tua.Tenant)
-            .WithMany(t => t.UserAdmins)
-            .HasForeignKey(tua => tua.TenantId);
+        modelBuilder
+           .ApplyConfiguration(new UserEntityTypeConfiguration())
+           .ApplyConfiguration(new RoleEntityTypeConfiguration())
+           .ApplyConfiguration(new TenantEntityTypeConfiguration())
+           .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration());
 
         var roleEntity = new RoleEntity
         {

@@ -3,6 +3,7 @@ using System;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.APPLICATION.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    partial class AuthIoContextModelSnapshot : ModelSnapshot
+    [Migration("20240408045255_INITIAL")]
+    partial class INITIAL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,8 +97,8 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0"),
-                            Created = new DateTime(2024, 3, 17, 23, 53, 5, 33, DateTimeKind.Local).AddTicks(2011),
+                            Id = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d"),
+                            Created = new DateTime(2024, 4, 8, 1, 52, 55, 449, DateTimeKind.Local).AddTicks(1381),
                             Name = "System",
                             Status = 1,
                             System = true
@@ -141,10 +144,12 @@ namespace AUTHIO.APPLICATION.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -255,7 +260,6 @@ namespace AUTHIO.APPLICATION.Migrations
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
-                        .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
                     b.HasIndex("TenantId");
@@ -290,28 +294,28 @@ namespace AUTHIO.APPLICATION.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0")
+                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0")
+                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0")
+                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0")
+                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
                         });
                 });
 

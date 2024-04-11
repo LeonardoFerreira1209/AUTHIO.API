@@ -136,7 +136,8 @@ public class TenantService(
     public async Task<ObjectResult> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         Log.Information(
-            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
+            $"[LOG INFORMATION] - SET TITLE {
+                nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
 
         try
         {
@@ -158,7 +159,8 @@ public class TenantService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {
+                exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
         }
     }
 
@@ -176,7 +178,8 @@ public class TenantService(
         RegisterUserRequest registerUserRequest, string apiKey, CancellationToken cancellationToken)
     {
         Log.Information(
-            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(RegisterTenantUserAsync)}\n");
+            $"[LOG INFORMATION] - SET TITLE {
+                nameof(TenantService)} - METHOD {nameof(RegisterTenantUserAsync)}\n");
 
         try
         {
@@ -228,7 +231,8 @@ public class TenantService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {
+                exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
         }
     }
 }

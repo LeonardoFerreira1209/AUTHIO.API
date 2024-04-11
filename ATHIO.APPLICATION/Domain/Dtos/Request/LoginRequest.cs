@@ -6,16 +6,16 @@
 /// <remarks>
 /// ctor
 /// </remarks>
-/// <param name="username"></param>
+/// <param name="email"></param>
 /// <param name="password"></param>
 public class LoginRequest(
-    string username, string password)
+    string email, string password)
 {
 
     /// <summary>
-    /// Email do usuário
+    /// Username do usuário
     /// </summary>
-    public string Username { get; set; } = username;
+    public string Username { get; set; } = email;
 
     /// <summary>
     /// Senha do usuário

@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.APPLICATION.Migrations
 {
     /// <inheritdoc />
-    public partial class INITIAL_MIGRATION : Migration
+    public partial class INITIAL : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,8 +43,8 @@ namespace AUTHIO.APPLICATION.Migrations
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "longtext", nullable: true),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
+                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    Description = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -279,17 +279,17 @@ namespace AUTHIO.APPLICATION.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0"), null, new DateTime(2024, 3, 17, 23, 53, 5, 33, DateTimeKind.Local).AddTicks(2011), "System", null, 1, true, null, null });
+                values: new object[] { new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d"), null, new DateTime(2024, 4, 8, 1, 52, 55, 449, DateTimeKind.Local).AddTicks(1381), "System", null, 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0") },
-                    { 2, "Tenants", "GET", new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0") },
-                    { 3, "Tenants", "PATCH", new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0") },
-                    { 4, "Tenants", "PUT", new Guid("c2152444-eff3-44c0-8705-79f0f46acbe0") }
+                    { 1, "Tenants", "POST", new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d") },
+                    { 2, "Tenants", "GET", new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d") },
+                    { 3, "Tenants", "PATCH", new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d") },
+                    { 4, "Tenants", "PUT", new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -336,8 +336,7 @@ namespace AUTHIO.APPLICATION.Migrations
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true);
+                column: "NormalizedUserName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TenantConfigurations_TenantId",

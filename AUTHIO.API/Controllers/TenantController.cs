@@ -9,6 +9,7 @@ using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.CUSTOMAUTHORIZE.ATTRIBU
 using AUTHIO.APPLICATION.DOMAIN.ENUMS;
 using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
@@ -35,35 +36,49 @@ public class TenantController(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("create")]
+    [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "POST")]
     [SwaggerOperation(Summary = "Registrar tenant", Description = "Método responsável por registrar um tenant!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateTenantRequest createTenantRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync(
+        [FromBody] CreateTenantRequest createTenantRequest, 
+        CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(createTenantRequest)))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))
         {
             return await ExecuteAsync(nameof(CreateAsync),
-                 () => _tenantService.CreateAsync(createTenantRequest, cancellationToken), "Registrar tenant.");
+                 () => _tenantService.CreateAsync(
+                     createTenantRequest, cancellationToken), "Registrar tenant.");
         }
     }
 
+    /// <summary>
+    /// Endpoint responsável por buscar os tenants do usuário logado.
+    /// </summary>
+    /// <param name="pageNumber"></param>
+    /// <param name="pageSize"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpPost("get-all")]
+    [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "GET")]
     [SwaggerOperation(Summary = "Buscar todos os tenants", Description = "Método responsável por buscar todos os tenants do usuário!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync(
+        int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))
         {
             return await ExecuteAsync(nameof(GetAllAsync),
-                 () => _tenantService.GetAllAsync(pageNumber, pageSize, cancellationToken), "Buscar todos os tenants.");
+                 () => _tenantService.GetAllAsync(
+                     pageNumber, pageSize, cancellationToken), "Buscar todos os tenants.");
         }
     }
 
@@ -75,19 +90,22 @@ public class TenantController(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("register/user")]
+    [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "PUT")]
     [SwaggerOperation(Summary = "Registrar usuário no tenant", Description = "Método responsável por registrar um usuário no tenant!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RegisterTenantUserAsync([FromBody] RegisterUserRequest registerUserRequest, [FromHeader] string apiKey, CancellationToken cancellationToken)
+    public async Task<IActionResult> RegisterTenantUserAsync(
+        [FromBody] RegisterUserRequest registerUserRequest, [FromHeader] string apiKey, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(registerUserRequest)))
         using (LogContext.PushProperty("Metodo", "RegisterTenantUserAsync"))
         {
             return await ExecuteAsync(nameof(RegisterTenantUserAsync),
-                 () => _tenantService.RegisterTenantUserAsync(registerUserRequest, apiKey, cancellationToken), "Registrar usuário no tenant.");
+                 () => _tenantService.RegisterTenantUserAsync(
+                     registerUserRequest, apiKey, cancellationToken), "Registrar usuário no tenant.");
         }
     }
 }

@@ -30,7 +30,6 @@ public class CustomUserException
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
         }
-
     }
 
     /// <summary>
@@ -53,7 +52,6 @@ public class CustomUserException
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
         }
-
     }
 
 
