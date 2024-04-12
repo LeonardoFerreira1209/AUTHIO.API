@@ -14,9 +14,9 @@ public static class CreateTenantConfiguration
     /// <param name="apikey"></param>
     /// <param name="tenantId"></param>
     /// <returns></returns>
-    public static TenantConfigurationEntity CreateDefaultTenantConfiguration(string apikey, Guid tenantId) 
+    public static TenantConfigurationEntity CreateDefaultTenantConfiguration(Guid tenantId) 
         => new TenantConfigurationBuilder()
-                .AddApikey(apikey)
+                .AddApikey($"{$"{Guid.NewGuid()}-HYPER.IO-{Random.Shared.NextInt64(1, 1000)}"}")
                     .AddTenantId(tenantId)
                         .AddCreated()
                             .AddStatus(Status.Ativo).Builder();

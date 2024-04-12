@@ -1,11 +1,12 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace AUTHIO.APPLICATION.Domain.Dtos.Response;
 
 /// <summary>
-/// Classe de response de TenantConfiguration.
+/// Classe de response de UserIdentityConfiguration.
 /// </summary>
-public class TenantConfigurationResponse
+public class UserIdentityConfigurationResponse : UserOptions
 {
     /// <summary>
     /// Id.
@@ -23,27 +24,17 @@ public class TenantConfigurationResponse
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant.
+    /// Id do tenant identity configuration.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid TenantIdentityConfigurationId { get; set; }
 
     /// <summary>
-    /// Response do tenant.
+    /// Entidade do tenant identity configuration.
     /// </summary>
-    public TenantResponse Tenant { get; set; }
-
-    /// <summary>
-    /// Response do tenant identity configuration.
-    /// </summary>
-    public TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
+    public virtual TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
 
     /// <summary>
     /// Status.
     /// </summary>
     public Status Status { get; set; }
-
-    /// <summary>
-    /// Chave de acesso.
-    /// </summary>
-    public string ApiKey { get; set; }
 }

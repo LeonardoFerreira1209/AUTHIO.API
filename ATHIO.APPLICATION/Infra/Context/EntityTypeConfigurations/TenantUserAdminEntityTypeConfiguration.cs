@@ -7,15 +7,17 @@ namespace AUTHIO.APPLICATION.Infra.Context.EntityTypeConfigurations;
 /// <summary>
 /// Configuração de modelo de TenantUserAdminEntity.
 /// </summary>
-public class TenantUserAdminEntityTypeConfiguration : IEntityTypeConfiguration<TenantUserAdminEntity>
+public class TenantUserAdminEntityTypeConfiguration : IEntityTypeConfiguration<TenantIdentityUserAdminEntity>
 {
     /// <summary>
     /// Configura a Entidade de tenant user admin.
     /// </summary>
     /// <param name="builder"></param>
     public void Configure(
-        EntityTypeBuilder<TenantUserAdminEntity> builder)
+        EntityTypeBuilder<TenantIdentityUserAdminEntity> builder)
     {
+        builder.ToTable("TenantUserAdmins");
+
         // Configura uma chave primária composta para a entidade, usando os campos UserId
         // e TenantId. Isso significa que cada combinação de UserId e TenantId deve ser única no conjunto de dados.
         builder.HasKey(tua => new { tua.UserId, tua.TenantId });

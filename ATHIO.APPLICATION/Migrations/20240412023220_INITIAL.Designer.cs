@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.APPLICATION.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240408045255_INITIAL")]
+    [Migration("20240412023220_INITIAL")]
     partial class INITIAL
     {
         /// <inheritdoc />
@@ -97,8 +97,8 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d"),
-                            Created = new DateTime(2024, 4, 8, 1, 52, 55, 449, DateTimeKind.Local).AddTicks(1381),
+                            Id = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e"),
+                            Created = new DateTime(2024, 4, 11, 23, 32, 20, 475, DateTimeKind.Local).AddTicks(4745),
                             Name = "System",
                             Status = 1,
                             System = true
@@ -165,7 +165,33 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.ToTable("Tenants");
                 });
 
-            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantUserAdminEntity", b =>
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantConfigurationId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantConfigurationId")
+                        .IsUnique();
+
+                    b.ToTable("TenantIdentityConfigurations");
+                });
+
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityUserAdminEntity", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -177,7 +203,7 @@ namespace AUTHIO.APPLICATION.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("TenantUserAdminEntity");
+                    b.ToTable("TenantUserAdmins", (string)null);
                 });
 
             modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.UserEntity", b =>
@@ -267,6 +293,39 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.UserIdentityConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("AllowedUserNameCharacters")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("RequireUniqueEmail")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantIdentityConfigurationId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantIdentityConfigurationId")
+                        .IsUnique();
+
+                    b.ToTable("UserIdentityConfigurationEntity");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -294,28 +353,28 @@ namespace AUTHIO.APPLICATION.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
+                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
+                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
+                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("8dfb8442-6400-4b2f-a445-075d39d30b8d")
+                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
                         });
                 });
 
@@ -421,7 +480,18 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.Navigation("Tenant");
                 });
 
-            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantUserAdminEntity", b =>
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.APPLICATION.Domain.Entities.TenantConfigurationEntity", "TenantConfiguration")
+                        .WithOne("TenantIdentityConfiguration")
+                        .HasForeignKey("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityConfigurationEntity", "TenantConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TenantConfiguration");
+                });
+
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityUserAdminEntity", b =>
                 {
                     b.HasOne("AUTHIO.APPLICATION.Domain.Entities.TenantEntity", "Tenant")
                         .WithMany("UserAdmins")
@@ -448,6 +518,17 @@ namespace AUTHIO.APPLICATION.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.UserIdentityConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityConfigurationEntity", "TenantIdentityConfiguration")
+                        .WithOne("UserIdentityConfiguration")
+                        .HasForeignKey("AUTHIO.APPLICATION.Domain.Entities.UserIdentityConfigurationEntity", "TenantIdentityConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TenantIdentityConfiguration");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -501,6 +582,11 @@ namespace AUTHIO.APPLICATION.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantConfigurationEntity", b =>
+                {
+                    b.Navigation("TenantIdentityConfiguration");
+                });
+
             modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantEntity", b =>
                 {
                     b.Navigation("Roles");
@@ -510,6 +596,11 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.Navigation("UserAdmins");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityConfigurationEntity", b =>
+                {
+                    b.Navigation("UserIdentityConfiguration");
                 });
 #pragma warning restore 612, 618
         }

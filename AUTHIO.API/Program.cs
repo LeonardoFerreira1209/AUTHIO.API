@@ -51,7 +51,9 @@ try
             options.Filters.Add(new ProducesAttribute("application/json"));
 
         }).AddJsonOptions(options =>
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
 
 
     builder.Services

@@ -22,5 +22,5 @@ public sealed class TenantRepository(
     /// <returns></returns>
     public async Task LinkTenantWithUserAdminAsync(Guid tenantId, Guid userId)
         => await _context.AddAsync(
-            new TenantUserAdminEntity { TenantId = tenantId, UserId = userId });
+            new TenantIdentityUserAdminEntity { TenantId = tenantId, UserId = userId });
 }

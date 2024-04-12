@@ -30,6 +30,7 @@ public class TenantService(
     IUnitOfWork<AuthIoContext> unitOfWork,
     ITenantRepository tenantRepository,
     ITenantConfigurationRepository tenantConfigurationRepository,
+    ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
     IContextService contextService,
     IUserRepository userRepository) : ITenantService
 {
@@ -41,6 +42,9 @@ public class TenantService(
 
     private readonly ITenantConfigurationRepository
         _tenantConfigurationRepository = tenantConfigurationRepository;
+
+    private readonly ITenantIdentityConfigurationRepository
+        _tenantIdentityConfigurationRepository = tenantIdentityConfigurationRepository;
 
     private readonly IContextService
         _contextService = contextService;
@@ -94,10 +98,23 @@ public class TenantService(
 
                                    await _tenantConfigurationRepository.CreateAsync(
                                         CreateTenantConfiguration.CreateDefaultTenantConfiguration(
-                                            $"{$"{Guid.NewGuid()}-HYPER.IO-{Random.Shared.NextInt64(1, 1000)}"}", tenant.Id)).ContinueWith(
-                                               async (taskResult) =>
+                                            tenant.Id)).ContinueWith(
+                                               async (tenantConfigurationEntityTask) =>
                                                {
-                                                   await _unitOfWork.CommitAsync();
+                                                   var tenantConfiguration
+                                                        = tenantConfigurationEntityTask.Result;
+
+                                                   await _tenantIdentityConfigurationRepository.CreateAsync(
+                                                       CreateTenantIdentityConfiguration.CreateDefaultTenantIdnetityConfiguration(
+                                                                tenantConfiguration.Id)).ContinueWith(
+                                                                    async (tenantIdentityConfigurationEntityTask) =>
+                                                                    {
+                                                                        var tenantConfiguration
+                                                                            = tenantIdentityConfigurationEntityTask.Result;
+
+                                                                        await _unitOfWork.CommitAsync();
+
+                                                                    }).Unwrap();
 
                                                }).Unwrap();
 
@@ -136,8 +153,7 @@ public class TenantService(
     public async Task<ObjectResult> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
         Log.Information(
-            $"[LOG INFORMATION] - SET TITLE {
-                nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
 
         try
         {
@@ -153,7 +169,7 @@ public class TenantService(
                                 HttpStatusCode.OK,
                                 pagination.ConvertPaginationData
                                     (pagination.Items.Select(
-                                        tenant => tenant.ToResponse()).ToList()), [ 
+                                        tenant => tenant.ToResponse()).ToList()), [
                                             new DadosNotificacao("Tenants reuperados com sucesso!")]));
                     });
         }
@@ -178,8 +194,7 @@ public class TenantService(
         RegisterUserRequest registerUserRequest, string apiKey, CancellationToken cancellationToken)
     {
         Log.Information(
-            $"[LOG INFORMATION] - SET TITLE {
-                nameof(TenantService)} - METHOD {nameof(RegisterTenantUserAsync)}\n");
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(RegisterTenantUserAsync)}\n");
 
         try
         {
@@ -231,8 +246,7 @@ public class TenantService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {
-                exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
         }
     }
 }

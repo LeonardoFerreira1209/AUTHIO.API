@@ -3,29 +3,27 @@
 namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
-/// Classe de configuração de Tenanty.
+/// Classe de entidade Tenant Identity Configuration.
 /// </summary>
-public class TenantConfigurationEntity : IEntityBase, IEntityTenant
+public class TenantIdentityConfigurationEntity : IEntityBase
 {
     /// <summary>
     /// ctor
     /// </summary>
-    public TenantConfigurationEntity() { }
+    public TenantIdentityConfigurationEntity() { }
 
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="apikey"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="tenantConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="status"></param>
-    public TenantConfigurationEntity(
-        string apikey, Guid tenantId, 
+    public TenantIdentityConfigurationEntity(
+        Guid tenantConfigurationId,
         DateTime created, DateTime? updated, Status status)
     {
-        ApiKey = apikey;
-        TenantId = tenantId;
+        TenantConfigurationId = tenantConfigurationId;
         Created = created;
         Updated = updated;
         Status = status;
@@ -47,27 +45,22 @@ public class TenantConfigurationEntity : IEntityBase, IEntityTenant
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant.
+    /// Id do tenant configuration Id.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid TenantConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant.
+    /// Entidade do tenant configuration.
     /// </summary>
-    public virtual TenantEntity Tenant { get; set; }
+    public virtual TenantConfigurationEntity TenantConfiguration { get; set; }
 
     /// <summary>
-    /// Entidade do tenant identity configuration.
+    /// Entidade de user identity configuration.
     /// </summary>
-    public virtual TenantIdentityConfigurationEntity TenantIdentityConfiguration { get; set; }
+    public virtual UserIdentityConfigurationEntity UserIdentityConfiguration { get; set; }
 
     /// <summary>
     /// Status.
     /// </summary>
     public Status Status { get; set; }
-
-    /// <summary>
-    /// Chave de acesso.
-    /// </summary>
-    public string ApiKey { get; set; }
 }

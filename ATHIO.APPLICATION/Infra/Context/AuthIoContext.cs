@@ -40,6 +40,11 @@ public class AuthIoContext(
     public DbSet<TenantConfigurationEntity> TenantConfigurations => Set<TenantConfigurationEntity>();
 
     /// <summary>
+    /// Tabela de Tenant Identity Configurations.
+    /// </summary>
+    public DbSet<TenantIdentityConfigurationEntity> TenantIdentityConfigurations => Set<TenantIdentityConfigurationEntity>();
+
+    /// <summary>
     /// Tabela de Feature Flags.
     /// </summary>
     public DbSet<FeatureFlagsEntity> FeatureFlags => Set<FeatureFlagsEntity>();
@@ -70,6 +75,7 @@ public class AuthIoContext(
            .ApplyConfiguration(new UserEntityTypeConfiguration())
            .ApplyConfiguration(new RoleEntityTypeConfiguration())
            .ApplyConfiguration(new TenantEntityTypeConfiguration())
+           .ApplyConfiguration(new TenantIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration());
 
         var roleEntity = new RoleEntity

@@ -1,34 +1,35 @@
 ﻿using AUTHIO.APPLICATION.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
-/// Classe de configuração de Tenanty.
+/// 
 /// </summary>
-public class TenantConfigurationEntity : IEntityBase, IEntityTenant
+public class UserIdentityConfigurationEntity : UserOptions, IEntityBase
 {
     /// <summary>
     /// ctor
     /// </summary>
-    public TenantConfigurationEntity() { }
+    public UserIdentityConfigurationEntity() { }
 
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="apikey"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="tenantIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="status"></param>
-    public TenantConfigurationEntity(
-        string apikey, Guid tenantId, 
-        DateTime created, DateTime? updated, Status status)
+    public UserIdentityConfigurationEntity(
+        Guid tenantIdentityConfigurationId,
+        DateTime created, DateTime? updated, Status status, bool requireUniqueEmail, string allowedUserNameCharacters)
     {
-        ApiKey = apikey;
-        TenantId = tenantId;
+        TenantIdentityConfigurationId = tenantIdentityConfigurationId;
         Created = created;
         Updated = updated;
         Status = status;
+        RequireUniqueEmail = requireUniqueEmail;
+        AllowedUserNameCharacters = allowedUserNameCharacters ?? AllowedUserNameCharacters;
     }
 
     /// <summary>
@@ -47,14 +48,9 @@ public class TenantConfigurationEntity : IEntityBase, IEntityTenant
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant.
+    /// Id do tenant identity configuration.
     /// </summary>
-    public Guid TenantId { get; set; }
-
-    /// <summary>
-    /// Entidade do tenant.
-    /// </summary>
-    public virtual TenantEntity Tenant { get; set; }
+    public Guid TenantIdentityConfigurationId { get; set; }
 
     /// <summary>
     /// Entidade do tenant identity configuration.
@@ -65,9 +61,4 @@ public class TenantConfigurationEntity : IEntityBase, IEntityTenant
     /// Status.
     /// </summary>
     public Status Status { get; set; }
-
-    /// <summary>
-    /// Chave de acesso.
-    /// </summary>
-    public string ApiKey { get; set; }
 }

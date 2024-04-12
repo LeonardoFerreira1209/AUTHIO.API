@@ -26,22 +26,6 @@ public static class TenantExtensions
         };
 
     /// <summary>
-    /// Transforma Tenant config em tenant config response.
-    /// </summary>
-    /// <param name="tenantConfigurationEntity"></param>
-    /// <returns></returns>
-    public static TenantConfigurationResponse ToResponse(this TenantConfigurationEntity tenantConfigurationEntity)
-        => new()
-        {
-            ApiKey = tenantConfigurationEntity.ApiKey,
-            Created = tenantConfigurationEntity.Created,
-            TenantId = tenantConfigurationEntity.TenantId,
-            Id = tenantConfigurationEntity.Id,
-            Status = tenantConfigurationEntity.Status,
-            Updated = tenantConfigurationEntity.Updated
-        };
-
-    /// <summary>
     /// Transforma um Tenant Entity em response.
     /// </summary>
     /// <param name="tenantEntity"></param>
@@ -61,5 +45,58 @@ public static class TenantExtensions
             }).ToList(),
             Users = tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList(),
             TenantConfiguration = tenantEntity?.TenantConfiguration?.ToResponse()
+        };
+
+    /// <summary>
+    /// Transforma Tenant config em tenant config response.
+    /// </summary>
+    /// <param name="tenantConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantConfigurationResponse ToResponse(this TenantConfigurationEntity tenantConfigurationEntity, bool includeTenant = false)
+        => new()
+        {
+            Id = tenantConfigurationEntity.Id,
+            ApiKey = tenantConfigurationEntity.ApiKey,
+            Created = tenantConfigurationEntity.Created,
+            TenantId = tenantConfigurationEntity.TenantId,
+            Tenant = includeTenant ? tenantConfigurationEntity.Tenant?.ToResponse() : null,
+            Status = tenantConfigurationEntity.Status,
+            Updated = tenantConfigurationEntity.Updated,
+            TenantIdentityConfiguration = tenantConfigurationEntity.TenantIdentityConfiguration?.ToResponse()
+        };
+
+
+    /// <summary>
+    /// Transforma um tenantIdentityConfigurationEntity em response.
+    /// </summary>
+    /// <param name="tenantIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantIdentityConfigurationResponse ToResponse(this TenantIdentityConfigurationEntity tenantIdentityConfigurationEntity, bool includeTenantConfiguration = false)
+        => new()
+        {
+            Id = tenantIdentityConfigurationEntity.Id,
+            Created = tenantIdentityConfigurationEntity.Created,
+            Updated = tenantIdentityConfigurationEntity.Updated,
+            Status = tenantIdentityConfigurationEntity.Status,
+            TenantConfigurationId = tenantIdentityConfigurationEntity.TenantConfigurationId,
+            TenantConfiguration = includeTenantConfiguration ? tenantIdentityConfigurationEntity.TenantConfiguration?.ToResponse() : null,
+            UserIdentityConfiguration = tenantIdentityConfigurationEntity?.UserIdentityConfiguration?.ToResponse()
+        };
+
+    /// <summary>
+    /// Transforma um UserIdentityConfigurationEntity em response.
+    /// </summary>
+    /// <param name="userIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static UserIdentityConfigurationResponse ToResponse(this UserIdentityConfigurationEntity userIdentityConfigurationEntity)
+        => new()
+        {
+            Id = userIdentityConfigurationEntity.Id,
+            AllowedUserNameCharacters = userIdentityConfigurationEntity.AllowedUserNameCharacters,
+            Created = userIdentityConfigurationEntity.Created,
+            Updated = userIdentityConfigurationEntity.Updated,
+            RequireUniqueEmail = userIdentityConfigurationEntity.RequireUniqueEmail,
+            Status = userIdentityConfigurationEntity.Status,
+            TenantIdentityConfiguration = userIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse()
         };
 }

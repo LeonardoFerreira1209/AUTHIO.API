@@ -3,9 +3,9 @@
 namespace AUTHIO.APPLICATION.Domain.Dtos.Response;
 
 /// <summary>
-/// Classe de response de TenantConfiguration.
+/// Classe de response de TenantIdentityConfiguration.
 /// </summary>
-public class TenantConfigurationResponse
+public class TenantIdentityConfigurationResponse
 {
     /// <summary>
     /// Id.
@@ -23,27 +23,22 @@ public class TenantConfigurationResponse
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant.
+    /// Id do tenant configuration Id.
     /// </summary>
-    public Guid TenantId { get; set; }
+    public Guid TenantConfigurationId { get; set; }
 
     /// <summary>
-    /// Response do tenant.
+    /// Entidade do tenant configuration.
     /// </summary>
-    public TenantResponse Tenant { get; set; }
+    public virtual TenantConfigurationResponse TenantConfiguration { get; set; }
 
     /// <summary>
-    /// Response do tenant identity configuration.
+    /// Entidade de user identity configuration.
     /// </summary>
-    public TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
+    public virtual UserIdentityConfigurationResponse UserIdentityConfiguration { get; set; }
 
     /// <summary>
     /// Status.
     /// </summary>
     public Status Status { get; set; }
-
-    /// <summary>
-    /// Chave de acesso.
-    /// </summary>
-    public string ApiKey { get; set; }
 }

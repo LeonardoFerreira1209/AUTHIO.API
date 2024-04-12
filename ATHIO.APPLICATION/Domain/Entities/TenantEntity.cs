@@ -66,7 +66,7 @@ public class TenantEntity : IEntityBase, IFilterableEntity<TenantEntity>
     /// <summary>
     /// Users Admins vinculados ao tenant.
     /// </summary>
-    public virtual ICollection<TenantUserAdminEntity> UserAdmins { get; private set; }
+    public virtual ICollection<TenantIdentityUserAdminEntity> UserAdmins { get; private set; }
 
     /// <summary> 
     /// Roles vinculadas ao tenant.
