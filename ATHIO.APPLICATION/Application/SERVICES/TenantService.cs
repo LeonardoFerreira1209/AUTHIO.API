@@ -31,6 +31,7 @@ public class TenantService(
     ITenantRepository tenantRepository,
     ITenantConfigurationRepository tenantConfigurationRepository,
     ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
+    IUserIdentityConfigurationRepository userIdentityConfigurationRepository,
     IContextService contextService,
     IUserRepository userRepository) : ITenantService
 {
@@ -45,6 +46,9 @@ public class TenantService(
 
     private readonly ITenantIdentityConfigurationRepository
         _tenantIdentityConfigurationRepository = tenantIdentityConfigurationRepository;
+
+    private readonly IUserIdentityConfigurationRepository 
+        _userIdentityConfigurationRepository = userIdentityConfigurationRepository;
 
     private readonly IContextService
         _contextService = contextService;
@@ -109,10 +113,17 @@ public class TenantService(
                                                                 tenantConfiguration.Id)).ContinueWith(
                                                                     async (tenantIdentityConfigurationEntityTask) =>
                                                                     {
-                                                                        var tenantConfiguration
+                                                                        var tenantIdentityConfiguration
                                                                             = tenantIdentityConfigurationEntityTask.Result;
 
-                                                                        await _unitOfWork.CommitAsync();
+                                                                        await _userIdentityConfigurationRepository.CreateAsync(
+                                                                            CreateUserIdentityConfiguration.CreateDefaultUserIdenityConfiguration(
+                                                                                    tenantIdentityConfiguration.Id)).ContinueWith(
+                                                                                        async (userIdentityConfigurationTask) => {
+
+                                                                                            await _unitOfWork.CommitAsync();
+
+                                                                                        }).Unwrap();
 
                                                                     }).Unwrap();
 

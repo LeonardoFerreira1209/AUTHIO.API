@@ -1,5 +1,4 @@
 ﻿using AUTHIO.APPLICATION.Domain.Entities;
-using AUTHIO.APPLICATION.Domain.Enums;
 
 namespace AUTHIO.APPLICATION.Domain.Builders.Creates;
 
@@ -17,6 +16,5 @@ public static class CreateTenantIdentityConfiguration
     public static TenantIdentityConfigurationEntity CreateDefaultTenantIdnetityConfiguration(Guid tenantConfigurationId) 
         => new TenantIdentityConfigurationBuilder()
                 .AddTenantConfigurationId(tenantConfigurationId)
-                    .AddCreated()
-                        .AddStatus(Status.Ativo).Builder();
+                    .AddCreated().Builder();
 }

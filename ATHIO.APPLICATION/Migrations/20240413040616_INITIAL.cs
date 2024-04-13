@@ -125,7 +125,6 @@ namespace AUTHIO.APPLICATION.Migrations
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     TenantId = table.Column<Guid>(type: "char(36)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
                     ApiKey = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
@@ -283,8 +282,7 @@ namespace AUTHIO.APPLICATION.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    TenantConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    TenantConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -306,7 +304,6 @@ namespace AUTHIO.APPLICATION.Migrations
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     TenantIdentityConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
                     AllowedUserNameCharacters = table.Column<string>(type: "longtext", nullable: false),
                     RequireUniqueEmail = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
@@ -325,17 +322,17 @@ namespace AUTHIO.APPLICATION.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e"), null, new DateTime(2024, 4, 11, 23, 32, 20, 475, DateTimeKind.Local).AddTicks(4745), "System", null, 1, true, null, null });
+                values: new object[] { new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5"), null, new DateTime(2024, 4, 13, 1, 6, 16, 531, DateTimeKind.Local).AddTicks(9213), "System", null, 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e") },
-                    { 2, "Tenants", "GET", new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e") },
-                    { 3, "Tenants", "PATCH", new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e") },
-                    { 4, "Tenants", "PUT", new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e") }
+                    { 1, "Tenants", "POST", new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5") },
+                    { 2, "Tenants", "GET", new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5") },
+                    { 3, "Tenants", "PATCH", new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5") },
+                    { 4, "Tenants", "PUT", new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5") }
                 });
 
             migrationBuilder.CreateIndex(

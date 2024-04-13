@@ -30,7 +30,8 @@ public static class TenantExtensions
     /// </summary>
     /// <param name="tenantEntity"></param>
     /// <returns></returns>
-    public static TenantResponse ToResponse(this TenantEntity tenantEntity) 
+    public static TenantResponse ToResponse(this TenantEntity tenantEntity, 
+        bool includeUsers = true, bool includeUserAdmins = true, bool includeTenantConfig = true) 
         => new() 
         {
             Id = tenantEntity.Id,
@@ -39,12 +40,18 @@ public static class TenantExtensions
             Name = tenantEntity.Name,
             Description = tenantEntity.Description,
             Status = tenantEntity.Status,
-            UserAdmins = tenantEntity?.UserAdmins?.Select(user => new TenantUserAdminResponse {
-                TenantId = user.TenantId,
-                UserId = user.UserId,
-            }).ToList(),
-            Users = tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList(),
-            TenantConfiguration = tenantEntity?.TenantConfiguration?.ToResponse()
+
+            UserAdmins = includeUserAdmins 
+                ? tenantEntity?.UserAdmins?.Select(user => new TenantUserAdminResponse { TenantId = user.TenantId, UserId = user.UserId }).ToList() 
+                : [],
+
+            Users = includeUsers 
+                ? tenantEntity?.Users?.Select(user => user?.ToResponse()).ToList() 
+                : [],
+
+            TenantConfiguration = includeTenantConfig 
+                ? tenantEntity?.TenantConfiguration?.ToResponse() 
+                : null
         };
 
     /// <summary>
@@ -52,35 +59,46 @@ public static class TenantExtensions
     /// </summary>
     /// <param name="tenantConfigurationEntity"></param>
     /// <returns></returns>
-    public static TenantConfigurationResponse ToResponse(this TenantConfigurationEntity tenantConfigurationEntity, bool includeTenant = false)
+    public static TenantConfigurationResponse ToResponse(this TenantConfigurationEntity tenantConfigurationEntity,
+        bool includeTenant = false, bool includeTenantIdentityConfiguration = true)
         => new()
         {
             Id = tenantConfigurationEntity.Id,
-            ApiKey = tenantConfigurationEntity.ApiKey,
-            Created = tenantConfigurationEntity.Created,
             TenantId = tenantConfigurationEntity.TenantId,
-            Tenant = includeTenant ? tenantConfigurationEntity.Tenant?.ToResponse() : null,
-            Status = tenantConfigurationEntity.Status,
+            Created = tenantConfigurationEntity.Created,
             Updated = tenantConfigurationEntity.Updated,
-            TenantIdentityConfiguration = tenantConfigurationEntity.TenantIdentityConfiguration?.ToResponse()
-        };
+            ApiKey = tenantConfigurationEntity.ApiKey,
 
+            TenantIdentityConfiguration = includeTenantIdentityConfiguration
+                ? tenantConfigurationEntity.TenantIdentityConfiguration?.ToResponse() 
+                : null,
+
+            Tenant = includeTenant 
+                ? tenantConfigurationEntity.Tenant?.ToResponse() 
+                : null
+        };
 
     /// <summary>
     /// Transforma um tenantIdentityConfigurationEntity em response.
     /// </summary>
     /// <param name="tenantIdentityConfigurationEntity"></param>
     /// <returns></returns>
-    public static TenantIdentityConfigurationResponse ToResponse(this TenantIdentityConfigurationEntity tenantIdentityConfigurationEntity, bool includeTenantConfiguration = false)
+    public static TenantIdentityConfigurationResponse ToResponse(this TenantIdentityConfigurationEntity tenantIdentityConfigurationEntity, 
+        bool includeTenantConfiguration = false, bool includeUserIdentityConfiguration = true)
         => new()
         {
             Id = tenantIdentityConfigurationEntity.Id,
+            TenantConfigurationId = tenantIdentityConfigurationEntity.TenantConfigurationId,
             Created = tenantIdentityConfigurationEntity.Created,
             Updated = tenantIdentityConfigurationEntity.Updated,
-            Status = tenantIdentityConfigurationEntity.Status,
-            TenantConfigurationId = tenantIdentityConfigurationEntity.TenantConfigurationId,
-            TenantConfiguration = includeTenantConfiguration ? tenantIdentityConfigurationEntity.TenantConfiguration?.ToResponse() : null,
-            UserIdentityConfiguration = tenantIdentityConfigurationEntity?.UserIdentityConfiguration?.ToResponse()
+            
+            UserIdentityConfiguration = includeUserIdentityConfiguration 
+                ?  tenantIdentityConfigurationEntity?.UserIdentityConfiguration?.ToResponse() 
+                : null,
+
+            TenantConfiguration = includeTenantConfiguration
+                ? tenantIdentityConfigurationEntity.TenantConfiguration?.ToResponse() 
+                : null
         };
 
     /// <summary>
@@ -88,15 +106,18 @@ public static class TenantExtensions
     /// </summary>
     /// <param name="userIdentityConfigurationEntity"></param>
     /// <returns></returns>
-    public static UserIdentityConfigurationResponse ToResponse(this UserIdentityConfigurationEntity userIdentityConfigurationEntity)
+    public static UserIdentityConfigurationResponse ToResponse(this UserIdentityConfigurationEntity userIdentityConfigurationEntity, 
+        bool includeTenantIdentityConfiguration = false)
         => new()
         {
             Id = userIdentityConfigurationEntity.Id,
-            AllowedUserNameCharacters = userIdentityConfigurationEntity.AllowedUserNameCharacters,
             Created = userIdentityConfigurationEntity.Created,
             Updated = userIdentityConfigurationEntity.Updated,
+            AllowedUserNameCharacters = userIdentityConfigurationEntity.AllowedUserNameCharacters,
             RequireUniqueEmail = userIdentityConfigurationEntity.RequireUniqueEmail,
-            Status = userIdentityConfigurationEntity.Status,
-            TenantIdentityConfiguration = userIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse()
+            TenantIdentityConfigurationId = userIdentityConfigurationEntity.TenantIdentityConfigurationId,
+            TenantIdentityConfiguration = includeTenantIdentityConfiguration
+                ? userIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse() 
+                : null
         };
 }

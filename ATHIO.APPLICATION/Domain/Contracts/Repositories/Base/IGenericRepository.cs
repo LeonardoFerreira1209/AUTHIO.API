@@ -8,7 +8,7 @@ namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 /// Repositório genérico.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public interface IGenericRepository<T> where T : class, IEntityBase
+public interface IGenericRepository<T> where T : IEntityPrimaryKey<Guid>
 {
     /// <summary>
     /// Criar.

@@ -1,12 +1,11 @@
-﻿using AUTHIO.APPLICATION.Domain.Enums;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
-/// 
+/// Entidade de User Identity Configuration.
 /// </summary>
-public class UserIdentityConfigurationEntity : UserOptions, IEntityBase
+public class UserIdentityConfigurationEntity : UserOptions, IEntityPrimaryKey<Guid>
 {
     /// <summary>
     /// ctor
@@ -19,15 +18,13 @@ public class UserIdentityConfigurationEntity : UserOptions, IEntityBase
     /// <param name="tenantIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
-    /// <param name="status"></param>
     public UserIdentityConfigurationEntity(
         Guid tenantIdentityConfigurationId,
-        DateTime created, DateTime? updated, Status status, bool requireUniqueEmail, string allowedUserNameCharacters)
+        DateTime created, DateTime? updated, bool requireUniqueEmail, string allowedUserNameCharacters)
     {
         TenantIdentityConfigurationId = tenantIdentityConfigurationId;
         Created = created;
         Updated = updated;
-        Status = status;
         RequireUniqueEmail = requireUniqueEmail;
         AllowedUserNameCharacters = allowedUserNameCharacters ?? AllowedUserNameCharacters;
     }
@@ -56,9 +53,4 @@ public class UserIdentityConfigurationEntity : UserOptions, IEntityBase
     /// Entidade do tenant identity configuration.
     /// </summary>
     public virtual TenantIdentityConfigurationEntity TenantIdentityConfiguration { get; set; }
-
-    /// <summary>
-    /// Status.
-    /// </summary>
-    public Status Status { get; set; }
 }

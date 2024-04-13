@@ -12,7 +12,6 @@ public class TenantConfigurationBuilder
     private Guid tenantId;
     private DateTime? updated = null;
     private DateTime created;
-    private Status status;
 
     /// <summary>
     /// Adiciona uma apikey.
@@ -68,21 +67,9 @@ public class TenantConfigurationBuilder
     }
 
     /// <summary>
-    /// Adiciona o status.
-    /// </summary>
-    /// <param name="status"></param>
-    /// <returns></returns>
-    public TenantConfigurationBuilder AddStatus(Status status)
-    {
-        this.status = status;
-
-        return this;
-    }
-
-    /// <summary>
     /// Cria a entidade.
     /// </summary>
     /// <returns></returns>
     public TenantConfigurationEntity Builder() 
-        => new(apikey, tenantId, created, updated, status);
+        => new(apikey, tenantId, created, updated);
 }

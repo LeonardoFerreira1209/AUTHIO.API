@@ -16,7 +16,7 @@ namespace AUTHIO.APPLICATION.Infra.Repositories.BASE;
 /// </remarks>
 /// <param name="context"></param>
 public class GenericEntityCoreRepository<T>(DbContext context)
-    : IGenerictEntityCoreRepository<T> where T : class, IEntityBase
+    : IGenerictEntityCoreRepository<T> where T : class, IEntityPrimaryKey<Guid>
 {
     private readonly DbContext _context = context;
 

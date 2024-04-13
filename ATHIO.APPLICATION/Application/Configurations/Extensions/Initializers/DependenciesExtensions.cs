@@ -41,6 +41,7 @@ public static class DependenciesExtensions
             .AddScoped<ITenantRepository, TenantRepository>()
             .AddScoped<ITenantConfigurationRepository, TenantConfigurationRepository>()
             .AddScoped<ITenantIdentityConfigurationRepository, TenantIdentityConfigurationRepository>()
+            .AddScoped<IUserIdentityConfigurationRepository, UserIdentityConfigurationRepository>()
             .AddScoped<IUserRepository, UserRepository>()
         // Infra
             .AddScoped<IFeatureFlags, FeatureFlagsProvider>();

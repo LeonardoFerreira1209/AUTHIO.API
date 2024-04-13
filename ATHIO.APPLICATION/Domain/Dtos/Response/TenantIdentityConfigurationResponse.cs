@@ -36,9 +36,4 @@ public class TenantIdentityConfigurationResponse
     /// Entidade de user identity configuration.
     /// </summary>
     public virtual UserIdentityConfigurationResponse UserIdentityConfiguration { get; set; }
-
-    /// <summary>
-    /// Status.
-    /// </summary>
-    public Status Status { get; set; }
 }

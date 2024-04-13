@@ -1,5 +1,4 @@
 ﻿using AUTHIO.APPLICATION.Domain.Entities;
-using AUTHIO.APPLICATION.Domain.Enums;
 
 namespace AUTHIO.APPLICATION.Domain.Builders;
 
@@ -11,7 +10,6 @@ public class TenantIdentityConfigurationBuilder
     private Guid tenantConfigurationId;
     private DateTime? updated = null;
     private DateTime created;
-    private Status status;
 
     /// <summary>
     /// Adiciona um TenantId.
@@ -55,21 +53,9 @@ public class TenantIdentityConfigurationBuilder
     }
 
     /// <summary>
-    /// Adiciona o status.
-    /// </summary>
-    /// <param name="status"></param>
-    /// <returns></returns>
-    public TenantIdentityConfigurationBuilder AddStatus(Status status)
-    {
-        this.status = status;
-
-        return this;
-    }
-
-    /// <summary>
     /// Cria a entidade.
     /// </summary>
     /// <returns></returns>
     public TenantIdentityConfigurationEntity Builder() 
-        => new(tenantConfigurationId, created, updated, status);
+        => new(tenantConfigurationId, created, updated);
 }

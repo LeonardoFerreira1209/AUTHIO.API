@@ -2,7 +2,7 @@
 
 namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 
-public interface IGenerictEntityCoreRepository<T> : IGenericRepository<T> where T : class, IEntityBase
+public interface IGenerictEntityCoreRepository<T> : IGenericRepository<T> where T : class, IEntityPrimaryKey<Guid>
 {
     /// <summary>
     /// Criar vários.

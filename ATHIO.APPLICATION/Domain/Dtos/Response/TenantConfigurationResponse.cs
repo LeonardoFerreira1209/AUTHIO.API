@@ -38,11 +38,6 @@ public class TenantConfigurationResponse
     public TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
 
     /// <summary>
-    /// Status.
-    /// </summary>
-    public Status Status { get; set; }
-
-    /// <summary>
     /// Chave de acesso.
     /// </summary>
     public string ApiKey { get; set; }

@@ -1,23 +1,20 @@
 ﻿using AUTHIO.APPLICATION.Domain.Entities;
-using AUTHIO.APPLICATION.Domain.Enums;
 
 namespace AUTHIO.APPLICATION.Domain.Builders.Creates;
 
 /// <summary>
-/// Classe de criação de Configuração do tenant.
+/// Classe de criação de User Identity Configuration.
 /// </summary>
-public static class CreateTenantConfiguration
+public static class CreateUserIdentityConfiguration
 {
     /// <summary>
-    /// Cria um tenant configuration com os dados de cadastro inicial.
+    /// Cria um User tenant configuration com os dados de cadastro inicial.
     /// </summary>
-    /// <param name="apikey"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="tenantIdentityConfigurationId"></param>
     /// <returns></returns>
-    public static TenantConfigurationEntity CreateDefaultTenantConfiguration(Guid tenantId) 
-        => new TenantConfigurationBuilder()
-                .AddApikey($"{$"{Guid.NewGuid()}-HYPER.IO-{Random.Shared.NextInt64(1, 1000)}"}")
-                    .AddTenantId(tenantId)
-                        .AddCreated()
-                            .AddStatus(Status.Ativo).Builder();
+    public static UserIdentityConfigurationEntity CreateDefaultUserIdenityConfiguration(Guid tenantIdentityConfigurationId) 
+        => new UserIdentityConfigurationBuilder()
+                .AddTenantIdentityConfigurationId(tenantIdentityConfigurationId)
+                    .AddRequireUniqueEmail(true)
+                        .AddCreated().Builder();
 }

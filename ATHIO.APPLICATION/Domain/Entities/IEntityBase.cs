@@ -5,13 +5,8 @@ namespace AUTHIO.APPLICATION.Domain.Entities;
 /// <summary>
 /// interface base de Entidade.
 /// </summary>
-public interface IEntityBase
+public interface IEntityBase : IEntityPrimaryKey<Guid>
 {
-    /// <summary>
-    /// Chave primaria.
-    /// </summary>
-    public Guid Id { get; }
-
     /// <summary>
     /// Data de criação.
     /// </summary>

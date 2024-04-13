@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.APPLICATION.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240412023220_INITIAL")]
+    [Migration("20240413040616_INITIAL")]
     partial class INITIAL
     {
         /// <inheritdoc />
@@ -97,8 +97,8 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e"),
-                            Created = new DateTime(2024, 4, 11, 23, 32, 20, 475, DateTimeKind.Local).AddTicks(4745),
+                            Id = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5"),
+                            Created = new DateTime(2024, 4, 13, 1, 6, 16, 531, DateTimeKind.Local).AddTicks(9213),
                             Name = "System",
                             Status = 1,
                             System = true
@@ -116,9 +116,6 @@ namespace AUTHIO.APPLICATION.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("char(36)");
@@ -173,9 +170,6 @@ namespace AUTHIO.APPLICATION.Migrations
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("TenantConfigurationId")
                         .HasColumnType("char(36)");
@@ -309,9 +303,6 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.Property<bool>("RequireUniqueEmail")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("TenantIdentityConfigurationId")
                         .HasColumnType("char(36)");
 
@@ -353,28 +344,28 @@ namespace AUTHIO.APPLICATION.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
+                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
+                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
+                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("eff34e49-6e3a-4148-b7a3-a432f9392f8e")
+                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
                         });
                 });
 

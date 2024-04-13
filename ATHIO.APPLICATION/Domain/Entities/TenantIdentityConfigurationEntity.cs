@@ -1,11 +1,9 @@
-﻿using AUTHIO.APPLICATION.Domain.Enums;
-
-namespace AUTHIO.APPLICATION.Domain.Entities;
+﻿namespace AUTHIO.APPLICATION.Domain.Entities;
 
 /// <summary>
 /// Classe de entidade Tenant Identity Configuration.
 /// </summary>
-public class TenantIdentityConfigurationEntity : IEntityBase
+public class TenantIdentityConfigurationEntity : IEntityPrimaryKey<Guid>
 {
     /// <summary>
     /// ctor
@@ -18,15 +16,13 @@ public class TenantIdentityConfigurationEntity : IEntityBase
     /// <param name="tenantConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
-    /// <param name="status"></param>
     public TenantIdentityConfigurationEntity(
         Guid tenantConfigurationId,
-        DateTime created, DateTime? updated, Status status)
+        DateTime created, DateTime? updated)
     {
         TenantConfigurationId = tenantConfigurationId;
         Created = created;
         Updated = updated;
-        Status = status;
     }
 
     /// <summary>
@@ -58,9 +54,4 @@ public class TenantIdentityConfigurationEntity : IEntityBase
     /// Entidade de user identity configuration.
     /// </summary>
     public virtual UserIdentityConfigurationEntity UserIdentityConfiguration { get; set; }
-
-    /// <summary>
-    /// Status.
-    /// </summary>
-    public Status Status { get; set; }
 }
