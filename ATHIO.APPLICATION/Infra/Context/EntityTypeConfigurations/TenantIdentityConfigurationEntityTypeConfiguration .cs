@@ -22,5 +22,9 @@ public class TenantIdentityConfigurationEntityTypeConfiguration : IEntityTypeCon
         // Configura uma relação um-para-um entre UserIdentityConfiguration e TenantIdentityConfiguration. Especifica que cada UserIdentityConfiguration tem uma TenantIdentityConfiguration,
         // e cada TenantIdentityConfiguration está associada a exatamente um UserIdentityConfiguration, usando UserIdentityConfigurationId como chave estrangeira.
         builder.HasOne(tic => tic.UserIdentityConfiguration).WithOne(tc => tc.TenantIdentityConfiguration).HasForeignKey<UserIdentityConfigurationEntity>(tc => tc.TenantIdentityConfigurationId);
+
+        // Configura uma relação um-para-um entre PasswordIdentityConfigurationEntity e TenantIdentityConfiguration. Especifica que cada PasswordIdentityConfigurationEntity tem uma TenantIdentityConfiguration,
+        // e cada TenantIdentityConfiguration está associada a exatamente um PasswordIdentityConfigurationEntity, usando PasswordIdentityConfigurationEntity como chave estrangeira.
+        builder.HasOne(tic => tic.PasswordIdentityConfiguration).WithOne(tc => tc.TenantIdentityConfiguration).HasForeignKey<PasswordIdentityConfigurationEntity>(tc => tc.TenantIdentityConfigurationId);
     }
 }

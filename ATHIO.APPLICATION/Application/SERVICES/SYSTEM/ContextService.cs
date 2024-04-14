@@ -36,8 +36,8 @@ public class ContextService(
     /// Recupera a apiKey passada no Header.
     /// </summary>
     /// <returns></returns>
-    public string GetCurrentApiKey() => httpContextAccessor.HttpContext.Request?.Headers
-                  .FirstOrDefault(header => header.Key.Equals("apikey")).Value;
+    public string GetCurrentApiKey() => httpContextAccessor.HttpContext?.Request?.Headers
+                  ?.FirstOrDefault(header => header.Key.Equals("apikey")).Value;
 
     /// <summary>
     /// Verifica se o usuário esta logado.
@@ -50,5 +50,5 @@ public class ContextService(
     /// </summary>
     /// <returns></returns>
     public Guid GetCurrentUserId()
-        => Guid.Parse(httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        => Guid.Parse(httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
 }

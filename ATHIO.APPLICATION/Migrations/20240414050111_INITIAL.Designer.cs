@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.APPLICATION.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240413040616_INITIAL")]
+    [Migration("20240414050111_INITIAL")]
     partial class INITIAL
     {
         /// <inheritdoc />
@@ -49,6 +49,47 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FeatureFlags");
+                });
+
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.PasswordIdentityConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("RequireDigit")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("RequireLowercase")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("RequireNonAlphanumeric")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("RequireUppercase")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("RequiredLength")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequiredUniqueChars")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TenantIdentityConfigurationId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantIdentityConfigurationId")
+                        .IsUnique();
+
+                    b.ToTable("PasswordIdentityConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.RoleEntity", b =>
@@ -97,8 +138,8 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5"),
-                            Created = new DateTime(2024, 4, 13, 1, 6, 16, 531, DateTimeKind.Local).AddTicks(9213),
+                            Id = new Guid("8a21a41a-37d9-492a-a5f0-e568ccba1baa"),
+                            Created = new DateTime(2024, 4, 14, 2, 1, 10, 851, DateTimeKind.Local).AddTicks(3325),
                             Name = "System",
                             Status = 1,
                             System = true
@@ -314,7 +355,7 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasIndex("TenantIdentityConfigurationId")
                         .IsUnique();
 
-                    b.ToTable("UserIdentityConfigurationEntity");
+                    b.ToTable("UserIdentityConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -344,28 +385,28 @@ namespace AUTHIO.APPLICATION.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
+                            RoleId = new Guid("8a21a41a-37d9-492a-a5f0-e568ccba1baa")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
+                            RoleId = new Guid("8a21a41a-37d9-492a-a5f0-e568ccba1baa")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
+                            RoleId = new Guid("8a21a41a-37d9-492a-a5f0-e568ccba1baa")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("c62f2ef8-f67a-4e78-8353-be8d1886f0f5")
+                            RoleId = new Guid("8a21a41a-37d9-492a-a5f0-e568ccba1baa")
                         });
                 });
 
@@ -448,6 +489,17 @@ namespace AUTHIO.APPLICATION.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.PasswordIdentityConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityConfigurationEntity", "TenantIdentityConfiguration")
+                        .WithOne("PasswordIdentityConfiguration")
+                        .HasForeignKey("AUTHIO.APPLICATION.Domain.Entities.PasswordIdentityConfigurationEntity", "TenantIdentityConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TenantIdentityConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.RoleEntity", b =>
@@ -591,6 +643,8 @@ namespace AUTHIO.APPLICATION.Migrations
 
             modelBuilder.Entity("AUTHIO.APPLICATION.Domain.Entities.TenantIdentityConfigurationEntity", b =>
                 {
+                    b.Navigation("PasswordIdentityConfiguration");
+
                     b.Navigation("UserIdentityConfiguration");
                 });
 #pragma warning restore 612, 618

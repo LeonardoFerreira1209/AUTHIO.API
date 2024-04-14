@@ -54,4 +54,9 @@ public class TenantIdentityConfigurationEntity : IEntityPrimaryKey<Guid>
     /// Entidade de user identity configuration.
     /// </summary>
     public virtual UserIdentityConfigurationEntity UserIdentityConfiguration { get; set; }
+
+    /// <summary>
+    ///  Entidade de password identity configuration.
+    /// </summary>
+    public virtual PasswordIdentityConfigurationEntity PasswordIdentityConfiguration { get; set; }
 }

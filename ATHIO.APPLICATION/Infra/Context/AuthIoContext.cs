@@ -24,10 +24,10 @@ public class AuthIoContext(
         = contextService.IsAuthenticated ? contextService.GetCurrentUserId() : null;
 
     public readonly Guid? _tenantId
-        = contextService.GetCurrentTenantId();
+        = contextService?.GetCurrentTenantId();
 
     public readonly string _apiKey
-        = contextService.GetCurrentApiKey();
+        = contextService?.GetCurrentApiKey();
 
     /// <summary>
     /// Tabela de Tenants.
@@ -76,6 +76,8 @@ public class AuthIoContext(
            .ApplyConfiguration(new RoleEntityTypeConfiguration())
            .ApplyConfiguration(new TenantEntityTypeConfiguration())
            .ApplyConfiguration(new TenantIdentityConfigurationEntityTypeConfiguration())
+           .ApplyConfiguration(new UserIdentityConfigurationEntityTypeConfiguration())
+           .ApplyConfiguration(new PasswordIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration());
 
         var roleEntity = new RoleEntity
