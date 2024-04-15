@@ -84,7 +84,8 @@ public static class TenantExtensions
     /// <param name="tenantIdentityConfigurationEntity"></param>
     /// <returns></returns>
     public static TenantIdentityConfigurationResponse ToResponse(this TenantIdentityConfigurationEntity tenantIdentityConfigurationEntity, 
-        bool includeTenantConfiguration = false, bool includeUserIdentityConfiguration = true)
+        bool includeTenantConfiguration = false, bool includeUserIdentityConfiguration = true,
+        bool includePasswordIdentityConfiguration = true)
         => new()
         {
             Id = tenantIdentityConfigurationEntity.Id,
@@ -94,6 +95,10 @@ public static class TenantExtensions
             
             UserIdentityConfiguration = includeUserIdentityConfiguration 
                 ?  tenantIdentityConfigurationEntity?.UserIdentityConfiguration?.ToResponse() 
+                : null,
+
+            PasswordIdentityConfiguration = includePasswordIdentityConfiguration 
+                ? tenantIdentityConfigurationEntity?.PasswordIdentityConfiguration?.ToResponse()
                 : null,
 
             TenantConfiguration = includeTenantConfiguration
@@ -118,6 +123,30 @@ public static class TenantExtensions
             TenantIdentityConfigurationId = userIdentityConfigurationEntity.TenantIdentityConfigurationId,
             TenantIdentityConfiguration = includeTenantIdentityConfiguration
                 ? userIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse() 
+                : null
+        };
+
+    /// <summary>
+    /// Transforma um PasswordIdentityConfigurationEntity em response.
+    /// </summary>
+    /// <param name="passwordIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static PasswordIdentityConfigurationResponse ToResponse(this PasswordIdentityConfigurationEntity passwordIdentityConfigurationEntity,
+        bool includeTenantIdentityConfiguration = false)
+        => new()
+        {
+            Id = passwordIdentityConfigurationEntity.Id,
+            Created = passwordIdentityConfigurationEntity.Created,
+            Updated = passwordIdentityConfigurationEntity.Updated,
+            RequireDigit = passwordIdentityConfigurationEntity.RequireDigit,
+            RequiredLength = passwordIdentityConfigurationEntity.RequiredLength,
+            RequiredUniqueChars = passwordIdentityConfigurationEntity.RequiredUniqueChars,
+            RequireLowercase = passwordIdentityConfigurationEntity.RequireLowercase,
+            RequireNonAlphanumeric = passwordIdentityConfigurationEntity.
+            RequireNonAlphanumeric = passwordIdentityConfigurationEntity.RequireNonAlphanumeric,
+            TenantIdentityConfigurationId = passwordIdentityConfigurationEntity.TenantIdentityConfigurationId,
+            TenantIdentityConfiguration = includeTenantIdentityConfiguration
+                ? passwordIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse()
                 : null
         };
 }

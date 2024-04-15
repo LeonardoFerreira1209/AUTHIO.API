@@ -32,6 +32,7 @@ public class TenantService(
     ITenantConfigurationRepository tenantConfigurationRepository,
     ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
     IUserIdentityConfigurationRepository userIdentityConfigurationRepository,
+    IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
     IContextService contextService,
     IUserRepository userRepository) : ITenantService
 {
@@ -49,6 +50,9 @@ public class TenantService(
 
     private readonly IUserIdentityConfigurationRepository 
         _userIdentityConfigurationRepository = userIdentityConfigurationRepository;
+
+    private readonly IPasswordIdentityConfigurationRepository
+        _passwordIdentityConfigurationRepository = passwordIdentityConfigurationRepository;
 
     private readonly IContextService
         _contextService = contextService;
@@ -101,7 +105,7 @@ public class TenantService(
                                        = tenantEntityTask.Result;
 
                                    await _tenantConfigurationRepository.CreateAsync(
-                                        CreateTenantConfiguration.CreateDefaultTenantConfiguration(
+                                        CreateTenantConfiguration.CreateDefault(
                                             tenant.Id)).ContinueWith(
                                                async (tenantConfigurationEntityTask) =>
                                                {
@@ -109,7 +113,7 @@ public class TenantService(
                                                         = tenantConfigurationEntityTask.Result;
 
                                                    await _tenantIdentityConfigurationRepository.CreateAsync(
-                                                       CreateTenantIdentityConfiguration.CreateDefaultTenantIdnetityConfiguration(
+                                                       CreateTenantIdentityConfiguration.CreateDefault(
                                                                 tenantConfiguration.Id)).ContinueWith(
                                                                     async (tenantIdentityConfigurationEntityTask) =>
                                                                     {
@@ -117,13 +121,14 @@ public class TenantService(
                                                                             = tenantIdentityConfigurationEntityTask.Result;
 
                                                                         await _userIdentityConfigurationRepository.CreateAsync(
-                                                                            CreateUserIdentityConfiguration.CreateDefaultUserIdenityConfiguration(
-                                                                                    tenantIdentityConfiguration.Id)).ContinueWith(
-                                                                                        async (userIdentityConfigurationTask) => {
+                                                                            CreateUserIdentityConfiguration.CreateDefault(
+                                                                                    tenantIdentityConfiguration.Id));
 
-                                                                                            await _unitOfWork.CommitAsync();
+                                                                        await _passwordIdentityConfigurationRepository.CreateAsync(
+                                                                            CreatePasswordIdentityConfiguration.CreateDefault(
+                                                                                    tenantIdentityConfiguration.Id));
 
-                                                                                        }).Unwrap();
+                                                                        await _unitOfWork.CommitAsync();
 
                                                                     }).Unwrap();
 

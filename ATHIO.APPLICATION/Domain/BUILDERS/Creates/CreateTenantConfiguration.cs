@@ -12,7 +12,7 @@ public static class CreateUserIdentityConfiguration
     /// </summary>
     /// <param name="tenantIdentityConfigurationId"></param>
     /// <returns></returns>
-    public static UserIdentityConfigurationEntity CreateDefaultUserIdenityConfiguration(Guid tenantIdentityConfigurationId) 
+    public static UserIdentityConfigurationEntity CreateDefault(Guid tenantIdentityConfigurationId) 
         => new UserIdentityConfigurationBuilder()
                 .AddTenantIdentityConfigurationId(tenantIdentityConfigurationId)
                     .AddRequireUniqueEmail(true)

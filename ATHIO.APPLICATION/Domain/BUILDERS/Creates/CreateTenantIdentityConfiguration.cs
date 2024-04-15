@@ -13,7 +13,7 @@ public static class CreateTenantIdentityConfiguration
     /// <param name="apikey"></param>
     /// <param name="tenantId"></param>
     /// <returns></returns>
-    public static TenantIdentityConfigurationEntity CreateDefaultTenantIdnetityConfiguration(Guid tenantConfigurationId) 
+    public static TenantIdentityConfigurationEntity CreateDefault(Guid tenantConfigurationId) 
         => new TenantIdentityConfigurationBuilder()
                 .AddTenantConfigurationId(tenantConfigurationId)
                     .AddCreated().Builder();

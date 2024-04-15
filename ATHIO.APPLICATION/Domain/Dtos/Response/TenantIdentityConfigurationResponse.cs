@@ -36,4 +36,10 @@ public class TenantIdentityConfigurationResponse
     /// Entidade de user identity configuration.
     /// </summary>
     public virtual UserIdentityConfigurationResponse UserIdentityConfiguration { get; set; }
+
+
+    /// <summary>
+    /// Entidade de password identity configuration.
+    /// </summary>
+    public virtual PasswordIdentityConfigurationResponse PasswordIdentityConfiguration { get; set; }
 }

@@ -13,7 +13,7 @@ public static class CreateTenantConfiguration
     /// <param name="apikey"></param>
     /// <param name="tenantId"></param>
     /// <returns></returns>
-    public static TenantConfigurationEntity CreateDefaultTenantConfiguration(Guid tenantId) 
+    public static TenantConfigurationEntity CreateDefault(Guid tenantId) 
         => new TenantConfigurationBuilder()
                 .AddApikey($"{$"{Guid.NewGuid()}-HYPER.IO-{Random.Shared.NextInt64(1, 1000)}"}")
                     .AddTenantId(tenantId)
