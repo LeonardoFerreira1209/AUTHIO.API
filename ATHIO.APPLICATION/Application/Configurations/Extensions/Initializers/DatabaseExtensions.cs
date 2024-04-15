@@ -19,7 +19,7 @@ public static class DatabaseExtensions
     public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
         => services.AddDbContext<AuthIoContext>(options =>
         {
-            options.UseLazyLoadingProxies().UseMySQL(configuration
+            options.UseLazyLoadingProxies().UseMySQL(Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configuration
                     .GetConnectionString("Database"))
                         .LogTo(Console.WriteLine, LogLevel.Debug);
 
