@@ -25,6 +25,9 @@ public static class LogExtensions
     /// <returns></returns>
     public static IServiceCollection ConfigureSerilog(this IServiceCollection services, IConfiguration configurations)
     {
+        string connectionString = Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations
+                   .GetConnectionString("Database");
+
         Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
@@ -38,7 +41,7 @@ public static class LogExtensions
                 .Enrich.WithThreadName()
                 .WriteTo.Console()
                 .WriteTo.ApplicationInsights(_telemetryConfig, TelemetryConverter.Traces, LogEventLevel.Information)
-                .WriteTo.MySQL(configurations.GetValue<string>("ConnectionStrings:DataBase"))
+                .WriteTo.MySQL(connectionString)
                 .CreateLogger();
 
         var applicationInsightsServiceOptions = new ApplicationInsightsServiceOptions
