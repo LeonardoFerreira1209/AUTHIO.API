@@ -16,11 +16,13 @@ public static class DatabaseExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureDatabase(this IServiceCollection services, IConfiguration configurations)
         => services.AddDbContext<AuthIoContext>(options =>
         {
-            options.UseLazyLoadingProxies().UseMySQL(Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configuration
-                    .GetConnectionString("Database"))
+            string connectionString = Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations
+                    .GetConnectionString("Database");
+
+            options.UseLazyLoadingProxies().UseMySQL(connectionString)
                         .LogTo(Console.WriteLine, LogLevel.Debug);
 
         }, ServiceLifetime.Scoped);

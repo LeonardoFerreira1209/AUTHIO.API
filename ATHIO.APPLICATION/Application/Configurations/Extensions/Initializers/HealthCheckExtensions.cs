@@ -25,8 +25,11 @@ public static class HealthCheckExtensions
     /// <returns></returns>
     public static IServiceCollection ConfigureHealthChecks(this IServiceCollection services, IConfiguration configurations)
     {
+        string connectionString = Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations
+                    .GetConnectionString("Database");
+
         services
-           .AddHealthChecks().AddMySql(configurations.GetConnectionString("DataBase"), name: "Base de dados padrão.", tags: tags);
+           .AddHealthChecks().AddMySql(connectionString, name: "Base de dados padrão.", tags: tags);
 
         return services;
     }
