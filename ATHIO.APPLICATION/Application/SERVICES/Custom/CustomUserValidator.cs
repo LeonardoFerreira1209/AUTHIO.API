@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
+using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace AUTHIO.APPLICATION.Application.Services.Custom;
@@ -6,9 +8,16 @@ namespace AUTHIO.APPLICATION.Application.Services.Custom;
 /// <summary>
 /// Classe customizada de validação de usuários.
 /// </summary>
-public class CustomUserValidator<TUser>
+public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository, 
+        IContextService contextService)
     : UserValidator<TUser> where TUser : class
 {
+    private readonly ITenantIdentityConfigurationRepository 
+        _tenantIdentityConfigurationRepository = tenantIdentityConfigurationRepository;
+
+    private readonly string _apiKey 
+        = contextService.GetCurrentApiKey();
+
     /// <summary>
     /// Valida o usuário.
     /// </summary>
@@ -24,9 +33,25 @@ public class CustomUserValidator<TUser>
                 var identityErrors 
                     = taskIdentityError.Result;
 
-                if (manager.Options.User.RequireUniqueEmail)
-                    identityErrors = await ValidateEmail(
-                        manager, user, identityErrors);
+                await _tenantIdentityConfigurationRepository
+                    .GetAsync(config => config.TenantConfiguration.ApiKey == _apiKey)
+                            .ContinueWith(async (tenantIdentityTask) =>
+                            {
+                                var tenantIdentityConfigurationEntity 
+                                    = tenantIdentityTask.Result;
+
+                                var userIdentityConfigurationEntity 
+                                    = tenantIdentityConfigurationEntity?.UserIdentityConfiguration;
+
+                                bool requireUniqueEmail = userIdentityConfigurationEntity is not null 
+                                    ? userIdentityConfigurationEntity.RequireUniqueEmail 
+                                    : manager.Options.User.RequireUniqueEmail;
+
+                                if (requireUniqueEmail)
+                                    identityErrors = await ValidateEmail(
+                                        manager, user, identityErrors);
+
+                            }).Unwrap();
 
                 return !(identityErrors?.Count > 0)
                     ? IdentityResult.Success

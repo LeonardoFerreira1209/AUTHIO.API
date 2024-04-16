@@ -92,6 +92,9 @@ public class TokenService(UserManager<UserEntity> userManager,
 
         var claims = await Claims(userEntity, roles);
 
+        if (userEntity?.Tenant?.TenantConfiguration is not null)
+            claims.Add(new Claim("apiKey", userEntity.Tenant.TenantConfiguration.ApiKey));
+
         Log.Information($"[LOG INFORMATION] - Criando o token do usuário.\n");
 
         return await Task.FromResult(

@@ -161,7 +161,7 @@ public class TokenJwtBuilder
                 new Claim(JwtRegisteredClaimNames.Typ, "Bearer"),
                 new Claim(JwtRegisteredClaimNames.Email, userEntity.Email),
                 new Claim(ClaimTypes.MobilePhone, userEntity.PhoneNumber ?? string.Empty),
-                new Claim(ClaimTypes.Webpage, "https://www.linkedin.com/in/leonardoferreiraalmeida/")
+                new Claim(ClaimTypes.Webpage, "https://www.linkedin.com/in/leonardoferreiraalmeida/"),
 
             }.Union(roles).Union(claims);
 
