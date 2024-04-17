@@ -4,7 +4,7 @@
 <p>O <strong>AUTHIO.API</strong> é uma solução em .NET Core desenvolvida com o objetivo de oferecer às empresas uma plataforma completa para o gerenciamento de usuários, incluindo funcionalidades de criação, atualização e autenticação. Inspirado na flexibilidade e configuração personalizável do Keycloak, este sistema proporciona às empresas a capacidade de adaptar as regras de autenticação de acordo com suas necessidades específicas.</p>
 <div>
   <img style="width:20px;'" src='https://www.svgrepo.com/show/354202/postman-icon.svg'/>
-  <a href='https://documenter.getpostman.com/view/8902020/2sA3Bn5C9h'>AUTHIO.IO Postman Collection</a>
+  <a target="_blank" href='https://documenter.getpostman.com/view/8902020/2sA3Bn5C9h'>AUTHIO.IO Postman Collection</a>
 </div>
 <h2>Funcionalidades Principais</h2>
 <ul>
