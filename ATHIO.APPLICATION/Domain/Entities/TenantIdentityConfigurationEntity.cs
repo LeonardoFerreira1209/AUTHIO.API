@@ -59,4 +59,9 @@ public class TenantIdentityConfigurationEntity : IEntityPrimaryKey<Guid>
     ///  Entidade de password identity configuration.
     /// </summary>
     public virtual PasswordIdentityConfigurationEntity PasswordIdentityConfiguration { get; set; }
+
+    /// <summary>
+    ///  Entidade de Lockout identity configuration.
+    /// </summary>
+    public virtual LockoutIdentityConfigurationEntity LockoutIdentityConfiguration { get; set; }
 }

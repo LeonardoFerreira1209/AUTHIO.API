@@ -2,19 +2,20 @@
 
 namespace AUTHIO.APPLICATION.Domain.Utils.Extensions;
 
+/// <summary>
+/// Classe de Base32
+/// </summary>
 internal static class Base32
 {
     private const string _base32Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 
+    /// <summary>
+    /// Gera um base 32.
+    /// </summary>
+    /// <returns></returns>
     public static string GenerateBase32()
     {
         const int length = 20;
-        // base32 takes 5 bytes and converts them into 8 characters, which would be (byte length / 5) * 8
-        // except that it also pads ('=') for the last processed chunk if it's less than 5 bytes.
-        // So in order to handle the padding we add 1 less than the chunk size to our byte length
-        // which will either be removed due to integer division truncation if the length was already a multiple of 5
-        // or it will increase the divided length by 1 meaning that a 1-4 byte length chunk will be 1 instead of 0
-        // so the padding is now included in our string length calculation
         return string.Create(((length + 4) / 5) * 8, 0, static (buffer, _) =>
         {
             Span<byte> bytes = stackalloc byte[length];
@@ -23,8 +24,8 @@ internal static class Base32
             var index = 0;
             for (int offset = 0; offset < bytes.Length;)
             {
-                byte a, b, c, d, e, f, g, h;
-                int numCharsToOutput = GetNextGroup(bytes, ref offset, out a, out b, out c, out d, out e, out f, out g, out h);
+                int numCharsToOutput = GetNextGroup(bytes, ref offset, out byte a, out byte b, out byte c, 
+                    out byte d, out byte e, out byte f, out byte g, out byte h);
 
                 buffer[index + 7] = ((numCharsToOutput >= 8) ? _base32Chars[h] : '=');
                 buffer[index + 6] = ((numCharsToOutput >= 7) ? _base32Chars[g] : '=');
@@ -40,7 +41,7 @@ internal static class Base32
     }
 
     /// <summary>
-    /// 
+    /// Retorna o próximo grupo.
     /// </summary>
     /// <param name="input"></param>
     /// <param name="offset"></param>
@@ -53,19 +54,19 @@ internal static class Base32
     /// <param name="g"></param>
     /// <param name="h"></param>
     /// <returns></returns>
-    private static int GetNextGroup(Span<byte> input, ref int offset, out byte a, out byte b, out byte c, out byte d, out byte e, out byte f, out byte g, out byte h)
+    private static int GetNextGroup(Span<byte> input, ref int offset, out byte a, 
+        out byte b, out byte c, out byte d, out byte e, out byte f, out byte g, out byte h)
     {
         uint b1, b2, b3, b4, b5;
 
-        int retVal;
-        switch (input.Length - offset)
+        var retVal = (input.Length - offset) switch
         {
-            case 1: retVal = 2; break;
-            case 2: retVal = 4; break;
-            case 3: retVal = 5; break;
-            case 4: retVal = 7; break;
-            default: retVal = 8; break;
-        }
+            1 => 2,
+            2 => 4,
+            3 => 5,
+            4 => 7,
+            _ => 8,
+        };
 
         b1 = (offset < input.Length) ? input[offset++] : 0U;
         b2 = (offset < input.Length) ? input[offset++] : 0U;
