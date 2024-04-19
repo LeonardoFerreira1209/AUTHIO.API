@@ -78,7 +78,7 @@ public class CustomPasswordValidator<TUser>(ITenantIdentityConfigurationReposito
         if (string.IsNullOrWhiteSpace(password) || password.Length < requiredLength)
         {
             errors ??= [];
-            errors.Add(Describer.PasswordTooShort(options.RequiredLength));
+            errors.Add(Describer.PasswordTooShort(requiredLength));
         }
 
         bool requireNonAlphanumeric = passwordOptions is not null
@@ -128,7 +128,7 @@ public class CustomPasswordValidator<TUser>(ITenantIdentityConfigurationReposito
         if (requiredUniqueChars >= 1 && password.Distinct().Count() < requiredUniqueChars)
         {
             errors ??= [];
-            errors.Add(Describer.PasswordRequiresUniqueChars(options.RequiredUniqueChars));
+            errors.Add(Describer.PasswordRequiresUniqueChars(requiredUniqueChars));
         }
 
         return
