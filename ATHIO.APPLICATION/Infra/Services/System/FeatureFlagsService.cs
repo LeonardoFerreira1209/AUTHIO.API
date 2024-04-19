@@ -49,7 +49,7 @@ public class FeatureFlagsService(
 
             }).Result;
 
-        if (featureFlag.IsEnabled is false)
+        if (featureFlag.IsEnabled is false || featureFlag.Status is Status.Inativo) 
             throw new CustomException(HttpStatusCode.NotImplemented, null, [
                 new($"Método {methodName} inativado!")
             ]);

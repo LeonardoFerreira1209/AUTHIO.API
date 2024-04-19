@@ -5,7 +5,6 @@ using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
 using AUTHIO.APPLICATION.Domain.Dtos.Request;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
-using AUTHIO.APPLICATION.Domain.Exceptions;
 using AUTHIO.APPLICATION.Domain.Utils.Extensions;
 using AUTHIO.APPLICATION.Domain.Validators;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
@@ -82,7 +81,7 @@ public sealed class AuthenticationService(
                         if (identityResult.Succeeded is false)
                             throw new CreateUserFailedException(
                                 registerUserRequest, identityResult.Errors.Select((e)
-                                    => new DadosNotificacao(e.Code.CustomExceptionMessage())).ToList());
+                                    => new DadosNotificacao(e.Description)).ToList());
 
                         return await _userRepository
                             .AddToUserRoleAsync(userEntity, "System").ContinueWith(identityResultTask =>
@@ -93,7 +92,7 @@ public sealed class AuthenticationService(
                                 if (identityResult.Succeeded is false)
                                     throw new UserToRoleFailedException(
                                         registerUserRequest, identityResult.Errors.Select((e)
-                                            => new DadosNotificacao(e.Code.CustomExceptionMessage())).ToList());
+                                            => new DadosNotificacao(e.Description)).ToList());
 
                                 transaction.CommitAsync();
 

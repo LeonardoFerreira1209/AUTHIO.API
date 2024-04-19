@@ -248,7 +248,7 @@ public class TenantService(
                                 if (identityResult.Succeeded is false)
                                     throw new CreateUserFailedException(
                                         registerUserRequest, identityResult.Errors.Select((e)
-                                            => new DadosNotificacao(e.Code.CustomExceptionMessage())).ToList());
+                                            => new DadosNotificacao(e.Description)).ToList());
 
                                 return new OkObjectResult(
                                     new ApiResponse<UserResponse>(

@@ -1,4 +1,5 @@
 ﻿using AUTHIO.APPLICATION.Domain.Entities;
+using AUTHIO.APPLICATION.Domain.Helpers;
 using AUTHIO.APPLICATION.Infra.Context;
 using AUTHIO.APPLICATION.Infra.Services.Custom;
 using Microsoft.AspNetCore.Identity;
@@ -83,10 +84,14 @@ public static class IdentityExtensions
               .AddEntityFrameworkStores<AuthIoContext>()
               .AddDefaultTokenProviders()
               .AddSignInManager<CustomSignInManager>()
+              .AddErrorDescriber<CustomIdentityErrorDescriber>() 
               .AddUserManager<CustomUserManager<UserEntity>>()
-              .AddUserValidator<CustomUserValidator<UserEntity>>();
+              .AddUserValidator<CustomUserValidator<UserEntity>>()
+              .AddPasswordValidator<CustomPasswordValidator<UserEntity>>();
 
+        services.AddSingleton<CustomIdentityErrorDescriber>();
         services.AddScoped<CustomUserValidator<UserEntity>>();
+        services.AddScoped<CustomPasswordValidator<UserEntity>>();
 
         return services;
     }
