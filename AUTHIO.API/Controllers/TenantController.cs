@@ -1,13 +1,11 @@
 ﻿using AUTHIO.API.Controllers.Base;
-using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
-using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services;
 using AUTHIO.APPLICATION.Domain.Dtos.Request;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
+using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.CUSTOMAUTHORIZE.ATTRIBUTE;
 using AUTHIO.APPLICATION.DOMAIN.ENUMS;
-using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
@@ -23,8 +21,8 @@ namespace AUTHIO.API.Controllers;
 /// <param name="tenantService"></param>
 /// <param name="unitOfWork"></param>
 public class TenantController(
-    IFeatureFlags featureFlags, ITenantService tenantService, IUnitOfWork<AuthIoContext> unitOfWork) 
-        : BaseController(featureFlags, unitOfWork)
+    IFeatureFlagsService featureFlags, ITenantService tenantService) 
+        : BaseController(featureFlags)
 {
     private readonly ITenantService 
         _tenantService = tenantService;

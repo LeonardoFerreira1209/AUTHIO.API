@@ -6,7 +6,7 @@ namespace AUTHIO.APPLICATION.Domain.Contracts.Repositories;
 /// <summary>
 /// Interface de feature flags
 /// </summary>
-public interface IFeatureFlags
+public interface IFeatureFlagsRepository
     : IGenerictEntityCoreRepository<FeatureFlagsEntity>
 {
     /// <summary>

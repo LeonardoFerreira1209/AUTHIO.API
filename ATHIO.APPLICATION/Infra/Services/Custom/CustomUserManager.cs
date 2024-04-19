@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AUTHIO.APPLICATION.Application.Services.Custom;
+namespace AUTHIO.APPLICATION.Infra.Services.Custom;
 
 /// <summary>
 /// Classe customizada do User Manager do Identity.
@@ -102,9 +102,9 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
     protected new async Task<IdentityResult> ValidateUserAsync(TUser user)
     {
         if (SupportsUserSecurityStamp)
-            if(string.IsNullOrEmpty(
+            if (string.IsNullOrEmpty(
                 await GetSecurityStampAsync(user)))
-                    throw new InvalidOperationException("Security Stamp não pode ser nulo.");
+                throw new InvalidOperationException("Security Stamp não pode ser nulo.");
 
         List<IdentityError> errors = null;
         foreach (var validator in UserValidators)
@@ -121,7 +121,7 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
                 });
         }
 
-        if (errors?.Count > 0) 
+        if (errors?.Count > 0)
             return IdentityResult.Failed([.. errors]);
 
         return IdentityResult.Success;

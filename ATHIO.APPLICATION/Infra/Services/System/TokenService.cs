@@ -12,7 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using static AUTHIO.APPLICATION.Domain.Exceptions.CustomUserException;
 
-namespace AUTHIO.APPLICATION.APPLICATION.SERVICES.SYSTEM;
+namespace AUTHIO.APPLICATION.Infra.Services.System;
 
 /// <summary>
 /// Token service
@@ -23,16 +23,16 @@ namespace AUTHIO.APPLICATION.APPLICATION.SERVICES.SYSTEM;
 /// <param name="userManager"></param>
 /// <param name="roleManager"></param>
 /// <param name="appsettings"></param>
-public class TokenService(UserManager<UserEntity> userManager, 
+public class TokenService(UserManager<UserEntity> userManager,
     RoleManager<RoleEntity> roleManager, IOptions<AppSettings> appsettings) : ITokenService
 {
-    private readonly UserManager<UserEntity> 
+    private readonly UserManager<UserEntity>
         _userManager = userManager;
 
-    private readonly RoleManager<RoleEntity> 
+    private readonly RoleManager<RoleEntity>
         _roleManager = roleManager;
 
-    private readonly IOptions<AppSettings> 
+    private readonly IOptions<AppSettings>
         _appsettings = appsettings;
 
     /// <summary>

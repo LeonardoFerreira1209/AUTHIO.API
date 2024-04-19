@@ -3,7 +3,7 @@ using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace AUTHIO.APPLICATION.Application.Services.Custom;
+namespace AUTHIO.APPLICATION.Infra.Services.Custom;
 
 /// <summary>
 /// Classe customizada de validação de usuários.
@@ -71,7 +71,7 @@ public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository t
     /// <param name="userOptions"></param>
     /// <returns></returns>
     private async Task<List<IdentityError>> ValidateUserName(
-        UserManager<TUser> manager, TUser user, 
+        UserManager<TUser> manager, TUser user,
         UserOptions userOptions)
     {
         List<IdentityError> errors = null;

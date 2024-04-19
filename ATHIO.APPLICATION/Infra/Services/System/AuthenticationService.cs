@@ -21,7 +21,7 @@ using System.Net;
 using static AUTHIO.APPLICATION.Domain.Exceptions.CustomUserException;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
-namespace AUTHIO.APPLICATION.Application.Services.System;
+namespace AUTHIO.APPLICATION.Infra.Services.System;
 
 /// <summary>
 /// Serviço de Authenticação do sistema.
@@ -107,7 +107,7 @@ public sealed class AuthenticationService(
 
                     }).Unwrap();
             }
-            catch 
+            catch
             {
                 transaction.Rollback(); throw;
             }
@@ -136,7 +136,7 @@ public sealed class AuthenticationService(
                 {
                     var validation = validationTask.Result;
 
-                    if (validation.IsValid is false) 
+                    if (validation.IsValid is false)
                         await validation.GetValidationErrors();
 
                 }).Unwrap();
@@ -190,8 +190,8 @@ public sealed class AuthenticationService(
     /// <param name="loginRequest"></param>
     /// <returns></returns>
     /// <exception cref="CustomException"></exception>
-    private async Task<TokenJWT> GenerateTokenJwtAsync(LoginRequest loginRequest) 
-        => await _tokenService.CreateJsonWebToken(loginRequest.Username).ContinueWith((tokenTask) => 
+    private async Task<TokenJWT> GenerateTokenJwtAsync(LoginRequest loginRequest)
+        => await _tokenService.CreateJsonWebToken(loginRequest.Username).ContinueWith((tokenTask) =>
         {
             var tokenJwt =
                 tokenTask.Result
@@ -221,7 +221,8 @@ public sealed class AuthenticationService(
         {
             Log.Information($"[LOG INFORMATION] - Falha ao autenticar usuário, não está confirmado.\n");
 
-            throw new IsNotAllowedAuthenticationException(new {
+            throw new IsNotAllowedAuthenticationException(new
+            {
                 userId,
                 isNotAllowed = true,
                 loginRequest

@@ -18,7 +18,7 @@ using System.Net;
 using static AUTHIO.APPLICATION.Domain.Exceptions.CustomTenantExceptions;
 using static AUTHIO.APPLICATION.Domain.Exceptions.CustomUserException;
 
-namespace AUTHIO.APPLICATION.APPLICATION.SERVICES;
+namespace AUTHIO.APPLICATION.Application.Services;
 
 /// <summary>
 /// Classe de serviço de Tenants.

@@ -1,13 +1,11 @@
 ﻿using AUTHIO.API.Controllers.Base;
-using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
-using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
 using AUTHIO.APPLICATION.Domain.Dtos.Request;
 using AUTHIO.APPLICATION.Domain.Dtos.Response;
 using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
+using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.TOKEN;
 using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;
-using AUTHIO.APPLICATION.Infra.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
@@ -22,8 +20,8 @@ namespace AUTHIO.API.Controllers;
 /// </summary>
 /// <param name="featureFlags"></param>
 public class AuthenticationController(
-    IFeatureFlags featureFlags, IAuthenticationService authenticationService, IUnitOfWork<AuthIoContext> unitOfWork) 
-        : BaseController(featureFlags, unitOfWork)
+    IFeatureFlagsService featureFlags, IAuthenticationService authenticationService) 
+        : BaseController(featureFlags)
 {
     private readonly IAuthenticationService 
         _authenticationService = authenticationService;

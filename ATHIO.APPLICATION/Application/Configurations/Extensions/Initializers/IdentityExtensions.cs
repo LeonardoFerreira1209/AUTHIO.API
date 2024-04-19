@@ -1,6 +1,6 @@
-﻿using AUTHIO.APPLICATION.Application.Services.Custom;
-using AUTHIO.APPLICATION.Domain.Entities;
+﻿using AUTHIO.APPLICATION.Domain.Entities;
 using AUTHIO.APPLICATION.Infra.Context;
+using AUTHIO.APPLICATION.Infra.Services.Custom;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

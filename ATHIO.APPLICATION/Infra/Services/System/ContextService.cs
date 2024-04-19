@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace AUTHIO.APPLICATION.APPLICATION.SERVICES.SYSTEM;
+namespace AUTHIO.APPLICATION.Infra.Services.System;
 
 /// <summary>
 /// Classe de contexto Http do sistema.
@@ -43,12 +43,14 @@ public class ContextService(
     /// Verifica se o usuário esta logado.
     /// </summary>
     public bool IsAuthenticated
-        => httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+        => httpContextAccessor.HttpContext?
+            .User?.Identity?.IsAuthenticated ?? false;
 
     /// <summary>
     /// Recupera o id do usuário logado.
     /// </summary>
     /// <returns></returns>
     public Guid GetCurrentUserId()
-        => Guid.Parse(httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+        => Guid.Parse(httpContextAccessor.HttpContext
+            ?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
 }

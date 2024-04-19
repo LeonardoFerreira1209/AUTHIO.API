@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AUTHIO.APPLICATION.Application.Services.Custom;
+namespace AUTHIO.APPLICATION.Infra.Services.Custom;
 
 /// <summary>
 /// 
@@ -17,14 +17,14 @@ namespace AUTHIO.APPLICATION.Application.Services.Custom;
 /// <param name="logger"></param>
 /// <param name="schemes"></param>
 /// <param name="confirmation"></param>
-public class CustomSignInManager(CustomUserManager<UserEntity> userManager, 
+public class CustomSignInManager(CustomUserManager<UserEntity> userManager,
     IHttpContextAccessor contextAccessor,
-    IUserClaimsPrincipalFactory<UserEntity> claimsFactory, 
+    IUserClaimsPrincipalFactory<UserEntity> claimsFactory,
     IOptions<IdentityOptions> optionsAccessor,
-    ILogger<SignInManager<UserEntity>> logger, 
-    IAuthenticationSchemeProvider schemes, 
+    ILogger<SignInManager<UserEntity>> logger,
+    IAuthenticationSchemeProvider schemes,
     IUserConfirmation<UserEntity> confirmation)
         : SignInManager<UserEntity>(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
 {
-    
+
 }

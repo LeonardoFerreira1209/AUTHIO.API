@@ -1,6 +1,4 @@
-﻿using AUTHIO.APPLICATION.Application.Services.System;
-using AUTHIO.APPLICATION.APPLICATION.SERVICES;
-using AUTHIO.APPLICATION.APPLICATION.SERVICES.SYSTEM;
+﻿using AUTHIO.APPLICATION.Application.Services;
 using AUTHIO.APPLICATION.Domain.Contracts.Repositories;
 using AUTHIO.APPLICATION.Domain.Contracts.Repositories.Base;
 using AUTHIO.APPLICATION.Domain.Contracts.Services;
@@ -8,7 +6,7 @@ using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
 using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using AUTHIO.APPLICATION.Infra.Repositories;
 using AUTHIO.APPLICATION.Infra.Repositories.BASE;
-using AUTHIO.APPLICATION.INFRA.FEATUREFLAGS;
+using AUTHIO.APPLICATION.Infra.Services.System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,23 +28,25 @@ public static class DependenciesExtensions
         services
             .AddSingleton(serviceProvider => configurations)
         // Services
+            .AddScoped<IFeatureFlagsService, FeatureFlagsService>()
             .AddScoped<IContextService, ContextService>()
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddScoped<ITokenService, TokenService>()
             .AddScoped<ITenantService, TenantService>()
         // Repository
-            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
-            .AddScoped<IUserRepository, UserRepository>()
-            .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
-            .AddScoped<ITenantRepository, TenantRepository>()
-            .AddScoped<ITenantConfigurationRepository, TenantConfigurationRepository>()
-            .AddScoped<ITenantIdentityConfigurationRepository, TenantIdentityConfigurationRepository>()
-            .AddScoped<IUserIdentityConfigurationRepository, UserIdentityConfigurationRepository>()
-            .AddScoped<IPasswordIdentityConfigurationRepository, PasswordIdentityConfigurationRepository>()
-            .AddScoped<ILockoutIdentityConfigurationRepository, LockoutIdentityConfigurationRepository>()
-            .AddScoped<IUserRepository, UserRepository>()
+            .AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
+            .AddTransient<IFeatureFlagsRepository, FeatureFlagsRepository>()
+            .AddTransient<IUserRepository, UserRepository>()
+            .AddTransient(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
+            .AddTransient<ITenantRepository, TenantRepository>()
+            .AddTransient<ITenantConfigurationRepository, TenantConfigurationRepository>()
+            .AddTransient<ITenantIdentityConfigurationRepository, TenantIdentityConfigurationRepository>()
+            .AddTransient<IUserIdentityConfigurationRepository, UserIdentityConfigurationRepository>()
+            .AddTransient<IPasswordIdentityConfigurationRepository, PasswordIdentityConfigurationRepository>()
+            .AddTransient<ILockoutIdentityConfigurationRepository, LockoutIdentityConfigurationRepository>()
+            .AddTransient<IUserRepository, UserRepository>()
         // Infra
-            .AddScoped<IFeatureFlags, FeatureFlagsProvider>();
+            .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>();
 
 
         return services;

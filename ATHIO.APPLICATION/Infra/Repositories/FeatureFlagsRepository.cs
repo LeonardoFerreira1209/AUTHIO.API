@@ -4,7 +4,7 @@ using AUTHIO.APPLICATION.Infra.Context;
 using AUTHIO.APPLICATION.Infra.Repositories.BASE;
 using Microsoft.EntityFrameworkCore;
 
-namespace AUTHIO.APPLICATION.INFRA.FEATUREFLAGS;
+namespace AUTHIO.APPLICATION.Infra.Repositories;
 
 /// <summary>
 /// Feature flags provider
@@ -12,8 +12,8 @@ namespace AUTHIO.APPLICATION.INFRA.FEATUREFLAGS;
 /// <remarks>
 /// ctor
 /// </remarks>
-public class FeatureFlagsProvider(
-    AuthIoContext context) : GenericEntityCoreRepository<FeatureFlagsEntity>(context), IFeatureFlags
+public class FeatureFlagsRepository(
+    AuthIoContext context) : GenericEntityCoreRepository<FeatureFlagsEntity>(context), IFeatureFlagsRepository
 {
     private readonly AuthIoContext _context = context;
 
