@@ -1,4 +1,5 @@
-﻿using AUTHIO.APPLICATION.Domain.Utils.Extensions;
+﻿using AUTHIO.APPLICATION.Domain.Helpers;
+using AUTHIO.APPLICATION.Domain.Utils.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -21,8 +22,8 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
     IOptions<IdentityOptions> optionsAccessor,
     IPasswordHasher<TUser> passwordHasher,
     IEnumerable<CustomUserValidator<TUser>> userValidators,
-    IEnumerable<IPasswordValidator<TUser>> passwordValidators,
-    ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors,
+    IEnumerable<CustomPasswordValidator<TUser>> passwordValidators,
+    ILookupNormalizer keyNormalizer, CustomIdentityErrorDescriber errors,
     IServiceProvider services,
     ILogger<UserManager<TUser>> logger)
         : UserManager<TUser>(store, optionsAccessor, passwordHasher,

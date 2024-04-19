@@ -19,7 +19,7 @@
     "RequiredDigit": true,
     "RequireLowercase": true,
     "RequireUppercase": true,
-    "RequiredLength": 12,
+    "RequiredLength": 15,
     "RequireNonAlphanumeric": true,
     "RequiredUniqueChars": 1
   }
