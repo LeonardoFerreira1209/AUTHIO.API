@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["AUTHIO.API/AUTHIO.API.csproj", "AUTHIO.API/"]
 COPY ["ATHIO.APPLICATION/AUTHIO.APPLICATION.csproj", "ATHIO.APPLICATION/"]
-RUN dotnet restore "AUTHIO.API/AUTHIO.API.csproj"
+RUN dotnet restore "src/AUTHIO.API/AUTHIO.API.csproj"
 COPY . .
 WORKDIR "/src/AUTHIO.API"
 RUN dotnet build "AUTHIO.API.csproj" -c Release -o /app/build
