@@ -7,16 +7,18 @@ EXPOSE 8080
 EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AUTHIO.API/AUTHIO.API.csproj", "AUTHIO.API/"]
-COPY ["ATHIO.APPLICATION/AUTHIO.APPLICATION.csproj", "ATHIO.APPLICATION/"]
-RUN dotnet restore "src/AUTHIO.API/AUTHIO.API.csproj"
+COPY ["src/AUTHIO.API/AUTHIO.API.csproj", "src/AUTHIO.API/"]
+COPY ["src/ATHIO.APPLICATION/AUTHIO.APPLICATION.csproj", "src/ATHIO.APPLICATION/"]
+RUN dotnet restore "./src/AUTHIO.API/AUTHIO.API.csproj"
 COPY . .
-WORKDIR "/src/AUTHIO.API"
-RUN dotnet build "AUTHIO.API.csproj" -c Release -o /app/build
+WORKDIR "/src/src/AUTHIO.API"
+RUN dotnet build "./AUTHIO.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AUTHIO.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./AUTHIO.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
