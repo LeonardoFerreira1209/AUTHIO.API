@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /AUTHIO.API/appsettings.Development.json
 /AUTHIO.API/appsettings.Development.json
+/src/AUTHIO.API/appsettings.Development.json
