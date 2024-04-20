@@ -37,7 +37,7 @@ public class ContextService(
     /// </summary>
     /// <returns></returns>
     public string GetCurrentTenantKey() => httpContextAccessor.HttpContext?.Request?.Headers
-                  ?.FirstOrDefault(header => header.Key.Equals("tenantKey")).Value;
+                  ?.FirstOrDefault(header => header.Key.Equals("tenantkey")).Value;
 
     /// <summary>
     /// Verifica se o usuário esta logado.
