@@ -50,6 +50,58 @@ public static class AuthenticationExtensions
 
             options.Events = new JwtBearerEvents
             {
+                //OnMessageReceived = async context =>
+                //{
+                //    var http = context.HttpContext.RequestServices.GetRequiredService<IHttpContextAccessor>();
+                //    var hasTenantKey =
+                //   !string.IsNullOrEmpty(
+                //       http.HttpContext
+                //           .Request.Headers
+                //               .FirstOrDefault(x => x.Key == "tenantkey").Key
+                //           );
+
+                //    if (hasTenantKey)
+                //    {
+                //        var meuServico = context.HttpContext.RequestServices.GetRequiredService<ITenantIdentityConfigurationRepository>(); 
+                //        var tenantkey = http.HttpContext.Request.Headers.FirstOrDefault(x => x.Key == "tenantkey").Value;
+                //        var a = await meuServico.GetAsync(config => config.TenantConfiguration.TenantKey == tenantkey);
+
+                //        if(a != null)
+                //        {
+                //            options.SaveToken = true;
+
+                //            options.TokenValidationParameters = new TokenValidationParameters
+                //            {
+                //                LogValidationExceptions = true,
+                //                ValidateIssuer = true,
+                //                ValidateAudience = true,
+                //                ValidateLifetime = true,
+                //                ValidateIssuerSigningKey = true,
+                //                ClockSkew = TimeSpan.FromHours(3),
+
+                //                ValidIssuer = configurations.GetValue<string>("Auth:ValidIssuer"),
+                //                ValidAudience = configurations.GetValue<string>("dfgsdgdfgdfgdf"),
+                //                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("fsdfsdfsfsdffsdfsdf"))
+                //            };
+                //        }
+                //    }
+                //    else
+                //    {
+                //        options.TokenValidationParameters = new TokenValidationParameters
+                //        {
+                //            LogValidationExceptions = true,
+                //            ValidateIssuer = true,
+                //            ValidateAudience = true,
+                //            ValidateLifetime = true,
+                //            ValidateIssuerSigningKey = true,
+                //            ClockSkew = TimeSpan.FromHours(3),
+
+                //            ValidIssuer = configurations.GetValue<string>("Auth:ValidIssuer"),
+                //            ValidAudience = configurations.GetValue<string>("Auth:ValidAudience"),
+                //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configurations.GetValue<string>("Auth:SecurityKey")))
+                //        };
+                //    }
+                //},
                 OnAuthenticationFailed = context =>
                 {
                     Log.Error($"[LOG ERROR] {nameof(JwtBearerEvents)} - METHOD OnAuthenticationFailed - {context.Exception.Message}\n");

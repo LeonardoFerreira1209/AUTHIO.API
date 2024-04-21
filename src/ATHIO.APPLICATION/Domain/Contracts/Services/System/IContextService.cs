@@ -1,4 +1,7 @@
-﻿namespace AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+
+namespace AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 
 /// <summary>
 /// Interface de contexto de http.
@@ -27,4 +30,9 @@ public interface IContextService
     /// </summary>
     /// <returns></returns>
     Guid GetCurrentUserId();
+
+    void SetTokenValidateParameters(
+        MessageReceivedContext receivedContext,
+        JwtBearerOptions options,
+        IConfiguration configurations);
 }
