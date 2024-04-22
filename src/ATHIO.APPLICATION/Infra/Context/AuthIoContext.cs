@@ -21,13 +21,13 @@ public class AuthIoContext(
         : IdentityDbContext<UserEntity, RoleEntity, Guid>(options)
 {
     public readonly Guid? _currentUserId
-        = contextService.IsAuthenticated ? contextService.GetCurrentUserId() : null;
+        = null;//contextService.IsAuthenticated ? contextService.GetCurrentUserId() : null;
 
     public readonly Guid? _tenantId
-        = contextService?.GetCurrentTenantId();
+        = null;//contextService?.GetCurrentTenantId();
 
     public readonly string _tenantKey
-        = contextService?.GetCurrentTenantKey();
+        = null;//contextService?.GetCurrentTenantKey();
 
     /// <summary>
     /// Tabela de Tenants.

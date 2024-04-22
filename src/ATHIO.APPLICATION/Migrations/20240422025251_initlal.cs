@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.APPLICATION.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initlal : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -373,17 +373,17 @@ namespace AUTHIO.APPLICATION.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("0ff85d50-38c9-481d-8efc-997d0b59d208"), null, new DateTime(2024, 4, 20, 1, 37, 26, 765, DateTimeKind.Local).AddTicks(169), "System", null, 1, true, null, null });
+                values: new object[] { new Guid("1dd39ecf-70e0-4de6-8c18-0f6748df44bc"), null, new DateTime(2024, 4, 21, 23, 52, 51, 523, DateTimeKind.Local).AddTicks(4637), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("0ff85d50-38c9-481d-8efc-997d0b59d208") },
-                    { 2, "Tenants", "GET", new Guid("0ff85d50-38c9-481d-8efc-997d0b59d208") },
-                    { 3, "Tenants", "PATCH", new Guid("0ff85d50-38c9-481d-8efc-997d0b59d208") },
-                    { 4, "Tenants", "PUT", new Guid("0ff85d50-38c9-481d-8efc-997d0b59d208") }
+                    { 1, "Tenants", "POST", new Guid("1dd39ecf-70e0-4de6-8c18-0f6748df44bc") },
+                    { 2, "Tenants", "GET", new Guid("1dd39ecf-70e0-4de6-8c18-0f6748df44bc") },
+                    { 3, "Tenants", "PATCH", new Guid("1dd39ecf-70e0-4de6-8c18-0f6748df44bc") },
+                    { 4, "Tenants", "PUT", new Guid("1dd39ecf-70e0-4de6-8c18-0f6748df44bc") }
                 });
 
             migrationBuilder.CreateIndex(

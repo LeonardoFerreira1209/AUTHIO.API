@@ -18,15 +18,18 @@ public static class RateLimitExtensions
     public static IServiceCollection ConfigureFixedRateLimit(
         this IServiceCollection services)
     {
-        services.AddRateLimiter(_ => 
-            _.AddFixedWindowLimiter(policyName: "fixed", options => {
-
-                options.PermitLimit = 10;
-                options.Window = TimeSpan.FromMinutes(10);
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = 429;
+            options.AddFixedWindowLimiter("fixes", options =>
+            {
+                options.AutoReplenishment = true;
                 options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-                options.QueueLimit = 5;
-
-            }));
+                options.QueueLimit = 2;
+                options.PermitLimit = 10;
+                options.Window = TimeSpan.FromMinutes(3);
+            });
+        });
 
         return services;
     }
