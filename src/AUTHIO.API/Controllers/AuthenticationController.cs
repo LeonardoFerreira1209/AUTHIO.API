@@ -34,9 +34,9 @@ public class AuthenticationController(
     [HttpPost("register")]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Registrar usuário", Description = "Método responsável por registrar um usuário no sistema!")]
-    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterAsync(
         [FromBody] RegisterUserRequest registerUserRequest, 
         CancellationToken cancellationToken)
