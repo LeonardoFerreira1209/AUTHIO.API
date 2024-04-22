@@ -21,7 +21,7 @@ public static class RateLimitExtensions
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = 429;
-            options.AddFixedWindowLimiter("fixes", options =>
+            options.AddFixedWindowLimiter("fixed", options =>
             {
                 options.AutoReplenishment = true;
                 options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
