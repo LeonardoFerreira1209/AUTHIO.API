@@ -1,11 +1,8 @@
 ﻿using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Primitives;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
-using System.Text;
-using MessageReceivedContext = Microsoft.AspNetCore.Authentication.JwtBearer.MessageReceivedContext;
 
 namespace AUTHIO.APPLICATION.Infra.Services.System;
 
@@ -42,7 +39,8 @@ public class ContextService(
     /// </summary>
     /// <returns></returns>
     public string GetCurrentTenantKey() => httpContextAccessor.HttpContext?.Request?.Headers
-                  ?.FirstOrDefault(header => header.Key.Equals("tenantkey")).Value;
+                  ?.FirstOrDefault(header => header.Key.Equals("tenantkey")).Value
+                        ?? httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Issuer == "tenantkey").Value;
 
     /// <summary>
     /// Verifica se o usuário esta logado.
@@ -58,58 +56,15 @@ public class ContextService(
     public Guid GetCurrentUserId()
         => Guid.Parse(httpContextAccessor.HttpContext
             ?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
-
+    
     /// <summary>
-    /// 
+    /// Tenta Recuperar um valor do header pelo key/type.
     /// </summary>
-    /// <param name="receivedContext"></param>
-    /// <param name="options"></param>
-    /// <param name="configurations"></param>
-    public void SetTokenValidateParameters(
-        MessageReceivedContext receivedContext, 
-        JwtBearerOptions options, 
-        IConfiguration configurations)
-    {
-        var hasTenantKey =
-                    !string.IsNullOrEmpty(
-                        receivedContext.HttpContext
-                            .Request.Headers
-                                .FirstOrDefault(x => x.Key == "tenantkey").Key
-                            );
-
-        if (hasTenantKey)
-        {
-            options.SaveToken = true;
-
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                LogValidationExceptions = true,
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ClockSkew = TimeSpan.FromHours(3),
-
-                ValidIssuer = configurations.GetValue<string>("Auth:ValidIssuer"),
-                ValidAudience = configurations.GetValue<string>("dfgsdgdfgdfgdf"),
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("fsdfsdfsfsdffsdfsdf"))
-            };
-        }
-        else
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                LogValidationExceptions = true,
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ClockSkew = TimeSpan.FromHours(3),
-
-                ValidIssuer = configurations.GetValue<string>("Auth:ValidIssuer"),
-                ValidAudience = configurations.GetValue<string>("Auth:ValidAudience"),
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configurations.GetValue<string>("Auth:SecurityKey")))
-            };
-        }
-    }
+    /// <param name="header"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public bool TryGetValueByHeader(string key, [MaybeNullWhen(false)] out StringValues value)
+        => httpContextAccessor
+               .HttpContext.Request
+                   .Headers.TryGetValue(key, out value);
 }
