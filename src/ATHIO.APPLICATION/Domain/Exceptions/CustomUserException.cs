@@ -15,13 +15,12 @@ public class CustomUserException
     public class UnauthorizedUserException : BaseException
     {
         public UnauthorizedUserException(
-            object dados)
+            object dados = null)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.Unauthorized, dados, new List<DadosNotificacao>() {
-                   new("Usuário não autorizado!"),
-                   new("Sem as permissões necessárias!")
-               });
+               (HttpStatusCode.Unauthorized, dados, [
+                   new("Usuário não autenticado!")
+               ]);
         }
 
         public UnauthorizedUserException(
@@ -29,6 +28,25 @@ public class CustomUserException
         {
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
+        }
+    }
+
+    public class ForbiddendUserException : BaseException
+    {
+        public ForbiddendUserException(
+            object dados)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.Forbidden, dados, [
+                   new("Usuário não tem as permissões mecessárias!")
+               ]);
+        }
+
+        public ForbiddendUserException(
+            object dados, List<DadosNotificacao> notificacoes)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.Forbidden, dados, notificacoes);
         }
     }
 
@@ -41,9 +59,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.Unauthorized, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.Unauthorized, dados, [
                    new("Token expirado!"),
-               });
+               ]);
         }
 
         public UnauthorizedTokenLifetimeException(
@@ -108,9 +126,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.NotFound, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.NotFound, dados, [
                    new("Roles não econtradas!")
-               });
+               ]);
         }
 
         public NotFoundRoleException(
@@ -130,9 +148,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.BadRequest, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.BadRequest, dados, [
                    new("Dados do usuário incorretos!")
-               });
+               ]);
         }
 
         public InvalidUserAuthenticationException(
@@ -152,9 +170,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-                (HttpStatusCode.Locked, dados, new List<DadosNotificacao>() {
+                (HttpStatusCode.Locked, dados, [
                    new("Usúario está bloqueado, aguarde alguns minutos e tente novamente!")
-               });
+               ]);
         }
 
         public LockedOutAuthenticationException(
@@ -174,9 +192,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.Unauthorized, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.Unauthorized, dados, [
                    new("Usuário não está habilitado, confirme o e-mail!")
-               });
+               ]);
         }
 
         public IsNotAllowedAuthenticationException(
@@ -196,9 +214,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.Unauthorized, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.Unauthorized, dados, [
                    new("Autenticação de dois fatores necessária!")
-               });
+               ]);
         }
 
         public RequiresTwoFactorAuthenticationException(
@@ -215,9 +233,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.BadRequest, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.BadRequest, dados, [
                    new("Códgo de confirmação inserido incorreto ou expirado!")
-               });
+               ]);
         }
 
         public IncorrectConfirmationCodeAuthenticationException(
@@ -237,9 +255,9 @@ public class CustomUserException
             object dados)
         {
             Response = new ErrorResponse
-               (HttpStatusCode.BadRequest, dados, new List<DadosNotificacao>() {
+               (HttpStatusCode.BadRequest, dados, [
                    new("Erro na geração do token JWT!")
-               });
+               ]);
         }
 
         public TokenJwtException(

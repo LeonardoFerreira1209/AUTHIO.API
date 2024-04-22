@@ -55,7 +55,6 @@ try
             options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         });
 
-
     builder.Services
            .ConfigureSwagger(configurations);
 

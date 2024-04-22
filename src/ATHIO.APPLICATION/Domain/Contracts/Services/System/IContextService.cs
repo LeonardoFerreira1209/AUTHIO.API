@@ -1,4 +1,7 @@
-﻿namespace AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
+﻿using Microsoft.Extensions.Primitives;
+using System.Diagnostics.CodeAnalysis;
+
+namespace AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 
 /// <summary>
 /// Interface de contexto de http.
@@ -27,4 +30,12 @@ public interface IContextService
     /// </summary>
     /// <returns></returns>
     Guid GetCurrentUserId();
+
+    /// <summary>
+    /// Tenta Recuperar um valor do header pelo key/type.
+    /// </summary>
+    /// <param name="header"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    bool TryGetValueByHeader(string header, [MaybeNullWhen(false)] out StringValues value);
 }

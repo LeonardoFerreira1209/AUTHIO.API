@@ -23,14 +23,14 @@ public class CustomAuthorizeFilter(
     /// <param name="context"></param>
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var isAuthenticated =
-            context.HttpContext.User.Identity.IsAuthenticated;
+        if(!context.HttpContext.User.Identity.IsAuthenticated) 
+            throw new UnauthorizedUserException();
 
         var claimsPrincipal =
             context.HttpContext.User;
 
-        if ((isAuthenticated && HasClaims(claimsPrincipal)) is false) 
-            throw new UnauthorizedUserException(null);
+        if (HasClaims(claimsPrincipal) is false) 
+            throw new ForbiddendUserException(null);
     }
 
     /// <summary>

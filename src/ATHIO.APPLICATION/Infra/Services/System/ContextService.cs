@@ -1,5 +1,7 @@
 ﻿using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace AUTHIO.APPLICATION.Infra.Services.System;
@@ -37,7 +39,8 @@ public class ContextService(
     /// </summary>
     /// <returns></returns>
     public string GetCurrentTenantKey() => httpContextAccessor.HttpContext?.Request?.Headers
-                  ?.FirstOrDefault(header => header.Key.Equals("tenantkey")).Value;
+                  ?.FirstOrDefault(header => header.Key.Equals("tenantkey")).Value
+                        ?? httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Issuer == "tenantkey").Value;
 
     /// <summary>
     /// Verifica se o usuário esta logado.
@@ -53,4 +56,15 @@ public class ContextService(
     public Guid GetCurrentUserId()
         => Guid.Parse(httpContextAccessor.HttpContext
             ?.User?.FindFirstValue(ClaimTypes.NameIdentifier));
+    
+    /// <summary>
+    /// Tenta Recuperar um valor do header pelo key/type.
+    /// </summary>
+    /// <param name="header"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public bool TryGetValueByHeader(string key, [MaybeNullWhen(false)] out StringValues value)
+        => httpContextAccessor
+               .HttpContext.Request
+                   .Headers.TryGetValue(key, out value);
 }

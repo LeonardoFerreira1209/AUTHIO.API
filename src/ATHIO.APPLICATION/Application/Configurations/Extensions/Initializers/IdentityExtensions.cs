@@ -79,7 +79,6 @@ public static class IdentityExtensions
                 options.Password.RequiredUniqueChars
                     = configuration
                         .GetValue<int>("Password:RequiredUniqueChars");
-
             })
               .AddEntityFrameworkStores<AuthIoContext>()
               .AddDefaultTokenProviders()
