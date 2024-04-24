@@ -1,11 +1,9 @@
 ﻿using AUTHIO.API.Controllers.Base;
-using AUTHIO.APPLICATION.Domain.Contracts.Services.System;
-using AUTHIO.APPLICATION.Domain.Dtos.Request;
-using AUTHIO.APPLICATION.Domain.Dtos.Response;
-using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
-using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
-using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.TOKEN;
-using AUTHIO.APPLICATION.DOMAIN.DTOs.REQUEST;
+using AUTHIO.DOMAIN.Auth.Token;
+using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Dtos.Request;
+using AUTHIO.DOMAIN.Dtos.Response;
+using AUTHIO.DOMAIN.Dtos.Response.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
@@ -20,10 +18,10 @@ namespace AUTHIO.API.Controllers;
 /// </summary>
 /// <param name="featureFlags"></param>
 public class AuthenticationController(
-    IFeatureFlagsService featureFlags, IAuthenticationService authenticationService) 
+    IFeatureFlagsService featureFlags, IAuthenticationService authenticationService)
         : BaseController(featureFlags)
 {
-    private readonly IAuthenticationService 
+    private readonly IAuthenticationService
         _authenticationService = authenticationService;
 
     /// <summary>
@@ -38,7 +36,7 @@ public class AuthenticationController(
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterAsync(
-        [FromBody] RegisterUserRequest registerUserRequest, 
+        [FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "AuthenticationController"))

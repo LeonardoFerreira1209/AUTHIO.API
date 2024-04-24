@@ -1,6 +1,6 @@
-using AUTHIO.APPLICATION.Application.Configurations.Extensions.Initializers;
-using AUTHIO.APPLICATION.Domain.Dtos.Configurations;
-using AUTHIO.APPLICATION.Infra.Middlewares;
+using AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
+using AUTHIO.DOMAIN.Dtos.Configurations;
+using AUTHIO.INFRASTRUCTURE.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Text.Json.Serialization;
