@@ -1,5 +1,5 @@
-﻿using AUTHIO.APPLICATION.Domain.Exceptions.Base;
-using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
+﻿using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Exceptions.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AUTHIO.API.Controllers.Base;
@@ -26,7 +26,7 @@ public class BaseController(
     /// <param name="methodDescription"></param>
     /// <returns></returns>
     /// <exception cref="CustomException"></exception>
-    protected async Task<T> ExecuteAsync<T>(string methodName, 
+    protected async Task<T> ExecuteAsync<T>(string methodName,
         Func<Task<T>> method, string methodDescription) =>
             await _featureFlags.ExecuteAsync(methodName, method, methodDescription);
 }

@@ -1,11 +1,10 @@
 ﻿using AUTHIO.API.Controllers.Base;
-using AUTHIO.APPLICATION.Domain.Contracts.Services;
-using AUTHIO.APPLICATION.Domain.Dtos.Request;
-using AUTHIO.APPLICATION.Domain.Dtos.Response;
-using AUTHIO.APPLICATION.Domain.Dtos.Response.Base;
-using AUTHIO.APPLICATION.DOMAIN.CONTRACTS.SERVICES.SYSTEM;
-using AUTHIO.APPLICATION.DOMAIN.DTOs.CONFIGURATIONS.AUTH.CUSTOMAUTHORIZE.ATTRIBUTE;
-using AUTHIO.APPLICATION.DOMAIN.ENUMS;
+using AUTHIO.DOMAIN.Auth.CustomAuthorize.Attribute;
+using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Dtos.Request;
+using AUTHIO.DOMAIN.Dtos.Response;
+using AUTHIO.DOMAIN.Dtos.Response.Base;
+using AUTHIO.DOMAIN.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
@@ -21,10 +20,10 @@ namespace AUTHIO.API.Controllers;
 /// <param name="tenantService"></param>
 /// <param name="unitOfWork"></param>
 public class TenantController(
-    IFeatureFlagsService featureFlags, ITenantService tenantService) 
+    IFeatureFlagsService featureFlags, ITenantService tenantService)
         : BaseController(featureFlags)
 {
-    private readonly ITenantService 
+    private readonly ITenantService
         _tenantService = tenantService;
 
     /// <summary>
@@ -41,7 +40,7 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync(
-        [FromBody] CreateTenantRequest createTenantRequest, 
+        [FromBody] CreateTenantRequest createTenantRequest,
         CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
