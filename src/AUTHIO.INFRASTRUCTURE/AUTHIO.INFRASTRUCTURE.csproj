@@ -40,4 +40,8 @@
     <ProjectReference Include="..\AUTHIO.DOMAIN\AUTHIO.DOMAIN.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
