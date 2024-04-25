@@ -1,9 +1,12 @@
 ﻿using AUTHIO.APPLICATION.Services;
 using AUTHIO.DATABASE.Repositories;
 using AUTHIO.DATABASE.Repositories.BASE;
+using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.INFRASTRUCTURE.Factories;
+using AUTHIO.INFRASTRUCTURE.Providers;
 using AUTHIO.INFRASTRUCTURE.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +47,9 @@ public static class DependenciesExtensions
             .AddTransient<ILockoutIdentityConfigurationRepository, LockoutIdentityConfigurationRepository>()
             .AddTransient<IUserRepository, UserRepository>()
         // Infra
-            .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>();
+            .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
+            .AddScoped<IEmailProvider, EmailProvider>()
+            .AddSingleton<IEmailProviderFactory, EmailProviderFactory>();
 
 
         return services;
