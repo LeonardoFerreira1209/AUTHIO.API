@@ -2,6 +2,8 @@
 
 using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Auth.Token;
+using AUTHIO.DOMAIN.Builders.Creates;
+using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
@@ -28,7 +30,8 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 public sealed class AuthenticationService(
     ITokenService tokenService,
     IUserRepository userRepository,
-    IUnitOfWork<AuthIoContext> unitOfWork) : IAuthenticationService
+    IUnitOfWork<AuthIoContext> unitOfWork,
+    IEmailProviderFactory emailProviderFactory) : IAuthenticationService
 {
     private readonly ITokenService _tokenService = tokenService;
 
@@ -36,6 +39,9 @@ public sealed class AuthenticationService(
         _unitOfWork = unitOfWork;
 
     private readonly IUserRepository _userRepository = userRepository;
+
+    private readonly IEmailProvider emailProvider 
+        = emailProviderFactory.GetSendGridEmailProvider();
 
     /// <summary>
     /// Método de registro de usuário.
@@ -91,7 +97,15 @@ public sealed class AuthenticationService(
                                         registerUserRequest, identityResult.Errors.Select((e)
                                             => new DadosNotificacao(e.Description)).ToList());
 
-                                await transaction.CommitAsync();
+                                await transaction.CommitAsync()
+                                    .ContinueWith(async (task) => {
+
+                                        await emailProvider.SendEmail(CreateDefaultEmailMessage
+                                            .CreateWithHtmlContent("HYPER.IO", "hyper.io@outlook.com",
+                                                userEntity.FirstName, userEntity.Email, "Confiormação de E-mail",
+                                                "Confirme seu e-mail", "Confirmação de e-mail teste"));
+
+                                    }).Unwrap();
 
                                 return new OkObjectResult(
                                     new ApiResponse<UserResponse>(

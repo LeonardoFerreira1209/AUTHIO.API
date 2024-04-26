@@ -17,7 +17,7 @@ namespace AUTHIO.DATABASE.Context;
 /// ctor
 /// </remarks>
 /// <param name="options"></param>
-public class AuthIoContext(
+public sealed class AuthIoContext(
     DbContextOptions<AuthIoContext> options, IContextService contextService)
         : IdentityDbContext<UserEntity, RoleEntity, Guid>(options), IAuthioContext
 {
