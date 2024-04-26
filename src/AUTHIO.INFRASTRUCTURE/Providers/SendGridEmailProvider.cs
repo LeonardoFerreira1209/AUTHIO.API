@@ -23,17 +23,11 @@ public class SendGridEmailProvider(
         var client = new SendGridClient(
             appSettings.Value.Email.SendGrid.ApiKey);
 
-        var a = await client.SendEmailAsync(MailHelper.CreateSingleEmail(
+        await client.SendEmailAsync(MailHelper.CreateSingleEmail(
                 message.From.ToSendGridEmailAddres(),
                 message.To.ToSendGridEmailAddres(),
                 message.Subject,
                 message.PlainTextContent,
-                message.HtmlContent
-            ));
-
-        if(a.IsSuccessStatusCode)
-        {
-            return;
-        }
+                message.HtmlContent));
     }
 }
