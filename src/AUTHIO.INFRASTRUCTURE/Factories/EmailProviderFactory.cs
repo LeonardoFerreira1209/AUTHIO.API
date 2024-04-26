@@ -1,19 +1,22 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.INFRASTRUCTURE.Providers;
+using Microsoft.Extensions.Options;
 
 namespace AUTHIO.INFRASTRUCTURE.Factories;
 
 /// <summary>
 /// Classe de provedor de e-mail.
 /// </summary>
-public class EmailProviderFactory : IEmailProviderFactory
+public sealed class EmailProviderFactory(
+    IOptions<AppSettings> appSettings) : IEmailProviderFactory
 {
     /// <summary>
     /// Provedor de e-mail do SendGrid.
     /// </summary>
     /// <returns></returns>
     public IEmailProvider GetSendGridEmailProvider()
-        => new SendGridEmailProvider();
+        => new SendGridEmailProvider(appSettings);
 
     /// <summary>
     /// Provedor de e-mail padrão do sistema.

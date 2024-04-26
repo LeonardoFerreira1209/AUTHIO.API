@@ -51,7 +51,6 @@ public static class DependenciesExtensions
             .AddScoped<IEmailProvider, EmailProvider>()
             .AddSingleton<IEmailProviderFactory, EmailProviderFactory>();
 
-
         return services;
     }
 }

@@ -9,7 +9,7 @@ public sealed class AppSettings
     public SwaggerInfo SwaggerInfo { get; set; }
     public RetryPolicy RetryPolicy { get; set; }
     public Auth Auth { get; set; }
-    public Mail Mail { get; set; }
+    public Email Email { get; set; }
 }
 
 /// <summary>
@@ -34,7 +34,7 @@ public sealed class ConnectionStrings
 /// <summary>
 /// Classe de config do swagger.
 /// </summary>
-public class SwaggerInfo
+public sealed class SwaggerInfo
 {
     public string ApiDescription { get; set; }
     public string ApiVersion { get; set; }
@@ -44,7 +44,7 @@ public class SwaggerInfo
 /// <summary>
 /// Classe de config de autenticação.
 /// </summary>
-public class Auth
+public sealed class Auth
 {
     public string ValidIssuer { get; set; }
     public string ValidAudience { get; set; }
@@ -64,10 +64,21 @@ public sealed class Password
 /// <summary>
 /// Classe de config de e-mail
 /// </summary>
-public sealed class Mail
+public sealed class Email
 {
     /// <summary>
-    /// Chave da API.
+    /// Config de SendGrid.
     /// </summary>
-    public string TenantKey { get; set; }
+    public SendGrid SendGrid { get; set; }
+}
+
+/// <summary>
+/// Classe de config do sendGrid.
+/// </summary>
+public sealed class SendGrid
+{
+    /// <summary>
+    /// Chave de api do sendGrid.
+    /// </summary>
+    public string ApiKey { get; set; }
 }

@@ -10,5 +10,6 @@ namespace AUTHIO.DATABASE.Repositories;
 /// </summary>
 public sealed class UserIdentityConfigurationRepository(
     AuthIoContext context)
-        : GenericEntityCoreRepository<UserIdentityConfigurationEntity>(context), IUserIdentityConfigurationRepository
+        : GenericEntityCoreRepository<UserIdentityConfigurationEntity>(
+            context), IUserIdentityConfigurationRepository
 { }
