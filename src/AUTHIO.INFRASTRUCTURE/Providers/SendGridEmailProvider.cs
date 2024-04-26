@@ -21,7 +21,8 @@ public class SendGridEmailProvider(
     public async Task SendEmail(DefaultEmailMessage message)
     {
         var client = new SendGridClient(
-            appSettings.Value.Email.SendGrid.ApiKey);
+            Environment.GetEnvironmentVariable("MYSQL_DATABASE") 
+                ?? appSettings.Value.Email.SendGrid.ApiKey);
 
         await client.SendEmailAsync(MailHelper.CreateSingleEmail(
                 message.From.ToSendGridEmailAddres(),
