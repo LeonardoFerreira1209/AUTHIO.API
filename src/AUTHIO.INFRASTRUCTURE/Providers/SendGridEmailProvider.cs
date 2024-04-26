@@ -21,8 +21,6 @@ public class SendGridEmailProvider(
     /// <param name="message"></param>
     public async Task SendEmail(DefaultEmailMessage message)
     {
-        Log.Information($"ApiKey: {Environment.GetEnvironmentVariable("SENDGRID_APIKEY")}");
-
         var client = new SendGridClient(
             Environment.GetEnvironmentVariable("SENDGRID_APIKEY") 
                 ?? appSettings.Value.Email.SendGrid.ApiKey);
