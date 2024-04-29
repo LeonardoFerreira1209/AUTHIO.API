@@ -3,7 +3,7 @@
 /// <summary>
 /// Classe de vinculo entre usuário admin e tenant.
 /// </summary>
-public class TenantIdentityUserAdminEntity
+public class TenantIdentityUserAdminEntity : IEntityTenant
 {
     /// <summary>
     /// User Id

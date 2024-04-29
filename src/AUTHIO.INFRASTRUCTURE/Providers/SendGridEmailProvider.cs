@@ -5,7 +5,6 @@ using AUTHIO.DOMAIN.Helpers.Extensions;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using Serilog;
 
 namespace AUTHIO.INFRASTRUCTURE.Providers;
 

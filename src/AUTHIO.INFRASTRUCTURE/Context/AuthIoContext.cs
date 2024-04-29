@@ -46,6 +46,11 @@ public sealed class AuthIoContext(
     public DbSet<TenantIdentityConfigurationEntity> TenantIdentityConfigurations => Set<TenantIdentityConfigurationEntity>();
 
     /// <summary>
+    /// Tabela de Tenant Email Configurations.
+    /// </summary>
+    public DbSet<TenantEmailConfigurationEntity> tenantEmailConfigurations => Set<TenantEmailConfigurationEntity>();
+
+    /// <summary>
     /// Tabela de Feature Flags.
     /// </summary>
     public DbSet<FeatureFlagsEntity> FeatureFlags => Set<FeatureFlagsEntity>();
