@@ -12,9 +12,9 @@ public class TenantIdentityConfigurationBuilder
     private DateTime created;
 
     /// <summary>
-    /// Adiciona um TenantId.
+    /// Adiciona um Tenant configuration Id.
     /// </summary>
-    /// <param name="tenantId"></param>
+    /// <param name="tenantConfigurationId"></param>
     /// <returns></returns>
     public TenantIdentityConfigurationBuilder AddTenantConfigurationId(Guid tenantConfigurationId)
     {
@@ -36,7 +36,6 @@ public class TenantIdentityConfigurationBuilder
 
         return this;
     }
-
 
     /// <summary>
     /// Adiciona a data de atualização.

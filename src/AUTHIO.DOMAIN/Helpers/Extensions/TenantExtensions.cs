@@ -85,7 +85,7 @@ public static class TenantExtensions
     /// <returns></returns>
     public static TenantIdentityConfigurationResponse ToResponse(this TenantIdentityConfigurationEntity tenantIdentityConfigurationEntity,
         bool includeTenantConfiguration = false, bool includeUserIdentityConfiguration = true,
-        bool includePasswordIdentityConfiguration = true)
+        bool includePasswordIdentityConfiguration = true, bool includeLockoutIdentityConfiguration = true)
         => new()
         {
             Id = tenantIdentityConfigurationEntity.Id,
@@ -99,6 +99,10 @@ public static class TenantExtensions
 
             PasswordIdentityConfiguration = includePasswordIdentityConfiguration
                 ? tenantIdentityConfigurationEntity?.PasswordIdentityConfiguration?.ToResponse()
+                : null,
+
+            LockoutIdentityConfiguration = includeLockoutIdentityConfiguration
+                 ? tenantIdentityConfigurationEntity.LockoutIdentityConfiguration?.ToResponse()
                 : null,
 
             TenantConfiguration = includeTenantConfiguration
@@ -147,6 +151,27 @@ public static class TenantExtensions
             TenantIdentityConfigurationId = passwordIdentityConfigurationEntity.TenantIdentityConfigurationId,
             TenantIdentityConfiguration = includeTenantIdentityConfiguration
                 ? passwordIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse()
+                : null
+        };
+
+    /// <summary>
+    /// Transforma um LockoutIdentityConfigurationEntity em response.
+    /// </summary>
+    /// <param name="lockoutIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static LockoutIdentityConfigurationResponse ToResponse(this LockoutIdentityConfigurationEntity lockoutIdentityConfigurationEntity,
+        bool includeTenantIdentityConfiguration = false)
+        => new()
+        {
+            Id = lockoutIdentityConfigurationEntity.Id,
+            Created = lockoutIdentityConfigurationEntity.Created,
+            Updated = lockoutIdentityConfigurationEntity.Updated,
+            AllowedForNewUsers = lockoutIdentityConfigurationEntity.AllowedForNewUsers,
+            DefaultLockoutTimeSpan = lockoutIdentityConfigurationEntity.DefaultLockoutTimeSpan,
+            MaxFailedAccessAttempts = lockoutIdentityConfigurationEntity.MaxFailedAccessAttempts,
+            TenantIdentityConfigurationId = lockoutIdentityConfigurationEntity.TenantIdentityConfigurationId,
+            TenantIdentityConfiguration = includeTenantIdentityConfiguration
+                ? lockoutIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse()
                 : null
         };
 }

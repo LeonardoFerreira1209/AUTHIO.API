@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class INITIAL : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -276,7 +276,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "tenantEmailConfigurations",
+                name: "TenantEmailConfigurations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
@@ -290,9 +290,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tenantEmailConfigurations", x => x.Id);
+                    table.PrimaryKey("PK_TenantEmailConfigurations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tenantEmailConfigurations_TenantConfigurations_TenantConfigu~",
+                        name: "FK_TenantEmailConfigurations_TenantConfigurations_TenantConfigu~",
                         column: x => x.TenantConfigurationId,
                         principalTable: "TenantConfigurations",
                         principalColumn: "Id",
@@ -322,7 +322,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "LockoutIdentityConfigurationEntity",
+                name: "LockoutIdentityConfigurations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
@@ -335,9 +335,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LockoutIdentityConfigurationEntity", x => x.Id);
+                    table.PrimaryKey("PK_LockoutIdentityConfigurations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LockoutIdentityConfigurationEntity_TenantIdentityConfigurati~",
+                        name: "FK_LockoutIdentityConfigurations_TenantIdentityConfigurations_T~",
                         column: x => x.TenantIdentityConfigurationId,
                         principalTable: "TenantIdentityConfigurations",
                         principalColumn: "Id",
@@ -398,17 +398,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2"), null, new DateTime(2024, 4, 29, 0, 43, 56, 800, DateTimeKind.Local).AddTicks(9228), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53"), null, new DateTime(2024, 4, 29, 22, 42, 43, 854, DateTimeKind.Local).AddTicks(3129), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2") },
-                    { 2, "Tenants", "GET", new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2") },
-                    { 3, "Tenants", "PATCH", new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2") },
-                    { 4, "Tenants", "PUT", new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2") }
+                    { 1, "Tenants", "POST", new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53") },
+                    { 2, "Tenants", "GET", new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53") },
+                    { 3, "Tenants", "PATCH", new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53") },
+                    { 4, "Tenants", "PUT", new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -458,8 +458,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 column: "NormalizedUserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LockoutIdentityConfigurationEntity_TenantIdentityConfigurati~",
-                table: "LockoutIdentityConfigurationEntity",
+                name: "IX_LockoutIdentityConfigurations_TenantIdentityConfigurationId",
+                table: "LockoutIdentityConfigurations",
                 column: "TenantIdentityConfigurationId",
                 unique: true);
 
@@ -476,8 +476,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_tenantEmailConfigurations_TenantConfigurationId",
-                table: "tenantEmailConfigurations",
+                name: "IX_TenantEmailConfigurations_TenantConfigurationId",
+                table: "TenantEmailConfigurations",
                 column: "TenantConfigurationId",
                 unique: true);
 
@@ -521,13 +521,13 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 name: "FeatureFlags");
 
             migrationBuilder.DropTable(
-                name: "LockoutIdentityConfigurationEntity");
+                name: "LockoutIdentityConfigurations");
 
             migrationBuilder.DropTable(
                 name: "PasswordIdentityConfigurations");
 
             migrationBuilder.DropTable(
-                name: "tenantEmailConfigurations");
+                name: "TenantEmailConfigurations");
 
             migrationBuilder.DropTable(
                 name: "TenantUserAdmins");

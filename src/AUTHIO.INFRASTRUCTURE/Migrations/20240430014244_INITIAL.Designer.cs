@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240429034357_initial")]
-    partial class initial
+    [Migration("20240430014244_INITIAL")]
+    partial class INITIAL
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,7 +80,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasIndex("TenantIdentityConfigurationId")
                         .IsUnique();
 
-                    b.ToTable("LockoutIdentityConfigurationEntity");
+                    b.ToTable("LockoutIdentityConfigurations");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PasswordIdentityConfigurationEntity", b =>
@@ -170,8 +170,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2"),
-                            Created = new DateTime(2024, 4, 29, 0, 43, 56, 800, DateTimeKind.Local).AddTicks(9228),
+                            Id = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53"),
+                            Created = new DateTime(2024, 4, 29, 22, 42, 43, 854, DateTimeKind.Local).AddTicks(3129),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -237,7 +237,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasIndex("TenantConfigurationId")
                         .IsUnique();
 
-                    b.ToTable("tenantEmailConfigurations");
+                    b.ToTable("TenantEmailConfigurations");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEntity", b =>
@@ -453,28 +453,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2")
+                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2")
+                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2")
+                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("418ab257-7bb2-40bf-9dd5-379a8a9e01d2")
+                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
                         });
                 });
 
