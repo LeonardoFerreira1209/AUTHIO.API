@@ -46,9 +46,24 @@ public sealed class AuthIoContext(
     public DbSet<TenantIdentityConfigurationEntity> TenantIdentityConfigurations => Set<TenantIdentityConfigurationEntity>();
 
     /// <summary>
+    /// Tabela de User Identity Configurations.
+    /// </summary>
+    public DbSet<UserIdentityConfigurationEntity> UserIdentityConfigurations => Set<UserIdentityConfigurationEntity>();
+
+    /// <summary>
+    /// Tabela de Password Identity Configurations.
+    /// </summary>
+    public DbSet<PasswordIdentityConfigurationEntity> PasswordIdentityConfigurations => Set<PasswordIdentityConfigurationEntity>();
+
+    /// <summary>
+    /// Tabela de Lockout Identity Configurations.
+    /// </summary>
+    public DbSet<LockoutIdentityConfigurationEntity> LockoutIdentityConfigurations => Set<LockoutIdentityConfigurationEntity>();
+
+    /// <summary>
     /// Tabela de Tenant Email Configurations.
     /// </summary>
-    public DbSet<TenantEmailConfigurationEntity> tenantEmailConfigurations => Set<TenantEmailConfigurationEntity>();
+    public DbSet<TenantEmailConfigurationEntity> TenantEmailConfigurations => Set<TenantEmailConfigurationEntity>();
 
     /// <summary>
     /// Tabela de Feature Flags.

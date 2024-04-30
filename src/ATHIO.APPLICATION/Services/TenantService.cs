@@ -31,6 +31,7 @@ public class TenantService(
     ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
     IUserIdentityConfigurationRepository userIdentityConfigurationRepository,
     IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
+    ILockoutIdentityConfigurationRepository lockoutIdentityConfigurationRepository,
     IContextService contextService,
     IUserRepository userRepository) : ITenantService
 {
@@ -51,6 +52,9 @@ public class TenantService(
 
     private readonly IPasswordIdentityConfigurationRepository
         _passwordIdentityConfigurationRepository = passwordIdentityConfigurationRepository;
+
+    private readonly ILockoutIdentityConfigurationRepository
+        _lockoutIdentityConfigurationRepository = lockoutIdentityConfigurationRepository;
 
     private readonly IContextService
         _contextService = contextService;
@@ -118,13 +122,8 @@ public class TenantService(
                                                                         var tenantIdentityConfiguration
                                                                             = tenantIdentityConfigurationEntityTask.Result;
 
-                                                                        await _userIdentityConfigurationRepository.CreateAsync(
-                                                                            CreateUserIdentityConfiguration.CreateDefault(
-                                                                                    tenantIdentityConfiguration.Id));
-
-                                                                        await _passwordIdentityConfigurationRepository.CreateAsync(
-                                                                            CreatePasswordIdentityConfiguration.CreateDefault(
-                                                                                    tenantIdentityConfiguration.Id));
+                                                                        await CreateTenantConfigurationsAsync(
+                                                                            tenantIdentityConfiguration.Id);
 
                                                                         await _unitOfWork.CommitAsync();
 
@@ -262,4 +261,29 @@ public class TenantService(
             Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
         }
     }
+
+    /// <summary>
+    /// Cria todas as configurações do tenant.
+    /// </summary>
+    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <returns></returns>
+    private async Task CreateTenantConfigurationsAsync(
+        Guid tenantIdentityConfigurationId) =>
+            await Task.WhenAll(
+
+                _userIdentityConfigurationRepository.CreateAsync(
+                    CreateUserIdentityConfiguration.CreateDefault(
+                        tenantIdentityConfigurationId)
+                    ),
+
+                _passwordIdentityConfigurationRepository.CreateAsync(
+                    CreatePasswordIdentityConfiguration.CreateDefault(
+                            tenantIdentityConfigurationId)
+                    ),
+
+                _lockoutIdentityConfigurationRepository.CreateAsync(
+                    CreateLockoutIdentityConfiguration.CreateDefault(
+                        tenantIdentityConfigurationId)
+                    )
+                );
 }

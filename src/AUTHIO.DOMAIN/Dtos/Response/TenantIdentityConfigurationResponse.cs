@@ -35,9 +35,13 @@ public class TenantIdentityConfigurationResponse
     /// </summary>
     public virtual UserIdentityConfigurationResponse UserIdentityConfiguration { get; set; }
 
-
     /// <summary>
     /// Entidade de password identity configuration.
     /// </summary>
     public virtual PasswordIdentityConfigurationResponse PasswordIdentityConfiguration { get; set; }
+
+    /// <summary>
+    /// Entidade de lockout identity configuration.
+    /// </summary>
+    public virtual LockoutIdentityConfigurationResponse LockoutIdentityConfiguration { get; set; }
 }
