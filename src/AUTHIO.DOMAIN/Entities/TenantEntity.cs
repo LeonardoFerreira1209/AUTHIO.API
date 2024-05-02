@@ -1,13 +1,11 @@
-﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Enums;
-using System.Linq.Expressions;
+﻿using AUTHIO.DOMAIN.Enums;
 
 namespace AUTHIO.DOMAIN.Entities;
 
 /// <summary>
 /// Classe de entidade de tenant.
 /// </summary>
-public class TenantEntity : IEntityBase, IFilterableEntity<TenantEntity>
+public class TenantEntity : IEntityBase
 {
     /// <summary>
     /// ctor
@@ -72,14 +70,4 @@ public class TenantEntity : IEntityBase, IFilterableEntity<TenantEntity>
     /// Roles vinculadas ao tenant.
     /// </summary>
     public virtual ICollection<RoleEntity> Roles { get; private set; }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="authIoContext"></param>
-    /// <returns></returns>
-    public Expression<Func<TenantEntity, bool>> GetFilterExpression(IAuthioContext authioContext)
-        => entidade => ((entidade.UserId == authioContext.CurrentUserId)
-            ||
-           entidade.TenantConfiguration.TenantKey == authioContext.TenantKey);
 }

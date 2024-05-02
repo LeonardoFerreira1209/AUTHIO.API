@@ -5,6 +5,9 @@ using System.Security.Claims;
 
 namespace AUTHIO.DOMAIN.Auth.CustomAuthorize.Attribute;
 
+/// <summary>
+/// Classe de autorização customizada.
+/// </summary>
 public class CustomAuthorizeAttribute : TypeFilterAttribute
 {
     /// <summary>

@@ -6,9 +6,11 @@ using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
+using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Exceptions;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
+using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog;
@@ -33,7 +35,7 @@ public class TenantService(
     IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
     ILockoutIdentityConfigurationRepository lockoutIdentityConfigurationRepository,
     IContextService contextService,
-    IUserRepository userRepository) : ITenantService
+    CustomUserManager<UserEntity> customUserManager) : ITenantService
 {
     private readonly IUnitOfWork<AuthIoContext>
        _unitOfWork = unitOfWork;
@@ -59,8 +61,8 @@ public class TenantService(
     private readonly IContextService
         _contextService = contextService;
 
-    private readonly IUserRepository
-        _userRepository = userRepository;
+    private readonly CustomUserManager<UserEntity>
+        _customUserManager = customUserManager;
 
     /// <summary>
     /// Método responsável por criar um Tenant.
@@ -170,7 +172,7 @@ public class TenantService(
 
         try
         {
-            return await _tenantRepository.GetAllAsyncPaginated(pageNumber, pageSize)
+            return await _tenantRepository.GetAllAsyncPaginated(pageNumber, pageSize, null)
                     .ContinueWith(taskResult =>
                     {
                         var pagination
@@ -234,7 +236,7 @@ public class TenantService(
                     var userEntity
                        = registerUserRequest.ToUserTenantEntity(tenantEntity.Id);
 
-                    return await _userRepository.CreateUserAsync(
+                    return await _customUserManager.CreateAsync(
                          userEntity, registerUserRequest.Password)
                             .ContinueWith(identityResultTask =>
                             {

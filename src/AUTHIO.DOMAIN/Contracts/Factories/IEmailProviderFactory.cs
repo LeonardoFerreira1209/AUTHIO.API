@@ -1,4 +1,6 @@
-﻿namespace AUTHIO.DOMAIN.Contracts.Factories;
+﻿using AUTHIO.DOMAIN.Contracts.Providers;
+
+namespace AUTHIO.DOMAIN.Contracts.Factories;
 
 /// <summary>
 /// Fabrica de provedores de e-mail.

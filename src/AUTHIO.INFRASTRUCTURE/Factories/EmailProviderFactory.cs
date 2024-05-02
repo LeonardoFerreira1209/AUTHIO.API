@@ -1,4 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.DOMAIN.Contracts.Providers;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.INFRASTRUCTURE.Providers;
 using Microsoft.Extensions.Options;

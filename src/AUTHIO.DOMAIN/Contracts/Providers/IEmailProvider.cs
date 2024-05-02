@@ -1,6 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Dtos.Email;
 
-namespace AUTHIO.DOMAIN.Contracts.Factories;
+namespace AUTHIO.DOMAIN.Contracts.Providers;
 
 /// <summary>
 /// Interface de provedor de email.

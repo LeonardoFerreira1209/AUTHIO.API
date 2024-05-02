@@ -9,7 +9,7 @@ namespace AUTHIO.DOMAIN.Entities;
 /// Classe de entidade de usuário.
 /// </summary>
 public class UserEntity
-    : IdentityUser<Guid>, IEntityBase, IEntityTenantNullAble, IEntitySystem, IFilterableEntity<UserEntity>
+    : IdentityUser<Guid>, IEntityBase, IEntityTenantNullAble, IEntitySystem
 {
     /// <summary>
     /// ctor
@@ -76,20 +76,4 @@ public class UserEntity
     /// Pertence ao sistema.
     /// </summary>
     public bool System { get; private set; }
-
-    /// <summary>
-    /// Filtragem global da entidade.
-    /// </summary>
-    /// <param name="contextService"></param>
-    /// <returns></returns>
-    public Expression<Func<UserEntity, bool>> GetFilterExpression(IAuthioContext authioContext)
-         => entidade =>
-            entidade.Tenant != null
-                && entidade.Tenant.TenantConfiguration != null
-                && entidade.Tenant.TenantConfiguration.TenantKey == authioContext.TenantKey
-                && !entidade.System
-                    ||
-            authioContext.TenantKey == null
-                && entidade.TenantId == null
-                && entidade.System;
 }

@@ -8,8 +8,9 @@ using Microsoft.Extensions.Options;
 namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 
 /// <summary>
-/// 
+/// Classe customizada de SigninManager.
 /// </summary>
+/// <typeparam name="TUser"></typeparam>
 /// <param name="userManager"></param>
 /// <param name="contextAccessor"></param>
 /// <param name="claimsFactory"></param>
@@ -17,14 +18,15 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// <param name="logger"></param>
 /// <param name="schemes"></param>
 /// <param name="confirmation"></param>
-public class CustomSignInManager(CustomUserManager<UserEntity> userManager,
+public class CustomSignInManager<TUser>(CustomUserManager<TUser> userManager,
     IHttpContextAccessor contextAccessor,
-    IUserClaimsPrincipalFactory<UserEntity> claimsFactory,
+    IUserClaimsPrincipalFactory<TUser> claimsFactory,
     IOptions<IdentityOptions> optionsAccessor,
-    ILogger<SignInManager<UserEntity>> logger,
+    ILogger<SignInManager<TUser>> logger,
     IAuthenticationSchemeProvider schemes,
-    IUserConfirmation<UserEntity> confirmation)
-        : SignInManager<UserEntity>(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation)
+    IUserConfirmation<TUser> confirmation)
+        : SignInManager<TUser>(userManager, contextAccessor, claimsFactory, optionsAccessor, logger, schemes, confirmation) 
+            where TUser : UserEntity, new()
 {
 
 }

@@ -4,14 +4,17 @@ using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Auth.Token;
 using AUTHIO.DOMAIN.Builders.Creates;
 using AUTHIO.DOMAIN.Contracts.Factories;
-using AUTHIO.DOMAIN.Contracts.Repositories;
+using AUTHIO.DOMAIN.Contracts.Providers;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
+using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
+using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog;
@@ -29,7 +32,9 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// </remarks>
 public sealed class AuthenticationService(
     ITokenService tokenService,
-    IUserRepository userRepository,
+    IContextService contextService,
+    CustomUserManager<UserEntity> customUserManager,
+    CustomSignInManager<UserEntity> customSignInManager,
     IUnitOfWork<AuthIoContext> unitOfWork,
     IEmailProviderFactory emailProviderFactory) : IAuthenticationService
 {
@@ -38,7 +43,8 @@ public sealed class AuthenticationService(
     private readonly IUnitOfWork<AuthIoContext>
         _unitOfWork = unitOfWork;
 
-    private readonly IUserRepository _userRepository = userRepository;
+    private readonly string _tenatKey 
+        = contextService.GetCurrentTenantKey();
 
     private readonly IEmailProvider emailProvider 
         = emailProviderFactory.GetSendGridEmailProvider();
@@ -75,8 +81,8 @@ public sealed class AuthenticationService(
                 var userEntity
                     = registerUserRequest.ToUserSystemEntity();
 
-                return await _userRepository
-                    .CreateUserAsync(userEntity, registerUserRequest.Password).ContinueWith(async (identityResultTask) =>
+                return await customUserManager
+                    .CreateAsync(userEntity, registerUserRequest.Password).ContinueWith(async (identityResultTask) =>
                     {
                         var identityResult
                                 = identityResultTask.Result;
@@ -86,8 +92,8 @@ public sealed class AuthenticationService(
                                 registerUserRequest, identityResult.Errors.Select((e)
                                     => new DadosNotificacao(e.Description)).ToList());
 
-                        return await _userRepository
-                            .AddToUserRoleAsync(userEntity, "System").ContinueWith(async (identityResultTask) =>
+                        return await customUserManager
+                            .AddToRoleAsync(userEntity, "System").ContinueWith(async (identityResultTask) =>
                             {
                                 var identityResult
                                         = identityResultTask.Result;
@@ -151,14 +157,15 @@ public sealed class AuthenticationService(
 
                 }).Unwrap();
 
-            return await _userRepository.GetWithUsernameAsync(
-                loginRequest.Username).ContinueWith(async (userEntityTask) =>
+            return await customUserManager.FindByNameWithExpressionAsync(
+                loginRequest.Username, 
+                UserFilters<UserEntity>.FilterSystemOrTenantUsers(_tenatKey)).ContinueWith(async (userEntityTask) =>
                 {
                     var userEntity =
                         userEntityTask.Result
                         ?? throw new NotFoundUserException(loginRequest);
 
-                    await _userRepository.PasswordSignInAsync(
+                    await customSignInManager.PasswordSignInAsync(
                         userEntity, loginRequest.Password, true, true).ContinueWith((signInResultTask) =>
                         {
                             var signInResult = signInResultTask.Result;
@@ -251,5 +258,4 @@ public sealed class AuthenticationService(
             throw new InvalidUserAuthenticationException(loginRequest);
         }
     }
-
 }

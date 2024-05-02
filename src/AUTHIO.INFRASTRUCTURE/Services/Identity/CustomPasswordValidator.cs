@@ -27,6 +27,7 @@ public class CustomPasswordValidator<TUser>(ITenantIdentityConfigurationReposito
     /// </summary>
     /// <param name="manager"></param>
     /// <param name="user"></param>
+    /// <param name="password"></param>
     /// <returns></returns>
     public override async Task<IdentityResult> ValidateAsync(
         UserManager<TUser> manager, TUser user, string password)
