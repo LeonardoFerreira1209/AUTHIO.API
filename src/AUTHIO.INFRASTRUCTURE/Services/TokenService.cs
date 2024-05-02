@@ -3,6 +3,8 @@ using AUTHIO.DOMAIN.Builders.Token;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
+using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -23,18 +25,12 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <param name="userManager"></param>
 /// <param name="roleManager"></param>
 /// <param name="appsettings"></param>
-public class TokenService(UserManager<UserEntity> userManager,
-    RoleManager<RoleEntity> roleManager, IOptions<AppSettings> appsettings) : ITokenService
+public class TokenService(
+    CustomUserManager<UserEntity> userManager,
+    RoleManager<RoleEntity> roleManager,
+    IContextService contextService,
+    IOptions<AppSettings> appsettings) : ITokenService
 {
-    private readonly UserManager<UserEntity>
-        _userManager = userManager;
-
-    private readonly RoleManager<RoleEntity>
-        _roleManager = roleManager;
-
-    private readonly IOptions<AppSettings>
-        _appsettings = appsettings;
-
     /// <summary>
     /// Cria o JWT TOKEN
     /// </summary>
@@ -64,11 +60,11 @@ public class TokenService(UserManager<UserEntity> userManager,
                 new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = JwtSecurityKey.Create(_appsettings.Value.Auth.SecurityKey),
+                    IssuerSigningKey = JwtSecurityKey.Create(appsettings.Value.Auth.SecurityKey),
                     ValidateIssuer = true,
-                    ValidIssuer = _appsettings.Value.Auth.ValidIssuer,
+                    ValidIssuer = appsettings.Value.Auth.ValidIssuer,
                     ValidateAudience = true,
-                    ValidAudience = _appsettings.Value.Auth.ValidAudience,
+                    ValidAudience = appsettings.Value.Auth.ValidAudience,
                     ClockSkew = TimeSpan.FromHours(3),
                 });
 
@@ -86,7 +82,9 @@ public class TokenService(UserManager<UserEntity> userManager,
     /// <returns></returns>
     private async Task<TokenJWT> BuildTokenJWT(string username)
     {
-        var userEntity = await User(username) ?? throw new NotFoundUserException(username);
+        var userEntity = await userManager.FindByNameWithExpressionAsync(username, 
+            UserFilters<UserEntity>.FilterSystemOrTenantUsers(
+                contextService.GetCurrentTenantKey())) ?? throw new NotFoundUserException(username);
 
         var roles = await Roles(userEntity);
 
@@ -100,23 +98,15 @@ public class TokenService(UserManager<UserEntity> userManager,
         return await Task.FromResult(
             new TokenJwtBuilder()
               .AddUsername(username)
-                .AddSecurityKey(JwtSecurityKey.Create(_appsettings.Value.Auth.SecurityKey))
+                .AddSecurityKey(JwtSecurityKey.Create(appsettings.Value.Auth.SecurityKey))
                    .AddSubject("HYPER.IO PROJECTS L.T.D.A")
-                      .AddIssuer(_appsettings.Value.Auth.ValidIssuer)
-                          .AddAudience(_appsettings.Value.Auth.ValidAudience)
-                              .AddExpiry(_appsettings.Value.Auth.ExpiresIn)
+                      .AddIssuer(appsettings.Value.Auth.ValidIssuer)
+                          .AddAudience(appsettings.Value.Auth.ValidAudience)
+                              .AddExpiry(appsettings.Value.Auth.ExpiresIn)
                                   .AddRoles(roles)
                                       .AddClaims(claims)
                                           .Builder(userEntity));
     }
-
-    /// <summary>
-    /// Return de User.
-    /// </summary>
-    /// <param name="username"></param>
-    /// <returns></returns>
-    private async Task<UserEntity> User(string username)
-        => await _userManager.Users.FirstOrDefaultAsync(u => u.UserName.Equals(username));
 
     /// <summary>
     /// Return de Roles.
@@ -125,7 +115,7 @@ public class TokenService(UserManager<UserEntity> userManager,
     /// <returns></returns>
     private async Task<List<Claim>> Roles(UserEntity user)
     {
-        return await _userManager.GetRolesAsync(user).ContinueWith(rolesTask =>
+        return await userManager.GetRolesAsync(user).ContinueWith(rolesTask =>
         {
             var roles = rolesTask.Result;
 
@@ -142,19 +132,19 @@ public class TokenService(UserManager<UserEntity> userManager,
     {
         var claims = new List<Claim>();
 
-        claims.AddRange(await _userManager.GetClaimsAsync(user));
+        claims.AddRange(await userManager.GetClaimsAsync(user));
 
         var rolesName = roles.Select(role => role.Value).ToList();
 
         if (roles is not null && roles.Count != 0)
         {
-            await _roleManager.Roles.Where(role
+            await roleManager.Roles.Where(role
                 => rolesName.Contains(role.Name)).ToListAsync().ContinueWith(rolesTask =>
                 {
                     var roles = rolesTask.Result;
 
                     roles.AsParallel().ForAll(role
-                        => claims.AddRange(_roleManager.GetClaimsAsync(role).Result));
+                        => claims.AddRange(roleManager.GetClaimsAsync(role).Result));
                 });
         }
 

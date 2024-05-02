@@ -1,5 +1,7 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,7 +12,7 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// </summary>
 public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
         IContextService contextService)
-    : UserValidator<TUser> where TUser : class
+    : UserValidator<TUser> where TUser : UserEntity, new()
 {
     private readonly ITenantIdentityConfigurationRepository
         _tenantIdentityConfigurationRepository = tenantIdentityConfigurationRepository;
@@ -27,6 +29,8 @@ public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository t
     public override async Task<IdentityResult> ValidateAsync(
         UserManager<TUser> manager, TUser user)
     {
+        var customManager = manager as CustomUserManager<TUser>;
+
         var tenantIdentityConfigurationEntity = await _tenantIdentityConfigurationRepository
             .GetAsync(config => config.TenantConfiguration.TenantKey == _tenantKey)
                 .ContinueWith((tenantIdentityTask) =>
@@ -42,7 +46,7 @@ public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository t
             = tenantIdentityConfigurationEntity?
                 .UserIdentityConfiguration;
 
-        return await ValidateUserName(manager, user, userOptions).ContinueWith(
+        return await ValidateUserName(customManager, user, userOptions).ContinueWith(
            async (taskIdentityError) =>
            {
                var identityErrors
@@ -71,7 +75,7 @@ public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository t
     /// <param name="userOptions"></param>
     /// <returns></returns>
     private async Task<List<IdentityError>> ValidateUserName(
-        UserManager<TUser> manager, TUser user,
+        CustomUserManager<TUser> manager, TUser user,
         UserOptions userOptions)
     {
         List<IdentityError> errors = null;
@@ -103,7 +107,9 @@ public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository t
                 }
                 else
                 {
-                    var owner = await manager.FindByNameAsync(userName);
+                    var owner = await manager.FindByNameWithExpressionAsync(
+                        userName, UserFilters<TUser>
+                            .FilterSystemOrTenantUsers(_tenantKey));
 
                     if (owner != null &&
                         !string.Equals(await manager.GetUserIdAsync(

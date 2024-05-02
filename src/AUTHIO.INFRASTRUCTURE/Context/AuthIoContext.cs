@@ -6,7 +6,6 @@ using AUTHIO.DOMAIN.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace AUTHIO.DATABASE.Context;
 
@@ -79,20 +78,6 @@ public sealed class AuthIoContext(
     {
         base.OnModelCreating(modelBuilder);
 
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            var entityClrType = entityType.ClrType;
-            var filterableInterfaceType = typeof(IFilterableEntity<>).MakeGenericType(entityClrType);
-            if (filterableInterfaceType.IsAssignableFrom(entityClrType))
-            {
-                var instance = Activator.CreateInstance(entityClrType);
-                var methodInfo = filterableInterfaceType.GetMethod("GetFilterExpression");
-                var filterExpression = methodInfo.Invoke(instance, [this]);
-
-                modelBuilder.Entity(entityClrType).HasQueryFilter((LambdaExpression)filterExpression);
-            }
-        }
-
         modelBuilder
            .ApplyConfiguration(new UserEntityTypeConfiguration())
            .ApplyConfiguration(new RoleEntityTypeConfiguration())
@@ -100,6 +85,7 @@ public sealed class AuthIoContext(
            .ApplyConfiguration(new TenantIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new UserIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new PasswordIdentityConfigurationEntityTypeConfiguration())
+           .ApplyConfiguration(new LockoutIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration());
 
         var roleEntity = new RoleEntity

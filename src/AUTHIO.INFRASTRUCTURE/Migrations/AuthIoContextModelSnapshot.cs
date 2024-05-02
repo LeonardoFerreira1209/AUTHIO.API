@@ -77,7 +77,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasIndex("TenantIdentityConfigurationId")
                         .IsUnique();
 
-                    b.ToTable("LockoutIdentityConfigurations");
+                    b.ToTable("LockoutIdentityConfigurations", (string)null);
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PasswordIdentityConfigurationEntity", b =>
@@ -167,8 +167,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53"),
-                            Created = new DateTime(2024, 4, 29, 22, 42, 43, 854, DateTimeKind.Local).AddTicks(3129),
+                            Id = new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a"),
+                            Created = new DateTime(2024, 4, 30, 0, 33, 20, 76, DateTimeKind.Local).AddTicks(7117),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -450,28 +450,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
+                            RoleId = new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
+                            RoleId = new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
+                            RoleId = new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("de4ce285-f7c4-4371-825b-9d7472fbbc53")
+                            RoleId = new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a")
                         });
                 });
 

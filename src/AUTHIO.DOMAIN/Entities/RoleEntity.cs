@@ -1,7 +1,5 @@
-﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Enums;
+﻿using AUTHIO.DOMAIN.Enums;
 using Microsoft.AspNetCore.Identity;
-using System.Linq.Expressions;
 
 namespace AUTHIO.DOMAIN.Entities;
 
@@ -9,7 +7,7 @@ namespace AUTHIO.DOMAIN.Entities;
 /// Classe de entidade de roles.
 /// </summary>
 public class RoleEntity : IdentityRole<Guid>,
-    IEntityBase, IEntityTenantNullAble, IEntitySystem, IFilterableEntity<RoleEntity>
+    IEntityBase, IEntityTenantNullAble, IEntitySystem
 {
     /// <summary>
     /// Data de criação.
@@ -40,20 +38,4 @@ public class RoleEntity : IdentityRole<Guid>,
     /// Role do sistema.
     /// </summary>
     public bool System { get; set; }
-
-    /// <summary>
-    /// Filtragem global da entidade.
-    /// </summary>
-    /// <param name="contextService"></param>
-    /// <returns></returns>
-    public Expression<Func<RoleEntity, bool>> GetFilterExpression(IAuthioContext authioContext)
-        => entidade =>
-            entidade.Tenant != null
-                && entidade.Tenant.TenantConfiguration != null
-                && entidade.Tenant.TenantConfiguration.TenantKey == authioContext.TenantKey
-                && !entidade.System
-                    ||
-            authioContext.TenantKey == null
-                && entidade.TenantId == null
-                && entidade.System;
 }

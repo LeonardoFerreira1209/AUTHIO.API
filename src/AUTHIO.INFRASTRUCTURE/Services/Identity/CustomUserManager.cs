@@ -1,13 +1,18 @@
-﻿using AUTHIO.DOMAIN.Helpers.Extensions;
+﻿using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Linq.Expressions;
 
 namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 
 /// <summary>
 /// Classe customizada do User Manager do Identity.
 /// </summary>
+/// <typeparam name="TUser"></typeparam>
 /// <param name="store"></param>
 /// <param name="optionsAccessor"></param>
 /// <param name="passwordHasher"></param>
@@ -17,7 +22,8 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// <param name="errors"></param>
 /// <param name="services"></param>
 /// <param name="logger"></param>
-public class CustomUserManager<TUser>(IUserStore<TUser> store,
+public class CustomUserManager<TUser>(
+    ICustomUserStore<TUser> store,
     IOptions<IdentityOptions> optionsAccessor,
     IPasswordHasher<TUser> passwordHasher,
     IEnumerable<CustomUserValidator<TUser>> userValidators,
@@ -26,8 +32,15 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
     IServiceProvider services,
     ILogger<UserManager<TUser>> logger)
         : UserManager<TUser>(store, optionsAccessor, passwordHasher,
-            userValidators, passwordValidators, keyNormalizer, errors, services, logger) where TUser : class
+            userValidators, passwordValidators, keyNormalizer, errors, services, logger) where TUser : UserEntity, new()
 {
+
+    /// <summary>
+    /// Instancia de ICustomUserStore.
+    /// </summary>
+    protected new internal ICustomUserStore<TUser> Store { get; set; }
+        = store ?? throw new ArgumentNullException(nameof(store));
+
     /// <summary>
     /// Cria um usuário com senha. 
     /// </summary>
@@ -77,7 +90,7 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
                         if (!identityResult.Succeeded) return identityResult;
 
                         if (Options.Lockout.AllowedForNewUsers && SupportsUserLockout)
-                            await GetUserLockoutStore()
+                            await GeTUserLockoutStore()
                                     .SetLockoutEnabledAsync(
                                          user, true, CancellationToken);
 
@@ -94,6 +107,47 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
     }
 
     /// <summary>
+    /// Busca um usuário pelo nome e expressão.
+    /// </summary>
+    /// <param name="userName"></param>
+    /// <param name="expression"></param>
+    /// <returns></returns>
+    public async Task<TUser> FindByNameWithExpressionAsync(string userName, Expression<Func<TUser, bool>> expression)
+    {
+        ThrowIfDisposed();
+        userName = NormalizeName(userName);
+
+        var user = await Store.FindByNameWithExpressionAsync(
+            userName, expression, CancellationToken).ConfigureAwait(false);
+
+        if (user == null 
+            && Options.Stores.ProtectPersonalData)
+        {
+            var keyRing = services.GetService<ILookupProtectorKeyRing>();
+            var protector = services.GetService<ILookupProtector>();
+
+            if (keyRing != null 
+                && protector != null)
+            {
+                foreach (var key in keyRing.GetAllKeyIds())
+                {
+                    var oldKey = protector.Protect(key, userName);
+
+                    user = await Store.FindByNameWithExpressionAsync(
+                        oldKey, expression, CancellationToken).ConfigureAwait(false);
+
+                    if (user != null)
+                    {
+                        return user;
+                    }
+                }
+            }
+        }
+
+        return user;
+    }
+
+    /// <summary>
     /// Valida os dados do usuário.
     /// </summary>
     /// <param name="user"></param>
@@ -103,8 +157,7 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
     {
         if (SupportsUserSecurityStamp)
             if (string.IsNullOrEmpty(
-                await GetSecurityStampAsync(user)))
-                throw new InvalidOperationException("Security Stamp não pode ser nulo.");
+                await GetSecurityStampAsync(user))) throw new InvalidOperationException("Security Stamp não pode ser nulo.");
 
         List<IdentityError> errors = null;
         foreach (var validator in UserValidators)
@@ -212,7 +265,7 @@ public class CustomUserManager<TUser>(IUserStore<TUser> store,
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotSupportedException"></exception>
-    private IUserLockoutStore<TUser> GetUserLockoutStore()
+    private IUserLockoutStore<TUser> GeTUserLockoutStore()
     {
         IUserLockoutStore<TUser> cast
             = Store as IUserLockoutStore<TUser>;

@@ -82,7 +82,7 @@ public static class IdentityExtensions
             })
               .AddEntityFrameworkStores<AuthIoContext>()
               .AddDefaultTokenProviders()
-              .AddSignInManager<CustomSignInManager>()
+              .AddSignInManager<CustomSignInManager<UserEntity>>()
               .AddErrorDescriber<CustomIdentityErrorDescriber>()
               .AddUserManager<CustomUserManager<UserEntity>>()
               .AddUserValidator<CustomUserValidator<UserEntity>>()

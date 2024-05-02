@@ -28,5 +28,8 @@ public class TenantEntityTypeConfiguration : IEntityTypeConfiguration<TenantEnti
         // Configura uma relação um-para-um entre Tenant e TenantConfiguration. Especifica que cada Tenant tem uma TenantConfiguration,
         // e cada TenantConfiguration está associada a exatamente um Tenant, usando TenantId como chave estrangeira.
         builder.HasOne(t => t.TenantConfiguration).WithOne(tc => tc.Tenant).HasForeignKey<TenantConfigurationEntity>(tc => tc.TenantId);
+
+        // Configura a relação de muitos para um entre tenants e usuarios.
+        builder.HasMany(t => t.Users).WithOne(tc => tc.Tenant).HasForeignKey(tc => tc.TenantId);
     }
 }
