@@ -10,7 +10,10 @@ public class UserIdentityConfigurationEntity : UserOptions, IEntityPrimaryKey<Gu
     /// <summary>
     /// ctor
     /// </summary>
-    public UserIdentityConfigurationEntity() { }
+    public UserIdentityConfigurationEntity()
+    {
+
+    }
 
     /// <summary>
     /// ctor

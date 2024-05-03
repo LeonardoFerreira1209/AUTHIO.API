@@ -19,7 +19,7 @@ public class SendGridEmailProvider(
     /// Método de envio de e-mail.
     /// </summary>
     /// <param name="message"></param>
-    public async Task SendEmail(DefaultEmailMessage message)
+    public void SendEmail(DefaultEmailMessage message)
     {
         Log.Information($"ApiKey: {Environment.GetEnvironmentVariable("SENDGRID_APIKEY")}");
 
@@ -27,7 +27,7 @@ public class SendGridEmailProvider(
             Environment.GetEnvironmentVariable("SENDGRID_APIKEY") 
                 ?? appSettings.Value.Email.SendGrid.ApiKey);
 
-        await client.SendEmailAsync(MailHelper.CreateSingleEmail(
+        client.SendEmailAsync(MailHelper.CreateSingleEmail(
                 message.From.ToSendGridEmailAddres(),
                 message.To.ToSendGridEmailAddres(),
                 message.Subject,

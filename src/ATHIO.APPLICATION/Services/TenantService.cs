@@ -1,5 +1,7 @@
 ﻿using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Builders.Creates;
+using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.DOMAIN.Contracts.Providers;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
@@ -8,6 +10,7 @@ using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Exceptions;
+using AUTHIO.DOMAIN.Helpers.Consts;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
 using AUTHIO.INFRASTRUCTURE.Services.Identity;
@@ -34,35 +37,13 @@ public class TenantService(
     IUserIdentityConfigurationRepository userIdentityConfigurationRepository,
     IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
     ILockoutIdentityConfigurationRepository lockoutIdentityConfigurationRepository,
+    ITenantEmailConfigurationRepository tenantEmailConfigurationRepository,
     IContextService contextService,
+    IEmailProviderFactory emailProviderFactory,
     CustomUserManager<UserEntity> customUserManager) : ITenantService
 {
-    private readonly IUnitOfWork<AuthIoContext>
-       _unitOfWork = unitOfWork;
-
-    private readonly ITenantRepository
-        _tenantRepository = tenantRepository;
-
-    private readonly ITenantConfigurationRepository
-        _tenantConfigurationRepository = tenantConfigurationRepository;
-
-    private readonly ITenantIdentityConfigurationRepository
-        _tenantIdentityConfigurationRepository = tenantIdentityConfigurationRepository;
-
-    private readonly IUserIdentityConfigurationRepository
-        _userIdentityConfigurationRepository = userIdentityConfigurationRepository;
-
-    private readonly IPasswordIdentityConfigurationRepository
-        _passwordIdentityConfigurationRepository = passwordIdentityConfigurationRepository;
-
-    private readonly ILockoutIdentityConfigurationRepository
-        _lockoutIdentityConfigurationRepository = lockoutIdentityConfigurationRepository;
-
-    private readonly IContextService
-        _contextService = contextService;
-
-    private readonly CustomUserManager<UserEntity>
-        _customUserManager = customUserManager;
+    private readonly IEmailProvider emailProvider
+       = emailProviderFactory.GetSendGridEmailProvider();
 
     /// <summary>
     /// Método responsável por criar um Tenant.
@@ -90,25 +71,25 @@ public class TenantService(
 
                     }).Unwrap();
 
-            return await _tenantRepository.GetAsync(tenant => tenant.Name == createTenantRequest.Name)
+            return await tenantRepository.GetAsync(tenant => tenant.Name == createTenantRequest.Name)
                 .ContinueWith(async (tenantResult) =>
                 {
                     if (tenantResult.Result is not null)
                         throw new DuplicatedTenantException(createTenantRequest);
 
                     var _transaction
-                        = await _unitOfWork.BeginTransactAsync();
+                        = await unitOfWork.BeginTransactAsync();
 
                     try
                     {
-                        return await _tenantRepository.CreateAsync(
-                           createTenantRequest.ToEntity(_contextService.GetCurrentUserId()))
+                        return await tenantRepository.CreateAsync(
+                           createTenantRequest.ToEntity(contextService.GetCurrentUserId()))
                                .ContinueWith(async (tenantEntityTask) =>
                                {
                                    var tenant
                                        = tenantEntityTask.Result;
 
-                                   await _tenantConfigurationRepository.CreateAsync(
+                                   await tenantConfigurationRepository.CreateAsync(
                                         CreateTenantConfiguration.CreateDefault(
                                             tenant.Id)).ContinueWith(
                                                async (tenantConfigurationEntityTask) =>
@@ -116,7 +97,7 @@ public class TenantService(
                                                    var tenantConfiguration
                                                         = tenantConfigurationEntityTask.Result;
 
-                                                   await _tenantIdentityConfigurationRepository.CreateAsync(
+                                                   await tenantIdentityConfigurationRepository.CreateAsync(
                                                        CreateTenantIdentityConfiguration.CreateDefault(
                                                                 tenantConfiguration.Id)).ContinueWith(
                                                                     async (tenantIdentityConfigurationEntityTask) =>
@@ -124,10 +105,27 @@ public class TenantService(
                                                                         var tenantIdentityConfiguration
                                                                             = tenantIdentityConfigurationEntityTask.Result;
 
-                                                                        await CreateTenantConfigurationsAsync(
-                                                                            tenantIdentityConfiguration.Id);
+                                                                        await Task.WhenAll(
+                                                                            userIdentityConfigurationRepository.CreateAsync(
+                                                                                CreateUserIdentityConfiguration.CreateDefault(
+                                                                                    tenantIdentityConfiguration.Id)
+                                                                                ),
+                                                                            passwordIdentityConfigurationRepository.CreateAsync(
+                                                                                CreatePasswordIdentityConfiguration.CreateDefault(
+                                                                                    tenantIdentityConfiguration.Id)
+                                                                                ),
+                                                                            lockoutIdentityConfigurationRepository.CreateAsync(
+                                                                                CreateLockoutIdentityConfiguration.CreateDefault(
+                                                                                    tenantIdentityConfiguration.Id)
+                                                                                ),
+                                                                            tenantEmailConfigurationRepository.CreateAsync(
+                                                                                CreateTenantEmailConfiguration.CreateDefault(
+                                                                                    tenantConfiguration.Id,
+                                                                                     createTenantRequest.Name, createTenantRequest.Email, true)
+                                                                                )
+                                                                            );
 
-                                                                        await _unitOfWork.CommitAsync();
+                                                                        await unitOfWork.CommitAsync();
 
                                                                     }).Unwrap();
 
@@ -172,7 +170,7 @@ public class TenantService(
 
         try
         {
-            return await _tenantRepository.GetAllAsyncPaginated(pageNumber, pageSize, null)
+            return await tenantRepository.GetAllAsyncPaginated(pageNumber, pageSize, null)
                     .ContinueWith(taskResult =>
                     {
                         var pagination
@@ -186,6 +184,40 @@ public class TenantService(
                                     (pagination.Items.Select(
                                         tenant => tenant.ToResponse()).ToList()), [
                                             new DadosNotificacao("Tenants reuperados com sucesso!")]));
+                    });
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+        }
+    }
+
+    /// <summary>
+    /// Recupera um tenant pela chave.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<ObjectResult> GetTenantByKeyAsync(string key, CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetTenantByKeyAsync)}\n");
+
+        try
+        {
+            return await tenantRepository.GetAsync(
+                x => x.TenantConfiguration.TenantKey == key)
+                    .ContinueWith(taskResult =>
+                    {
+                        var tenantEntity
+                                = taskResult.Result;
+
+                        return new OkObjectResult(
+                            new ApiResponse<TenantResponse>(
+                                true,
+                                HttpStatusCode.OK,
+                                tenantEntity.ToResponse(), [
+                                new DadosNotificacao("Tenant recuperado com sucesso!")]));
                     });
         }
         catch (Exception exception)
@@ -223,22 +255,22 @@ public class TenantService(
 
                     }).Unwrap();
 
-            return await _tenantRepository.GetAsync(tenant => tenant.TenantConfiguration.TenantKey.Equals(tenantKey))
+            return await tenantRepository.GetAsync(tenant => tenant.TenantConfiguration.TenantKey.Equals(tenantKey))
                 .ContinueWith(async (taskResut) =>
                 {
                     var tenantEntity
                       = taskResut.Result
                          ?? throw new NotFoundTenantException(tenantKey);
 
-                    if (!tenantEntity.UserId.Equals(_contextService.GetCurrentUserId()))
+                    if (!tenantEntity.UserId.Equals(contextService.GetCurrentUserId()))
                         throw new NotPermissionTenantException();
 
                     var userEntity
                        = registerUserRequest.ToUserTenantEntity(tenantEntity.Id);
 
-                    return await _customUserManager.CreateAsync(
+                    return await customUserManager.CreateAsync(
                          userEntity, registerUserRequest.Password)
-                            .ContinueWith(identityResultTask =>
+                            .ContinueWith(async identityResultTask =>
                             {
                                 var identityResult
                                         = identityResultTask.Result;
@@ -248,13 +280,21 @@ public class TenantService(
                                         registerUserRequest, identityResult.Errors.Select((e)
                                             => new DadosNotificacao(e.Description)).ToList());
 
+                                await unitOfWork.CommitAsync().ContinueWith((task) => {
+                                    emailProvider.SendEmail(CreateDefaultEmailMessage
+                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                           EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, 
+                                           EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL, tenantEntity.TenantConfiguration.TenantEmailConfiguration.SendersName,
+                                           tenantEntity.TenantConfiguration.TenantEmailConfiguration.SendersEmail));
+                                });
+
                                 return new OkObjectResult(
                                     new ApiResponse<UserResponse>(
                                         identityResult.Succeeded,
                                             HttpStatusCode.Created,
                                             userEntity.ToResponse(), [
                                                  new DadosNotificacao("Usuário criado com sucesso e vinculado ao Tenant!")]));
-                            });
+                            }).Unwrap();
 
                 }).Unwrap();
         }
@@ -263,29 +303,4 @@ public class TenantService(
             Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
         }
     }
-
-    /// <summary>
-    /// Cria todas as configurações do tenant.
-    /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
-    /// <returns></returns>
-    private async Task CreateTenantConfigurationsAsync(
-        Guid tenantIdentityConfigurationId) =>
-            await Task.WhenAll(
-
-                _userIdentityConfigurationRepository.CreateAsync(
-                    CreateUserIdentityConfiguration.CreateDefault(
-                        tenantIdentityConfigurationId)
-                    ),
-
-                _passwordIdentityConfigurationRepository.CreateAsync(
-                    CreatePasswordIdentityConfiguration.CreateDefault(
-                            tenantIdentityConfigurationId)
-                    ),
-
-                _lockoutIdentityConfigurationRepository.CreateAsync(
-                    CreateLockoutIdentityConfiguration.CreateDefault(
-                        tenantIdentityConfigurationId)
-                    )
-                );
 }

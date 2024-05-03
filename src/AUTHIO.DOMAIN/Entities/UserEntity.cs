@@ -14,7 +14,10 @@ public class UserEntity
     /// <summary>
     /// ctor
     /// </summary>
-    public UserEntity() { }
+    public UserEntity()
+    {
+
+    }
 
     /// <summary>
     /// ctor

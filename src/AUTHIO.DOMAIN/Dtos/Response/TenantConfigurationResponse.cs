@@ -34,6 +34,11 @@ public class TenantConfigurationResponse
     /// Response do tenant identity configuration.
     /// </summary>
     public TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
+    
+    /// <summary>
+    /// Response de Configuraçoes de email.
+    /// </summary>
+    public TenantEmailConfigurationResponse TenantEmailConfiguration { get; set; }
 
     /// <summary>
     /// Chave de acesso.

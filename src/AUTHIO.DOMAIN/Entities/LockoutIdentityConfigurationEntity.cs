@@ -10,7 +10,10 @@ public class LockoutIdentityConfigurationEntity : LockoutOptions, IEntityPrimary
     /// <summary>
     /// ctor
     /// </summary>
-    public LockoutIdentityConfigurationEntity() { }
+    public LockoutIdentityConfigurationEntity()
+    {
+
+    }
 
     /// <summary>
     /// ctor

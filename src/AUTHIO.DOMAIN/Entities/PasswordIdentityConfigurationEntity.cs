@@ -10,7 +10,10 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     /// <summary>
     /// ctor
     /// </summary>
-    public PasswordIdentityConfigurationEntity() { }
+    public PasswordIdentityConfigurationEntity()
+    {
+
+    }
 
     /// <summary>
     /// ctor

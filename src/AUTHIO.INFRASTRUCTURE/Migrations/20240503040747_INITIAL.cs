@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class INITIAL : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -282,10 +282,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    SerdersName = table.Column<string>(type: "longtext", nullable: true),
+                    SendersName = table.Column<string>(type: "longtext", nullable: true),
                     SendersEmail = table.Column<string>(type: "longtext", nullable: true),
                     IsEmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TemplateId = table.Column<string>(type: "longtext", nullable: true),
                     TenantConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
@@ -398,17 +397,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a"), null, new DateTime(2024, 4, 30, 0, 33, 20, 76, DateTimeKind.Local).AddTicks(7117), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065"), null, new DateTime(2024, 5, 3, 1, 7, 47, 112, DateTimeKind.Local).AddTicks(5905), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") },
-                    { 2, "Tenants", "GET", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") },
-                    { 3, "Tenants", "PATCH", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") },
-                    { 4, "Tenants", "PUT", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") }
+                    { 1, "Tenants", "POST", new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065") },
+                    { 2, "Tenants", "GET", new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065") },
+                    { 3, "Tenants", "PATCH", new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065") },
+                    { 4, "Tenants", "PUT", new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065") }
                 });
 
             migrationBuilder.CreateIndex(

@@ -8,7 +8,10 @@ public class TenantConfigurationEntity : IEntityPrimaryKey<Guid>, IEntityTenant
     /// <summary>
     /// ctor
     /// </summary>
-    public TenantConfigurationEntity() { }
+    public TenantConfigurationEntity()
+    {
+
+    }
 
     /// <summary>
     /// ctor

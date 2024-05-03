@@ -60,7 +60,7 @@ public static class TenantExtensions
     /// <param name="tenantConfigurationEntity"></param>
     /// <returns></returns>
     public static TenantConfigurationResponse ToResponse(this TenantConfigurationEntity tenantConfigurationEntity,
-        bool includeTenant = false, bool includeTenantIdentityConfiguration = true)
+        bool includeTenant = false, bool includeTenantIdentityConfiguration = true, bool includeTenantEmailConfiguration = true)
         => new()
         {
             Id = tenantConfigurationEntity.Id,
@@ -71,6 +71,10 @@ public static class TenantExtensions
 
             TenantIdentityConfiguration = includeTenantIdentityConfiguration
                 ? tenantConfigurationEntity.TenantIdentityConfiguration?.ToResponse()
+                : null,
+
+            TenantEmailConfiguration = includeTenantEmailConfiguration 
+                ? tenantConfigurationEntity.TenantEmailConfiguration?.ToResponse() 
                 : null,
 
             Tenant = includeTenant
@@ -172,6 +176,27 @@ public static class TenantExtensions
             TenantIdentityConfigurationId = lockoutIdentityConfigurationEntity.TenantIdentityConfigurationId,
             TenantIdentityConfiguration = includeTenantIdentityConfiguration
                 ? lockoutIdentityConfigurationEntity?.TenantIdentityConfiguration?.ToResponse()
+                : null
+        };
+
+    /// <summary>
+    /// Transforma um TenantEmailConfigurationEntity em response.
+    /// </summary>
+    /// <param name="TenantEmailConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantEmailConfigurationResponse ToResponse(this TenantEmailConfigurationEntity tenantEmailConfigurationEntity,
+        bool includeTenantConfiguration = false)
+        => new()
+        {
+            Id = tenantEmailConfigurationEntity.Id,
+            Created = tenantEmailConfigurationEntity.Created,
+            Updated = tenantEmailConfigurationEntity.Updated,
+            SendersName = tenantEmailConfigurationEntity.SendersName,
+            SendersEmail = tenantEmailConfigurationEntity.SendersEmail,
+            IsEmailConfirmed = tenantEmailConfigurationEntity.IsEmailConfirmed,
+            TenantConfigurationId = tenantEmailConfigurationEntity.TenantConfigurationId,
+            TenantConfiguration = includeTenantConfiguration
+                ? tenantEmailConfigurationEntity?.TenantConfiguration?.ToResponse()
                 : null
         };
 }

@@ -55,6 +55,6 @@ public class FeatureFlagsService(
             ]);
 
         return await Tracker.Time(
-            () => method(), methodDescription);
+            () => method(), $"{methodName} - {methodDescription}");
     }
 }
