@@ -6,6 +6,36 @@
 public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
 {
     /// <summary>
+    /// ctor
+    /// </summary>
+    public TenantEmailConfigurationEntity()
+    {
+
+    }
+
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="tenantConfigurationId"></param>
+    /// <param name="created"></param>
+    /// <param name="updated"></param>
+    /// <param name="serdersName"></param>
+    /// <param name="serdersEmail"></param>
+    /// <param name="isEmailConfirmed"></param>
+    public TenantEmailConfigurationEntity(
+        Guid tenantConfigurationId, DateTime created,
+        DateTime? updated, string serdersName, string serdersEmail,
+        bool isEmailConfirmed)
+    {
+        TenantConfigurationId = tenantConfigurationId;
+        Created = created;
+        Updated = updated;
+        SendersName = serdersName;
+        SendersEmail = serdersEmail;
+        IsEmailConfirmed = isEmailConfirmed;
+    }
+
+    /// <summary>
     /// User Id
     /// </summary>
     public Guid Id { get; set; }
@@ -23,7 +53,7 @@ public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// Nome do Remetente.
     /// </summary>
-    public string SerdersName { get; set; }
+    public string SendersName { get; set; }
 
     /// <summary>
     /// Email do Remetente.
@@ -33,12 +63,7 @@ public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// Email do Remetente confirmado.
     /// </summary>
-    public bool IsEmailConfirmed { get; set; }  
-    
-    /// <summary>
-    /// Id do template do Email.
-    /// </summary>
-    public string TemplateId { get; set; }
+    public bool IsEmailConfirmed { get; set; }
 
     /// <summary>
     /// Id do tenant configuration Id.

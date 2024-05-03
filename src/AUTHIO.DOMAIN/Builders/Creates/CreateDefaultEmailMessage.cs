@@ -17,12 +17,12 @@ public static class CreateDefaultEmailMessage
     /// <param name="subject"></param>
     /// <param name="plainTextContent"></param>
     /// <param name="htmlContent"></param>
-    public static DefaultEmailMessage CreateWithHtmlContent(string fromName, string fromEmail,
-        string toName, string toEmail, string subject, string plainTextContent, string htmlContent)
+    public static DefaultEmailMessage CreateWithHtmlContent(string toName, string toEmail, 
+        string subject, string plainTextContent, string htmlContent, string fromName = "HYPER.IO", string fromEmail = "HYPER.IO@outlook.com")
             => new DefaultEmailMessageBuilder()
+                .AddTo(toName, toEmail)
                     .AddFrom(fromName, fromEmail)
-                        .AddTo(toName, toEmail)
-                            .AddSubject(subject)
-                                .AddPlainTextContent(plainTextContent)
-                                    .AddHtmlContent(htmlContent).Builder();
+                        .AddSubject(subject)
+                            .AddPlainTextContent(plainTextContent)
+                                .AddHtmlContent(htmlContent).Builder();
 }

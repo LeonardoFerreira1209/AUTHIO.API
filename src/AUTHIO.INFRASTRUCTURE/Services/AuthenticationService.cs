@@ -11,6 +11,7 @@ using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Consts;
 using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
@@ -38,15 +39,7 @@ public sealed class AuthenticationService(
     IUnitOfWork<AuthIoContext> unitOfWork,
     IEmailProviderFactory emailProviderFactory) : IAuthenticationService
 {
-    private readonly ITokenService _tokenService = tokenService;
-
-    private readonly IUnitOfWork<AuthIoContext>
-        _unitOfWork = unitOfWork;
-
-    private readonly string _tenatKey 
-        = contextService.GetCurrentTenantKey();
-
-    private readonly IEmailProvider emailProvider 
+    private readonly IEmailProvider emailProvider
         = emailProviderFactory.GetSendGridEmailProvider();
 
     /// <summary>
@@ -56,7 +49,8 @@ public sealed class AuthenticationService(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="CreateUserFailedException"></exception>
-    public async Task<ObjectResult> RegisterAsync(RegisterUserRequest registerUserRequest, CancellationToken cancellationToken)
+    public async Task<ObjectResult> RegisterAsync(
+        RegisterUserRequest registerUserRequest, CancellationToken cancellationToken)
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(AuthenticationService)} - METHOD {nameof(RegisterAsync)}\n");
@@ -74,7 +68,7 @@ public sealed class AuthenticationService(
                     }).Unwrap();
 
             var transaction =
-                await _unitOfWork.BeginTransactAsync();
+                await unitOfWork.BeginTransactAsync();
 
             try
             {
@@ -92,8 +86,8 @@ public sealed class AuthenticationService(
                                 registerUserRequest, identityResult.Errors.Select((e)
                                     => new DadosNotificacao(e.Description)).ToList());
 
-                        return await customUserManager
-                            .AddToRoleAsync(userEntity, "System").ContinueWith(async (identityResultTask) =>
+                        return await customUserManager.AddToRoleAsync(
+                            userEntity, "System").ContinueWith(async (identityResultTask) =>
                             {
                                 var identityResult
                                         = identityResultTask.Result;
@@ -103,15 +97,11 @@ public sealed class AuthenticationService(
                                         registerUserRequest, identityResult.Errors.Select((e)
                                             => new DadosNotificacao(e.Description)).ToList());
 
-                                await transaction.CommitAsync()
-                                    .ContinueWith(async (task) => {
-
-                                        await emailProvider.SendEmail(CreateDefaultEmailMessage
-                                            .CreateWithHtmlContent("HYPER.IO", "hyper.io@outlook.com",
-                                                userEntity.FirstName, userEntity.Email, "Confiormação de E-mail",
-                                                "Confirme seu e-mail", "Confirmação de e-mail teste"));
-
-                                    }).Unwrap();
+                                await transaction.CommitAsync().ContinueWith((task) => {
+                                    emailProvider.SendEmail(CreateDefaultEmailMessage
+                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                           EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL));
+                                });
 
                                 return new OkObjectResult(
                                     new ApiResponse<UserResponse>(
@@ -158,8 +148,9 @@ public sealed class AuthenticationService(
                 }).Unwrap();
 
             return await customUserManager.FindByNameWithExpressionAsync(
-                loginRequest.Username, 
-                UserFilters<UserEntity>.FilterSystemOrTenantUsers(_tenatKey)).ContinueWith(async (userEntityTask) =>
+                loginRequest.Username,
+                UserFilters<UserEntity>.FilterSystemOrTenantUsers(
+                    contextService.GetCurrentTenantKey())).ContinueWith(async (userEntityTask) =>
                 {
                     var userEntity =
                         userEntityTask.Result
@@ -208,7 +199,8 @@ public sealed class AuthenticationService(
     /// <returns></returns>
     /// <exception cref="CustomException"></exception>
     private async Task<TokenJWT> GenerateTokenJwtAsync(LoginRequest loginRequest)
-        => await _tokenService.CreateJsonWebToken(loginRequest.Username).ContinueWith((tokenTask) =>
+        => await tokenService.CreateJsonWebToken(
+            loginRequest.Username).ContinueWith((tokenTask) =>
         {
             var tokenJwt =
                 tokenTask.Result
@@ -226,7 +218,8 @@ public sealed class AuthenticationService(
     /// <exception cref="IsNotAllowedAuthenticationException"></exception>
     /// <exception cref="RequiresTwoFactorAuthenticationException"></exception>
     /// <exception cref="InvalidUserAuthenticationException"></exception>
-    private static void ThrownAuthorizationException(SignInResult signInResult, Guid userId, LoginRequest loginRequest)
+    private static void ThrownAuthorizationException(
+        SignInResult signInResult, Guid userId, LoginRequest loginRequest)
     {
         if (signInResult.IsLockedOut)
         {

@@ -11,5 +11,5 @@ public interface IEmailProvider
     /// Método de envio de email.
     /// </summary>
     /// <param name="message"></param>
-    Task SendEmail(DefaultEmailMessage message);
+    void SendEmail(DefaultEmailMessage message);
 }

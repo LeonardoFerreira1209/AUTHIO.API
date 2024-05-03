@@ -17,10 +17,18 @@ public interface ITenantService
         CreateTenantRequest createTenantRequest, CancellationToken cancellationToken);
 
     /// <summary>
-    /// 
+    /// Recupera todos os tenants com paginação.
     /// </summary>
     /// <returns></returns>
     Task<ObjectResult> GetAllAsync(int pageNumber, int PageSize, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Recupera um tenant pela chave.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<ObjectResult> GetTenantByKeyAsync(string key, CancellationToken cancellationToken);
 
     /// <summary>
     /// Método responsável por criar um usuário no tenant.
