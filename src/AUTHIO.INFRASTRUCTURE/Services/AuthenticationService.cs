@@ -98,8 +98,7 @@ public sealed class AuthenticationService(
                                         registerUserRequest, identityResult.Errors.Select((e)
                                             => new DadosNotificacao(e.Description)).ToList());
 
-                                await transaction.CommitAsync().ContinueWith((task) =>
-                                {
+                                await transaction.CommitAsync().ContinueWith((task) => {
                                     eventServiceBusProvider.SendAsync(new EventMessage<EmailEvent>(
                                         new EmailEvent(CreateDefaultEmailMessage
                                             .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
