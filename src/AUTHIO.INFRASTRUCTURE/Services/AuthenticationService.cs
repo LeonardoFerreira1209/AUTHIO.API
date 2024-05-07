@@ -3,13 +3,13 @@
 using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Auth.Token;
 using AUTHIO.DOMAIN.Builders.Creates;
-using AUTHIO.DOMAIN.Contracts.Factories;
-using AUTHIO.DOMAIN.Contracts.Providers;
+using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
+using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Consts;
 using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
@@ -37,10 +37,11 @@ public sealed class AuthenticationService(
     CustomUserManager<UserEntity> customUserManager,
     CustomSignInManager<UserEntity> customSignInManager,
     IUnitOfWork<AuthIoContext> unitOfWork,
-    IEmailProviderFactory emailProviderFactory) : IAuthenticationService
+    //IEmailProviderFactory emailProviderFactory,
+    IEventServiceBusProvider eventServiceBusProvider) : IAuthenticationService
 {
-    private readonly IEmailProvider emailProvider
-        = emailProviderFactory.GetSendGridEmailProvider();
+    //private readonly IEmailProvider emailProvider
+    //    = emailProviderFactory.GetSendGridEmailProvider();
 
     /// <summary>
     /// Método de registro de usuário.
@@ -98,9 +99,10 @@ public sealed class AuthenticationService(
                                             => new DadosNotificacao(e.Description)).ToList());
 
                                 await transaction.CommitAsync().ContinueWith((task) => {
-                                    emailProvider.SendEmail(CreateDefaultEmailMessage
-                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                           EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL));
+                                    eventServiceBusProvider.SendAsync(new EventMessage<EmailEvent>(
+                                        new EmailEvent(CreateDefaultEmailMessage
+                                            .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                               EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL))));
                                 });
 
                                 return new OkObjectResult(
@@ -151,40 +153,40 @@ public sealed class AuthenticationService(
                 loginRequest.Username,
                 UserFilters<UserEntity>.FilterSystemOrTenantUsers(
                     contextService.GetCurrentTenantKey())).ContinueWith(async (userEntityTask) =>
-                {
-                    var userEntity =
-                        userEntityTask.Result
-                        ?? throw new NotFoundUserException(loginRequest);
+                    {
+                        var userEntity =
+                            userEntityTask.Result
+                            ?? throw new NotFoundUserException(loginRequest);
 
-                    await customSignInManager.PasswordSignInAsync(
-                        userEntity, loginRequest.Password, true, true).ContinueWith((signInResultTask) =>
-                        {
-                            var signInResult = signInResultTask.Result;
+                        await customSignInManager.PasswordSignInAsync(
+                            userEntity, loginRequest.Password, true, true).ContinueWith((signInResultTask) =>
+                            {
+                                var signInResult = signInResultTask.Result;
 
-                            if (signInResult.Succeeded is false)
-                                ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
-                        });
+                                if (signInResult.Succeeded is false)
+                                    ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
+                            });
 
-                    Log.Information(
-                        $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
+                        Log.Information(
+                            $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
 
-                    return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
-                        (tokenJwtTask) =>
-                        {
-                            var tokenJWT =
-                                tokenJwtTask.Result
-                                ?? throw new TokenJwtException(null);
+                        return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
+                            (tokenJwtTask) =>
+                            {
+                                var tokenJWT =
+                                    tokenJwtTask.Result
+                                    ?? throw new TokenJwtException(null);
 
-                            Log.Information(
-                                $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
+                                Log.Information(
+                                    $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
 
-                            return new OkObjectResult(
-                                new ApiResponse<TokenJWT>(
-                                    true, HttpStatusCode.Created, tokenJWT, [
-                                        new("Token criado com sucesso!")]));
-                        });
+                                return new OkObjectResult(
+                                    new ApiResponse<TokenJWT>(
+                                        true, HttpStatusCode.Created, tokenJWT, [
+                                            new("Token criado com sucesso!")]));
+                            });
 
-                }).Unwrap();
+                    }).Unwrap();
         }
         catch (Exception exception)
         {

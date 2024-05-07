@@ -10,13 +10,11 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// <summary>
 /// Classe customizada de validação de usuários.
 /// </summary>
-public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
+public class CustomUserValidator<TUser>(
+        ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
         IContextService contextService)
     : UserValidator<TUser> where TUser : UserEntity, new()
 {
-    private readonly ITenantIdentityConfigurationRepository
-        _tenantIdentityConfigurationRepository = tenantIdentityConfigurationRepository;
-
     private readonly string _tenantKey
         = contextService.GetCurrentTenantKey();
 
@@ -31,7 +29,7 @@ public class CustomUserValidator<TUser>(ITenantIdentityConfigurationRepository t
     {
         var customManager = manager as CustomUserManager<TUser>;
 
-        var tenantIdentityConfigurationEntity = await _tenantIdentityConfigurationRepository
+        var tenantIdentityConfigurationEntity = await tenantIdentityConfigurationRepository
             .GetAsync(config => config.TenantConfiguration.TenantKey == _tenantKey)
                 .ContinueWith((tenantIdentityTask) =>
                 {

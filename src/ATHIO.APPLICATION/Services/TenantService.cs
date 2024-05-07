@@ -1,7 +1,7 @@
 ﻿using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Builders.Creates;
 using AUTHIO.DOMAIN.Contracts.Factories;
-using AUTHIO.DOMAIN.Contracts.Providers;
+using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
@@ -99,35 +99,35 @@ public class TenantService(
 
                                                    await tenantIdentityConfigurationRepository.CreateAsync(
                                                        CreateTenantIdentityConfiguration.CreateDefault(
-                                                                tenantConfiguration.Id)).ContinueWith(
-                                                                    async (tenantIdentityConfigurationEntityTask) =>
-                                                                    {
-                                                                        var tenantIdentityConfiguration
-                                                                            = tenantIdentityConfigurationEntityTask.Result;
+                                                            tenantConfiguration.Id)).ContinueWith(
+                                                                async (tenantIdentityConfigurationEntityTask) =>
+                                                                {
+                                                                    var tenantIdentityConfiguration
+                                                                        = tenantIdentityConfigurationEntityTask.Result;
 
-                                                                        await Task.WhenAll(
-                                                                            userIdentityConfigurationRepository.CreateAsync(
-                                                                                CreateUserIdentityConfiguration.CreateDefault(
-                                                                                    tenantIdentityConfiguration.Id)
-                                                                                ),
-                                                                            passwordIdentityConfigurationRepository.CreateAsync(
-                                                                                CreatePasswordIdentityConfiguration.CreateDefault(
-                                                                                    tenantIdentityConfiguration.Id)
-                                                                                ),
-                                                                            lockoutIdentityConfigurationRepository.CreateAsync(
-                                                                                CreateLockoutIdentityConfiguration.CreateDefault(
-                                                                                    tenantIdentityConfiguration.Id)
-                                                                                ),
-                                                                            tenantEmailConfigurationRepository.CreateAsync(
-                                                                                CreateTenantEmailConfiguration.CreateDefault(
-                                                                                    tenantConfiguration.Id,
-                                                                                     createTenantRequest.Name, createTenantRequest.Email, true)
-                                                                                )
-                                                                            );
+                                                                    await Task.WhenAll(
+                                                                        userIdentityConfigurationRepository.CreateAsync(
+                                                                            CreateUserIdentityConfiguration.CreateDefault(
+                                                                                tenantIdentityConfiguration.Id)
+                                                                            ),
+                                                                        passwordIdentityConfigurationRepository.CreateAsync(
+                                                                            CreatePasswordIdentityConfiguration.CreateDefault(
+                                                                                tenantIdentityConfiguration.Id)
+                                                                            ),
+                                                                        lockoutIdentityConfigurationRepository.CreateAsync(
+                                                                            CreateLockoutIdentityConfiguration.CreateDefault(
+                                                                                tenantIdentityConfiguration.Id)
+                                                                            ),
+                                                                        tenantEmailConfigurationRepository.CreateAsync(
+                                                                            CreateTenantEmailConfiguration.CreateDefault(
+                                                                                tenantConfiguration.Id,
+                                                                                    createTenantRequest.Name, createTenantRequest.Email, true)
+                                                                            )
+                                                                        );
 
-                                                                        await unitOfWork.CommitAsync();
+                                                                    await unitOfWork.CommitAsync();
 
-                                                                    }).Unwrap();
+                                                                }).Unwrap();
 
                                                }).Unwrap();
 

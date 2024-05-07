@@ -11,7 +11,6 @@
 public class LoginRequest(
     string email, string password)
 {
-
     /// <summary>
     /// Username do usuário
     /// </summary>

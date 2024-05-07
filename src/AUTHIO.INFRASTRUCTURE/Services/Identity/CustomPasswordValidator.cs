@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,13 +13,12 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// <param name="tenantIdentityConfigurationRepository"></param>
 /// <param name="contextService"></param>
 /// <param name="customIdentityErrorDescriber"></param>
-public class CustomPasswordValidator<TUser>(ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
-                               IContextService contextService, CustomIdentityErrorDescriber customIdentityErrorDescriber = null)
-    : PasswordValidator<TUser>(customIdentityErrorDescriber) where TUser : class
+public class CustomPasswordValidator<TUser>(
+        ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
+        IContextService contextService, 
+        CustomIdentityErrorDescriber customIdentityErrorDescriber)
+    : PasswordValidator<TUser>(customIdentityErrorDescriber) where TUser : UserEntity, new()
 {
-    private readonly ITenantIdentityConfigurationRepository
-        _tenantIdentityConfigurationRepository = tenantIdentityConfigurationRepository;
-
     private readonly string _tenantKey
         = contextService.GetCurrentTenantKey();
 
@@ -32,7 +32,9 @@ public class CustomPasswordValidator<TUser>(ITenantIdentityConfigurationReposito
     public override async Task<IdentityResult> ValidateAsync(
         UserManager<TUser> manager, TUser user, string password)
     {
-        var tenantIdentityConfigurationEntity = await _tenantIdentityConfigurationRepository
+        var customManager = manager as CustomUserManager<TUser>;
+
+        var tenantIdentityConfigurationEntity = await tenantIdentityConfigurationRepository
             .GetAsync(config => config.TenantConfiguration.TenantKey == _tenantKey)
                 .ContinueWith((tenantIdentityTask) =>
                 {

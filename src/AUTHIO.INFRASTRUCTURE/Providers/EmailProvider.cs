@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Providers;
+﻿using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Dtos.Email;
 
 namespace AUTHIO.INFRASTRUCTURE.Providers;

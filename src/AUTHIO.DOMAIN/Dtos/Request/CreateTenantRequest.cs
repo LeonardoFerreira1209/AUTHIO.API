@@ -18,5 +18,5 @@ public sealed class CreateTenantRequest
     /// <summary>
     /// Email do tenant.
     /// </summary>
-    public required string Email { get; set; }
+    public string Email { get; set; }
 }
