@@ -98,7 +98,8 @@ public sealed class AuthenticationService(
                                         registerUserRequest, identityResult.Errors.Select((e)
                                             => new DadosNotificacao(e.Description)).ToList());
 
-                                await transaction.CommitAsync().ContinueWith((task) => {
+                                await transaction.CommitAsync().ContinueWith((task) =>
+                                {
                                     eventServiceBusProvider.SendAsync(new EventMessage<EmailEvent>(
                                         new EmailEvent(CreateDefaultEmailMessage
                                             .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
@@ -153,40 +154,40 @@ public sealed class AuthenticationService(
                 loginRequest.Username,
                 UserFilters<UserEntity>.FilterSystemOrTenantUsers(
                     contextService.GetCurrentTenantKey())).ContinueWith(async (userEntityTask) =>
-                {
-                    var userEntity =
-                        userEntityTask.Result
-                        ?? throw new NotFoundUserException(loginRequest);
+                    {
+                        var userEntity =
+                            userEntityTask.Result
+                            ?? throw new NotFoundUserException(loginRequest);
 
-                    await customSignInManager.PasswordSignInAsync(
-                        userEntity, loginRequest.Password, true, true).ContinueWith((signInResultTask) =>
-                        {
-                            var signInResult = signInResultTask.Result;
+                        await customSignInManager.PasswordSignInAsync(
+                            userEntity, loginRequest.Password, true, true).ContinueWith((signInResultTask) =>
+                            {
+                                var signInResult = signInResultTask.Result;
 
-                            if (signInResult.Succeeded is false)
-                                ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
-                        });
+                                if (signInResult.Succeeded is false)
+                                    ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
+                            });
 
-                    Log.Information(
-                        $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
+                        Log.Information(
+                            $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
 
-                    return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
-                        (tokenJwtTask) =>
-                        {
-                            var tokenJWT =
-                                tokenJwtTask.Result
-                                ?? throw new TokenJwtException(null);
+                        return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
+                            (tokenJwtTask) =>
+                            {
+                                var tokenJWT =
+                                    tokenJwtTask.Result
+                                    ?? throw new TokenJwtException(null);
 
-                            Log.Information(
-                                $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
+                                Log.Information(
+                                    $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
 
-                            return new OkObjectResult(
-                                new ApiResponse<TokenJWT>(
-                                    true, HttpStatusCode.Created, tokenJWT, [
-                                        new("Token criado com sucesso!")]));
-                        });
+                                return new OkObjectResult(
+                                    new ApiResponse<TokenJWT>(
+                                        true, HttpStatusCode.Created, tokenJWT, [
+                                            new("Token criado com sucesso!")]));
+                            });
 
-                }).Unwrap();
+                    }).Unwrap();
         }
         catch (Exception exception)
         {
