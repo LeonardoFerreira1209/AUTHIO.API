@@ -32,8 +32,14 @@ public class CustomUserManager<TUser>(
     IServiceProvider services,
     ILogger<UserManager<TUser>> logger)
         : UserManager<TUser>(store, optionsAccessor, passwordHasher,
-            userValidators, passwordValidators, keyNormalizer, errors, services, logger) where TUser : UserEntity, new()
+            userValidators, passwordValidators, keyNormalizer,
+                errors, services, logger) where TUser : UserEntity, new()
 {
+
+    /// <summary>
+    /// Provedor de serviços.
+    /// </summary>
+    private readonly IServiceProvider _services = services;
 
     /// <summary>
     /// Instancia de ICustomUserStore.
@@ -123,8 +129,8 @@ public class CustomUserManager<TUser>(
         if (user == null 
             && Options.Stores.ProtectPersonalData)
         {
-            var keyRing = services.GetService<ILookupProtectorKeyRing>();
-            var protector = services.GetService<ILookupProtector>();
+            var keyRing = _services.GetService<ILookupProtectorKeyRing>();
+            var protector = _services.GetService<ILookupProtector>();
 
             if (keyRing != null 
                 && protector != null)

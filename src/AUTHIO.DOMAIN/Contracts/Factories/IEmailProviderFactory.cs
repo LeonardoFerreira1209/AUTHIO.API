@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Providers;
+﻿using AUTHIO.DOMAIN.Contracts.Providers.Email;
 
 namespace AUTHIO.DOMAIN.Contracts.Factories;
 

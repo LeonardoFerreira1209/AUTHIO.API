@@ -15,7 +15,8 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// <param name="context"></param>
 /// <param name="describer"></param>
 public class CustomUserStore<TUser>(
-    AuthIoContext context, IdentityErrorDescriber describer = null) 
+        AuthIoContext context, 
+        IdentityErrorDescriber describer = null) 
     : UserStore<TUser, RoleEntity, AuthIoContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, 
         IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>(context, describer), ICustomUserStore<TUser>
     where TUser : IdentityUser<Guid> 

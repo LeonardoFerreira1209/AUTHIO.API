@@ -21,6 +21,12 @@ public sealed class CreateTenantRequestValidator : AbstractValidator<CreateTenan
             .WithErrorCode(ErrorCode.ErroInesperado.ToCode())
             .WithMessage("Preencha o campo nome.");
 
+        RuleFor(t => t.Email)
+           .NotEmpty()
+           .NotNull()
+           .WithErrorCode(ErrorCode.ErroInesperado.ToCode())
+           .WithMessage("Preencha o campo email.");
+
         RuleFor(t => t.Description)
             .NotEmpty()
             .NotNull()

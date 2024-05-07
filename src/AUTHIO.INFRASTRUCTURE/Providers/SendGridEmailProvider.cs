@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Providers;
+﻿using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Email;
 using AUTHIO.DOMAIN.Helpers.Extensions;

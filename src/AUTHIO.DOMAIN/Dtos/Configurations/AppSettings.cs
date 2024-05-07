@@ -10,6 +10,7 @@ public sealed class AppSettings
     public RetryPolicy RetryPolicy { get; set; }
     public Auth Auth { get; set; }
     public Email Email { get; set; }
+    public ServiceBus ServiceBus { get; set; }
 }
 
 /// <summary>
@@ -81,4 +82,15 @@ public sealed class SendGrid
     /// Chave de api do sendGrid.
     /// </summary>
     public string ApiKey { get; set; }
+}
+
+/// <summary>
+/// Classe de config do service bus.
+/// </summary>
+public sealed class ServiceBus
+{
+    /// <summary>
+    /// String de conexão do service bus.
+    /// </summary>
+    public string ConnectionString { get; set; }
 }

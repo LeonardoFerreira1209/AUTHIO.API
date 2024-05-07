@@ -1,9 +1,12 @@
-﻿namespace AUTHIO.DOMAIN.Enums;
+﻿using System.ComponentModel;
+
+namespace AUTHIO.DOMAIN.Enums;
 
 /// <summary>
 /// Enum que representa os tipos de eventos.
 /// </summary>
 public enum EventType
 {
-    Email
+    [Description("Email")]
+    Email = 1
 }

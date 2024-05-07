@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations;
 
 namespace AUTHIO.API.Controllers;
 
@@ -28,6 +27,7 @@ public class AuthenticationController(
     /// Endpoint responsável pelo registro de usuários no sistema.
     /// </summary>
     /// <param name="registerUserRequest"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("register")]
     [EnableRateLimiting("fixed")]
@@ -52,9 +52,7 @@ public class AuthenticationController(
     /// <summary>
     /// Endpoint responsável por fazer a autenticação do usuário, é retornado um token JWT (Json Web Token).
     /// </summary>
-    /// <param name="username"></param>
-    /// <param name="password"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="authenticationRequest"></param>
     /// <returns></returns>
     [HttpGet("authetication")]
     [EnableRateLimiting("fixed")]
@@ -65,16 +63,16 @@ public class AuthenticationController(
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status423Locked)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AuthenticationAsync(
-        [FromHeader][Required] string username,
-        [FromHeader][Required] string password, [FromHeader] string tenantKey)
+        AuthenticationRequest authenticationRequest)
     {
         using (LogContext.PushProperty("Controller", "UserController"))
-        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(new { username, password, tenantKey })))
+        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(authenticationRequest)))
         using (LogContext.PushProperty("Metodo", "Authentication"))
         {
             return await ExecuteAsync(nameof(AuthenticationAsync),
                 () => _authenticationService.AuthenticationAsync(
-                    new LoginRequest(username, password)), "Autenticar usuário");
+                    new LoginRequest(authenticationRequest.Username, 
+                        authenticationRequest.Password)), "Autenticar usuário");
         }
     }
 }

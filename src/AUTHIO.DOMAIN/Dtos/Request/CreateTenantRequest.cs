@@ -8,7 +8,7 @@ public sealed class CreateTenantRequest
     /// <summary>
     /// Nomde do tenant.
     /// </summary>
-    public required string Name { get; set; } = null;
+    public string Name { get; set; } = null;
 
     /// <summary>
     /// Descrição do tenant.
@@ -18,5 +18,5 @@ public sealed class CreateTenantRequest
     /// <summary>
     /// Email do tenant.
     /// </summary>
-    public required string Email { get; set; }
+    public string Email { get; set; }
 }

@@ -25,7 +25,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public async Task<T> CreateAsync(T entity)
+    public virtual async Task<T> CreateAsync(T entity)
     {
         await _context.Set<T>().AddAsync(entity);
 
@@ -37,7 +37,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="entities"></param>
     /// <returns></returns>
-    public async Task<IList<T>> BulkInsertAsync(IList<T> entities)
+    public virtual async Task<IList<T>> BulkInsertAsync(IList<T> entities)
     {
         await _context.BulkInsertAsync(entities);
 
@@ -49,7 +49,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public T Update(T entity)
+    public virtual T Update(T entity)
     {
         _context.Set<T>().Update(entity);
 
@@ -61,7 +61,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="entities"></param>
     /// <returns></returns>
-    public async Task<IList<T>> BulkUpdateAsync(IList<T> entities)
+    public virtual async Task<IList<T>> BulkUpdateAsync(IList<T> entities)
     {
         await _context.BulkUpdateAsync(entities);
 
@@ -73,7 +73,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="entities"></param>
     /// <returns></returns>
-    public async Task BulkDeleteAsync(IList<T> entities)
+    public virtual async Task BulkDeleteAsync(IList<T> entities)
         => await _context.BulkDeleteAsync(entities);
 
     /// <summary>
@@ -82,7 +82,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// <param name="id"></param>
     /// <param name="laziLoading"></param>
     /// <returns></returns>
-    public Task<T> GetByIdAsync(Guid id)
+    public virtual Task<T> GetByIdAsync(Guid id)
         => _context.Set<T>().FirstOrDefaultAsync(entity => entity.Id.Equals(id));
 
     /// <summary>
@@ -90,14 +90,14 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null)
+    public virtual async Task<T> GetAsync(Expression<Func<T, bool>> predicate = null)
         => await _context.Set<T>().FirstOrDefaultAsync(predicate);
 
     /// <summary>
     /// Quantidade total de itens na tabela.
     /// </summary>
     /// <returns></returns>
-    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null)
+    public virtual async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
@@ -111,7 +111,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public async Task<IList<T>> GetAllAsync(
+    public virtual async Task<IList<T>> GetAllAsync(
         Expression<Func<T, bool>> predicate = null)
     {
         IQueryable<T> query = _context.Set<T>();
@@ -130,7 +130,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// <param name="pageSize"></param>
     /// <param name="predicate"></param>
     /// <returns></returns>
-    public async Task<PaginatedResponse<T>> GetAllAsyncPaginated(
+    public virtual async Task<PaginatedResponse<T>> GetAllAsyncPaginated(
          int pageNumber, int pageSize, Expression<Func<T, bool>> predicate = null)
     {
         IQueryable<T> query = _context.Set<T>();

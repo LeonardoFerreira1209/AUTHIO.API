@@ -3,13 +3,13 @@
 using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Auth.Token;
 using AUTHIO.DOMAIN.Builders.Creates;
-using AUTHIO.DOMAIN.Contracts.Factories;
-using AUTHIO.DOMAIN.Contracts.Providers;
+using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
+using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Consts;
 using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
@@ -37,10 +37,11 @@ public sealed class AuthenticationService(
     CustomUserManager<UserEntity> customUserManager,
     CustomSignInManager<UserEntity> customSignInManager,
     IUnitOfWork<AuthIoContext> unitOfWork,
-    IEmailProviderFactory emailProviderFactory) : IAuthenticationService
+    //IEmailProviderFactory emailProviderFactory,
+    IEventServiceBusProvider eventServiceBusProvider) : IAuthenticationService
 {
-    private readonly IEmailProvider emailProvider
-        = emailProviderFactory.GetSendGridEmailProvider();
+    //private readonly IEmailProvider emailProvider
+    //    = emailProviderFactory.GetSendGridEmailProvider();
 
     /// <summary>
     /// Método de registro de usuário.
@@ -98,9 +99,10 @@ public sealed class AuthenticationService(
                                             => new DadosNotificacao(e.Description)).ToList());
 
                                 await transaction.CommitAsync().ContinueWith((task) => {
-                                    emailProvider.SendEmail(CreateDefaultEmailMessage
-                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                           EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL));
+                                    eventServiceBusProvider.SendAsync(new EventMessage<EmailEvent>(
+                                        new EmailEvent(CreateDefaultEmailMessage
+                                            .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                               EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL))));
                                 });
 
                                 return new OkObjectResult(
