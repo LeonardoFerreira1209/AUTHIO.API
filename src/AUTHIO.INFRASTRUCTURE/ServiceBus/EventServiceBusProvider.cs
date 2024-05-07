@@ -9,9 +9,8 @@ namespace AUTHIO.INFRASTRUCTURE.ServiceBus;
 /// </summary>
 public class EventServiceBusProvider(IOptions<AppSettings> appsettings)
     : ServiceBusProviderBase(
-        appsettings.Value.ServiceBus.ConnectionString 
-            ?? Environment.GetEnvironmentVariable(
-                "SERVICEBUS_CONNECTION_STRING"), "events"), IEventServiceBusProvider
+        Environment.GetEnvironmentVariable("SERVICEBUS_CONNECTION_STRING") 
+            ?? appsettings.Value.ServiceBus.ConnectionString, "events"), IEventServiceBusProvider
 {
 
 }
