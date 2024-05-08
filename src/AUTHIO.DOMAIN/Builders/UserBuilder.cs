@@ -6,7 +6,7 @@ namespace AUTHIO.DOMAIN.Builders;
 /// <summary>
 /// Classe responsavel por construir um usuário do systema.
 /// </summary>
-public class UserBuilder
+public sealed class UserBuilder
 {
     private string firstName, userName, lastName, phoneNumber, email;
     private DateTime created;
@@ -69,9 +69,11 @@ public class UserBuilder
     /// </summary>
     /// <param name="updated"></param>
     /// <returns></returns>
-    public UserBuilder AddUpdated(DateTime updated)
+    public UserBuilder AddUpdated(DateTime? updated)
     {
-        this.updated = updated;
+        this.updated
+           = updated
+           ?? DateTime.Now;
 
         return this;
     }

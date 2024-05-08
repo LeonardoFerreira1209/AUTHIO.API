@@ -5,7 +5,7 @@ namespace AUTHIO.DOMAIN.Builders;
 /// <summary>
 /// Classe de builder de TenantIdentityConfiguration.
 /// </summary>
-public class TenantIdentityConfigurationBuilder
+public sealed class TenantIdentityConfigurationBuilder
 {
     private Guid tenantConfigurationId;
     private DateTime? updated = null;

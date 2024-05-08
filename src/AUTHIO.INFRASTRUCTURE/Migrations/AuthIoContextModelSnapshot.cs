@@ -16,11 +16,37 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.EventEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("JsonBody")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("Processed")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("SchedulerTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Events");
+                });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.FeatureFlagsEntity", b =>
                 {
@@ -167,8 +193,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065"),
-                            Created = new DateTime(2024, 5, 3, 1, 7, 47, 112, DateTimeKind.Local).AddTicks(5905),
+                            Id = new Guid("278d2723-54f5-43b3-b145-eaff88575613"),
+                            Created = new DateTime(2024, 5, 8, 0, 22, 55, 299, DateTimeKind.Local).AddTicks(5798),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -447,28 +473,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("c04a5c57-4d5a-491e-b737-6f7627f39065")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         });
                 });
 

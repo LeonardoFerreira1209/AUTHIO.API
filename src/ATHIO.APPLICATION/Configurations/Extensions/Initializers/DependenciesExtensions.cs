@@ -50,6 +50,7 @@ public static class DependenciesExtensions
             .AddTransient<IPasswordIdentityConfigurationRepository, PasswordIdentityConfigurationRepository>()
             .AddTransient<ILockoutIdentityConfigurationRepository, LockoutIdentityConfigurationRepository>()
             .AddTransient<ITenantEmailConfigurationRepository, TenantEmailConfigurationRepository>()
+            .AddTransient<IEventRepository, EventRepository>()
         // Infra
             .AddScoped<ICustomUserStore<UserEntity>, CustomUserStore<UserEntity>>()
             .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
