@@ -69,7 +69,11 @@ public sealed class AuthIoContext(
     /// </summary>
     public DbSet<FeatureFlagsEntity> FeatureFlags => Set<FeatureFlagsEntity>();
 
-   
+    /// <summary>
+    /// Tabela de Events.
+    /// </summary>
+    public DbSet<EventEntity> Events => Set<EventEntity>();
+
     /// <summary>
     /// On model creating.
     /// </summary>

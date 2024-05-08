@@ -5,7 +5,7 @@ namespace AUTHIO.DOMAIN.Builders;
 /// <summary>
 /// Classe de builder de LockoutIdentityConfiguration.
 /// </summary>
-public class LockoutIdentityConfigurationBuilder
+public sealed class LockoutIdentityConfigurationBuilder
 {
     private Guid tenantConfigurationId;
     private DateTime? updated = null;

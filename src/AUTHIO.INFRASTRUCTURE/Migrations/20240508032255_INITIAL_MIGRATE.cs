@@ -9,12 +9,29 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class INITIAL_MIGRATE : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Processed = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    SchedulerTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    JsonBody = table.Column<string>(type: "longtext", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -282,10 +299,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    SerdersName = table.Column<string>(type: "longtext", nullable: true),
+                    SendersName = table.Column<string>(type: "longtext", nullable: true),
                     SendersEmail = table.Column<string>(type: "longtext", nullable: true),
                     IsEmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TemplateId = table.Column<string>(type: "longtext", nullable: true),
                     TenantConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
@@ -398,17 +414,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a"), null, new DateTime(2024, 4, 30, 0, 33, 20, 76, DateTimeKind.Local).AddTicks(7117), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("278d2723-54f5-43b3-b145-eaff88575613"), null, new DateTime(2024, 5, 8, 0, 22, 55, 299, DateTimeKind.Local).AddTicks(5798), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") },
-                    { 2, "Tenants", "GET", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") },
-                    { 3, "Tenants", "PATCH", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") },
-                    { 4, "Tenants", "PUT", new Guid("b10f6e03-2be8-4e75-b218-4ac182a0572a") }
+                    { 1, "Tenants", "POST", new Guid("278d2723-54f5-43b3-b145-eaff88575613") },
+                    { 2, "Tenants", "GET", new Guid("278d2723-54f5-43b3-b145-eaff88575613") },
+                    { 3, "Tenants", "PATCH", new Guid("278d2723-54f5-43b3-b145-eaff88575613") },
+                    { 4, "Tenants", "PUT", new Guid("278d2723-54f5-43b3-b145-eaff88575613") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -516,6 +532,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "FeatureFlags");

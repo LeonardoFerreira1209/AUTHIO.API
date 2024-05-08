@@ -4,6 +4,7 @@ using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Auth.Token;
 using AUTHIO.DOMAIN.Builders.Creates;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
+using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Request;
@@ -37,6 +38,7 @@ public sealed class AuthenticationService(
     CustomUserManager<UserEntity> customUserManager,
     CustomSignInManager<UserEntity> customSignInManager,
     IUnitOfWork<AuthIoContext> unitOfWork,
+    IEventRepository eventRepository,
     //IEmailProviderFactory emailProviderFactory,
     IEventServiceBusProvider eventServiceBusProvider) : IAuthenticationService
 {
@@ -98,12 +100,20 @@ public sealed class AuthenticationService(
                                         registerUserRequest, identityResult.Errors.Select((e)
                                             => new DadosNotificacao(e.Description)).ToList());
 
-                                await transaction.CommitAsync().ContinueWith((task) => {
-                                    eventServiceBusProvider.SendAsync(new EventMessage<EmailEvent>(
-                                        new EmailEvent(CreateDefaultEmailMessage
+                                var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
                                             .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                               EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL))));
-                                });
+                                               EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)));
+
+                                await eventRepository.CreateAsync(CreateEvent
+                                    .CreateEmailEvent(jsonBody)).ContinueWith(async (task) => {
+                                        await unitOfWork.CommitAsync();
+                                        await transaction.CommitAsync(); 
+                                    }).Unwrap();
+
+                                //eventServiceBusProvider.SendAsync(new EventMessage<EmailEvent>(
+                                //    new EmailEvent(CreateDefaultEmailMessage
+                                //        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                //           EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL))));
 
                                 return new OkObjectResult(
                                     new ApiResponse<UserResponse>(

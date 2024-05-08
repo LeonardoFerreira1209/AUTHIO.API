@@ -5,7 +5,7 @@ namespace AUTHIO.DOMAIN.Builders;
 /// <summary>
 /// Classe de builder de Password identity configurations.
 /// </summary>
-public class PasswordIdentityConfigurationBuilder
+public sealed class PasswordIdentityConfigurationBuilder
 {
     private Guid tenantIdentityConfigurationId;
     private DateTime? updated = null;
