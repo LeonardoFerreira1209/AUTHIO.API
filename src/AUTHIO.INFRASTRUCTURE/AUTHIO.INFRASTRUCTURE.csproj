@@ -11,6 +11,7 @@
 	  <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.5" />
 	  <PackageReference Include="Dapper" Version="2.1.35" />
 	  <PackageReference Include="EFCore.BulkExtensions" Version="8.0.3" />
+	  <PackageReference Include="Hangfire.Core" Version="1.8.12" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.4" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
