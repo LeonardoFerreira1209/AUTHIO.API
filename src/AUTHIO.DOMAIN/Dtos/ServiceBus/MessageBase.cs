@@ -14,7 +14,7 @@ public class MessageBase(
     /// <summary>
     /// Id do evento.
     /// </summary>
-    public Guid? EventId { get; set; } = eventId ?? Guid.NewGuid();
+    public Guid? Id { get; set; } = eventId ?? Guid.NewGuid();
 
     /// <summary>
     /// Tipo do evento.

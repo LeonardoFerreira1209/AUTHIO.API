@@ -8,12 +8,12 @@ public interface IEmailMessage
     /// <summary>
     /// Remetente.
     /// </summary>
-    public IEmailAddress From { get; set; }
+    public EmailAddres From { get; set; }
 
     /// <summary>
     /// Destinatario.
     /// </summary>
-    public IEmailAddress To { get; set; }
+    public EmailAddres To { get; set; }
 
     /// <summary>
     /// Assunto.

@@ -39,6 +39,7 @@ public static class DependenciesExtensions
             .AddScoped<IAuthenticationService, AuthenticationService>()
             .AddScoped<ITokenService, TokenService>()
             .AddScoped<ITenantService, TenantService>()
+            .AddScoped<IEventService, EventService>()
         // Repository
             .AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
             .AddTransient<IFeatureFlagsRepository, FeatureFlagsRepository>()
@@ -56,6 +57,7 @@ public static class DependenciesExtensions
             .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
             .AddScoped<IEmailProvider, EmailProvider>()
             .AddScoped<IEmailProviderFactory, EmailProviderFactory>()
+            .AddScoped<IEventFactory, EventFactory>()
             .AddScoped<IEventServiceBusProvider, EventServiceBusProvider>();
 
         return services;

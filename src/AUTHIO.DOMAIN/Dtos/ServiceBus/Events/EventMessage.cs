@@ -5,8 +5,8 @@ namespace AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 /// <summary>
 /// Classe de envio de mensagem de evento.
 /// </summary>
-public class EventMessage<T>(T data) 
-    : MessageBase(EventType.Email) where T : class 
+public class EventMessage<T>(T data, EventType eventType, Guid? eventId)
+    : MessageBase(eventType, eventId) where T : class
 {
     /// <summary>
     /// Dados do evento.

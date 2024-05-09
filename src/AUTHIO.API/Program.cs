@@ -1,6 +1,7 @@
 using AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.INFRASTRUCTURE.Middlewares;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Text.Json.Serialization;
@@ -45,6 +46,7 @@ try
         .ConfigureApplicationCookie()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
+        .ConfigureHamgfire(configurations)
         .AddControllers(options =>
         {
             options.EnableEndpointRouting = false;
@@ -81,6 +83,8 @@ try
         .UseAuthentication()
         .UseHealthChecks()
         .UseSwaggerConfigurations(configurations);
+
+    applicationbuilder.UseHangfireDashboard();
 
     if (applicationbuilder.Environment.IsProduction())
         applicationbuilder.UseHsts();
