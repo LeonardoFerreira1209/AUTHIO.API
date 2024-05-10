@@ -29,6 +29,7 @@ public class EventEntity : IEntityPrimaryKey<Guid>
     /// <param name="type"></param>
     public EventEntity(
         DateTime created, DateTime? processed, DateTime? sended,
+        DateTime created, DateTime? processed,
         DateTime schedulerTime, string jsonBody, EventType type)
     {
         Created = created;

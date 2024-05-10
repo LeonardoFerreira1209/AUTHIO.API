@@ -42,7 +42,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.Property<DateTime?>("Sended")
                         .HasColumnType("datetime(6)");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -198,6 +197,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         {
                             Id = new Guid("063553c5-f359-4e0e-94e7-23e6f54d5fd7"),
                             Created = new DateTime(2024, 5, 10, 1, 31, 50, 355, DateTimeKind.Local).AddTicks(4511),
+                            Id = new Guid("278d2723-54f5-43b3-b145-eaff88575613"),
+                            Created = new DateTime(2024, 5, 8, 0, 22, 55, 299, DateTimeKind.Local).AddTicks(5798),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -477,6 +478,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
                             RoleId = new Guid("063553c5-f359-4e0e-94e7-23e6f54d5fd7")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         },
                         new
                         {
@@ -484,6 +486,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
                             RoleId = new Guid("063553c5-f359-4e0e-94e7-23e6f54d5fd7")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         },
                         new
                         {
@@ -491,6 +494,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
                             RoleId = new Guid("063553c5-f359-4e0e-94e7-23e6f54d5fd7")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         },
                         new
                         {
@@ -498,6 +502,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
                             RoleId = new Guid("063553c5-f359-4e0e-94e7-23e6f54d5fd7")
+                            RoleId = new Guid("278d2723-54f5-43b3-b145-eaff88575613")
                         });
                 });
 

@@ -3,6 +3,9 @@ using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
+﻿using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
+using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Email;
 using AUTHIO.DOMAIN.Entities;
@@ -57,6 +60,17 @@ public class EventService(
 
             await unitOfWork
                     .CommitAsync();
+                    x => x.SchedulerTime <= currentDate && x.Processed == null);
+
+            events.AsParallel()
+                .ForAll(async (even) =>
+                {
+                    var message =
+                        eventFactory.CreateEventMessage<EmailMessage>(
+                            even.Type, even.JsonBody, even.Id);
+
+                    await eventServiceBusProvider.SendAsync(message);
+                });
         }
         catch (Exception exception)
         {
