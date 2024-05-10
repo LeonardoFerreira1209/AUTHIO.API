@@ -1,6 +1,8 @@
-﻿using AUTHIO.DOMAIN.Contracts.Factories;
+﻿using AUTHIO.DATABASE.Context;
+using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories;
+using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Email;
 using AUTHIO.DOMAIN.Entities;
@@ -18,6 +20,7 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 public class EventService(
     IEventFactory eventFactory,
     IEventServiceBusProvider eventServiceBusProvider,
+    IUnitOfWork<AuthIoContext> unitOfWork,
     IEventRepository eventRepository) : IEventService
 {
     /// <summary>
@@ -36,17 +39,24 @@ public class EventService(
 
             ICollection<EventEntity> events
                 = await eventRepository.GetAllAsync(
-                    x => x.SchedulerTime <= currentDate && x.Processed == null);
+                    x => x.SchedulerTime <= currentDate && x.Sended == null);
 
-            events.AsParallel()
-                .ForAll(async (even) =>
-                {
-                    var message =
-                        eventFactory.CreateEventMessage<EmailMessage>(
-                            even.Type, even.JsonBody, even.Id);
+            foreach (EventEntity even in events )
+            {
+                var message =
+                       eventFactory.CreateEventMessage<EmailMessage>(
+                           even.Type, even.JsonBody, even.Id);
 
-                    await eventServiceBusProvider.SendAsync(message);
-                });
+                await eventServiceBusProvider
+                    .SendAsync(message).ContinueWith(async (Task) =>
+                    {
+                        even.Sended = DateTime.Now;
+                        await eventRepository.UpdateAsync(even);
+                    });
+            }
+
+            await unitOfWork
+                    .CommitAsync();
         }
         catch (Exception exception)
         {

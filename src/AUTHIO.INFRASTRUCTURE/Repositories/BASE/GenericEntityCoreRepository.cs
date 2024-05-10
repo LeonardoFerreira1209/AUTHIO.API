@@ -49,11 +49,12 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    public virtual T Update(T entity)
+    public virtual async Task<T> UpdateAsync(T entity)
     {
         _context.Set<T>().Update(entity);
 
-        return entity;
+        return await 
+            Task.FromResult(entity);
     }
 
     /// <summary>

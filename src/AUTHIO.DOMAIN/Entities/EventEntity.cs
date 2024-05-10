@@ -23,11 +23,12 @@ public class EventEntity : IEntityPrimaryKey<Guid>
     /// </summary>
     /// <param name="created"></param>
     /// <param name="processed"></param>
+    /// <param name="sended"></param>
     /// <param name="schedulerTime"></param>
     /// <param name="jsonBody"></param>
     /// <param name="type"></param>
     public EventEntity(
-        DateTime created, DateTime? processed,
+        DateTime created, DateTime? processed, DateTime? sended,
         DateTime schedulerTime, string jsonBody, EventType type)
     {
         Created = created;
@@ -51,6 +52,11 @@ public class EventEntity : IEntityPrimaryKey<Guid>
     /// Data de procesamento.
     /// </summary>
     public DateTime? Processed { get; set; }
+
+    /// <summary>
+    /// Data de envio.
+    /// </summary>
+    public DateTime? Sended { get; set; }
 
     /// <summary>
     /// Tempo de execução.

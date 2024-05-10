@@ -10,6 +10,7 @@ public sealed class EventBuilder
 {
     private DateTime created;
     private DateTime? processed;
+    private DateTime? sended;
     private DateTime schedulerTime;
     private string jsonBody;
     private EventType type;
@@ -35,6 +36,20 @@ public sealed class EventBuilder
     {
         this.processed
             = processed
+            ?? DateTime.Now;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona data de envio.
+    /// </summary>
+    /// <param name="sended"></param>
+    /// <returns></returns>
+    public EventBuilder AddSended(DateTime? sended)
+    {
+        this.sended
+            = sended
             ?? DateTime.Now;
 
         return this;
@@ -81,6 +96,6 @@ public sealed class EventBuilder
     /// </summary>
     /// <returns></returns>
     public EventEntity Builder()
-        => new(created, processed, 
+        => new(created, processed, sended,
             schedulerTime, jsonBody, type);
 }
