@@ -22,7 +22,7 @@ public interface IGenericRepository<T> where T : IEntityPrimaryKey<Guid>
     /// </summary>
     /// <param name="entity"></param>
     /// <returns></returns>
-    T Update(T entity);
+    Task<T> UpdateAsync(T entity);
 
     /// <summary>
     /// Recuperar por id.
