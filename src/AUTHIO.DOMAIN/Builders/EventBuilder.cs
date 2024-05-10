@@ -97,6 +97,5 @@ public sealed class EventBuilder
     /// <returns></returns>
     public EventEntity Builder()
         => new(created, processed, sended,
-        => new(created, processed, 
             schedulerTime, jsonBody, type);
 }
