@@ -34,31 +34,32 @@ public static class DependenciesExtensions
         services
             .AddSingleton(serviceProvider => configurations)
         // Services
-            .AddScoped<IFeatureFlagsService, FeatureFlagsService>()
-            .AddScoped<IContextService, ContextService>()
-            .AddScoped<IAuthenticationService, AuthenticationService>()
-            .AddScoped<ITokenService, TokenService>()
-            .AddScoped<ITenantService, TenantService>()
-            .AddScoped<IEventService, EventService>()
+            .AddTransient<IFeatureFlagsService, FeatureFlagsService>()
+            .AddTransient<IContextService, ContextService>()
+            .AddTransient<IAuthenticationService, AuthenticationService>()
+            .AddTransient<ITokenService, TokenService>()
+            .AddTransient<ITenantService, TenantService>()
+            .AddTransient<IEventService, EventService>()
         // Repository
-            .AddTransient(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
-            .AddTransient<IFeatureFlagsRepository, FeatureFlagsRepository>()
-            .AddTransient(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
-            .AddTransient<ITenantRepository, TenantRepository>()
-            .AddTransient<ITenantConfigurationRepository, TenantConfigurationRepository>()
-            .AddTransient<ITenantIdentityConfigurationRepository, TenantIdentityConfigurationRepository>()
-            .AddTransient<IUserIdentityConfigurationRepository, UserIdentityConfigurationRepository>()
-            .AddTransient<IPasswordIdentityConfigurationRepository, PasswordIdentityConfigurationRepository>()
-            .AddTransient<ILockoutIdentityConfigurationRepository, LockoutIdentityConfigurationRepository>()
-            .AddTransient<ITenantEmailConfigurationRepository, TenantEmailConfigurationRepository>()
-            .AddTransient<IEventRepository, EventRepository>()
-        // Infra
-            .AddScoped<ICustomUserStore<UserEntity>, CustomUserStore<UserEntity>>()
+            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
             .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
-            .AddScoped<IEmailProvider, EmailProvider>()
-            .AddScoped<IEmailProviderFactory, EmailProviderFactory>()
-            .AddScoped<IEventFactory, EventFactory>()
-            .AddScoped<IEventServiceBusProvider, EventServiceBusProvider>();
+            .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
+            .AddScoped<ITenantRepository, TenantRepository>()
+            .AddScoped<ITenantConfigurationRepository, TenantConfigurationRepository>()
+            .AddScoped<ITenantIdentityConfigurationRepository, TenantIdentityConfigurationRepository>()
+            .AddScoped<IUserIdentityConfigurationRepository, UserIdentityConfigurationRepository>()
+            .AddScoped<IPasswordIdentityConfigurationRepository, PasswordIdentityConfigurationRepository>()
+            .AddScoped<ILockoutIdentityConfigurationRepository, LockoutIdentityConfigurationRepository>()
+            .AddScoped<ITenantEmailConfigurationRepository, TenantEmailConfigurationRepository>()
+            .AddScoped<IEventRepository, EventRepository>()
+            .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
+            .AddScoped<ICustomUserStore<UserEntity>, CustomUserStore<UserEntity>>()
+        // Infra
+            .AddTransient<IEmailProvider, EmailProvider>()
+            .AddTransient<IEmailProviderFactory, EmailProviderFactory>()
+            .AddTransient<IEventFactory, EventFactory>()
+            .AddTransient<IEventServiceBusProvider, EventServiceBusProvider>()
+            .AddSingleton<EventServiceBusSubscriber>();
 
         return services;
     }

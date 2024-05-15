@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     /// <inheritdoc />
-    public partial class INITIAL_MIGRATE : Migration
+    public partial class INITIAL15052024 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Processed = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Sended = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     SchedulerTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     JsonBody = table.Column<string>(type: "longtext", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: false)
@@ -414,17 +415,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("278d2723-54f5-43b3-b145-eaff88575613"), null, new DateTime(2024, 5, 8, 0, 22, 55, 299, DateTimeKind.Local).AddTicks(5798), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("e60631cd-cf85-43fb-b983-3bcdec776207"), null, new DateTime(2024, 5, 15, 1, 9, 42, 847, DateTimeKind.Local).AddTicks(6314), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("278d2723-54f5-43b3-b145-eaff88575613") },
-                    { 2, "Tenants", "GET", new Guid("278d2723-54f5-43b3-b145-eaff88575613") },
-                    { 3, "Tenants", "PATCH", new Guid("278d2723-54f5-43b3-b145-eaff88575613") },
-                    { 4, "Tenants", "PUT", new Guid("278d2723-54f5-43b3-b145-eaff88575613") }
+                    { 1, "Tenants", "POST", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") },
+                    { 2, "Tenants", "GET", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") },
+                    { 3, "Tenants", "PATCH", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") },
+                    { 4, "Tenants", "PUT", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") }
                 });
 
             migrationBuilder.CreateIndex(

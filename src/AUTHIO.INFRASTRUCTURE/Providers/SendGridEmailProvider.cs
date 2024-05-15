@@ -5,7 +5,6 @@ using AUTHIO.DOMAIN.Helpers.Extensions;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using Serilog;
 
 namespace AUTHIO.INFRASTRUCTURE.Providers;
 
@@ -19,15 +18,13 @@ public class SendGridEmailProvider(
     /// Método de envio de e-mail.
     /// </summary>
     /// <param name="message"></param>
-    public void SendEmail(DefaultEmailMessage message)
+    public async Task SendEmailAsync(DefaultEmailMessage message)
     {
-        Log.Information($"ApiKey: {Environment.GetEnvironmentVariable("SENDGRID_APIKEY")}");
-
         var client = new SendGridClient(
             Environment.GetEnvironmentVariable("SENDGRID_APIKEY") 
                 ?? appSettings.Value.Email.SendGrid.ApiKey);
 
-        client.SendEmailAsync(MailHelper.CreateSingleEmail(
+        await client.SendEmailAsync(MailHelper.CreateSingleEmail(
                 message.From.ToSendGridEmailAddres(),
                 message.To.ToSendGridEmailAddres(),
                 message.Subject,

@@ -92,6 +92,9 @@ try
     applicationbuilder.MapControllers();
 
     applicationbuilder
+        .ConfigureServiceBusSubscriber();
+
+    applicationbuilder
        .Lifetime.ApplicationStarted
            .Register(() => Log.Debug(
                    $"[LOG DEBUG] - Aplicação inicializada com sucesso: [AUTHIO.API]\n"));

@@ -1,0 +1,182 @@
+﻿using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.DOMAIN.Contracts.Providers.Email;
+using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
+using AUTHIO.DOMAIN.Dtos.Configurations;
+using AUTHIO.DOMAIN.Dtos.Email;
+using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
+using AUTHIO.DOMAIN.Enums;
+using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Serilog;
+using System.Text;
+
+namespace AUTHIO.INFRASTRUCTURE.ServiceBus;
+
+/// <summary>
+/// Serviço de subscriber de eventos.
+/// </summary>
+/// <param name="appSettings"></param>
+/// <param name="emailProviderFactory"></param>
+public class EventServiceBusSubscriber(
+    IOptions<AppSettings> appSettings,
+    IEmailProviderFactory emailProviderFactory) : IEventServiceBusSubscriber
+{
+    /// <summary>
+    /// Const de nome da queue ou topico.
+    /// </summary>
+    private const string QUEUE_OR_TOPIC_NAME = "events";
+
+    /// <summary>
+    /// Instancia de ServiceBusCient.
+    /// </summary>
+    private ServiceBusClient _busClient;
+
+    /// <summary>
+    /// String de conexão do service bus.
+    /// </summary>
+    private readonly string busConnection
+        = Environment.GetEnvironmentVariable("SERVICEBUS_CONNECTION_STRING")
+            ?? appSettings.Value.ServiceBus.ConnectionString;
+
+    /// <summary>
+    /// Provider de email.
+    /// </summary>
+    private readonly IEmailProvider emailProvider
+        = emailProviderFactory.GetSendGridEmailProvider();
+
+    /// <summary>
+    /// Registra o handler de recebimento de mensagens.
+    /// </summary>
+    public void RegisterReceiveMessageHandler()
+    {
+        Log.Information(
+           $"[LOG INFORMATION] - SET TITLE {nameof(EventServiceBusSubscriber)} - METHOD {nameof(RegisterReceiveMessageHandler)} - Subscriber inicializado\n");
+
+        _busClient =
+            new ServiceBusClient(busConnection);
+
+        var messageHandlerOptions
+            = new ServiceBusProcessorOptions
+            {
+                MaxConcurrentCalls = 1,
+                AutoCompleteMessages = true,
+            };
+
+        try
+        {
+            ServiceBusProcessor processor
+                = _busClient.CreateProcessor(
+                    QUEUE_OR_TOPIC_NAME, messageHandlerOptions);
+
+            processor.ProcessMessageAsync += ProcessMensageAsync;
+            processor.ProcessErrorAsync += ProcessErrorAsync;
+
+            processor.StartProcessingAsync();
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+        }
+    }
+
+    /// <summary>
+    /// Processa as mensagens.
+    /// </summary>
+    /// <param name="messageEvent"></param>
+    /// <returns></returns>
+    private async Task ProcessMensageAsync(
+        ProcessMessageEventArgs messageEvent)
+    {
+        var message = messageEvent.Message;
+
+        try
+        {
+            EventMessage<object> eventMessage = 
+                JsonConvert.DeserializeObject<EventMessage<object>>(
+                    message.Body.ToString());
+
+            await ProccesByEventTypeAsync(
+                eventMessage.EventType, eventMessage.Data);
+
+            Log.Information(
+                $"[LOG INFORMATION] - {nameof(EventServiceBusSubscriber)} - METHOD {nameof(ProcessMensageAsync)} - Memsagem consumida com sucesso: {JsonConvert.SerializeObject(eventMessage.Data)}.\n");
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
+            var cloneMessage = new ServiceBusMessage(messageEvent.Message) {
+                ScheduledEnqueueTime 
+                    = DateTime.UtcNow.AddHours(1)
+            };
+
+            ServiceBusSender sender = 
+                _busClient.CreateSender(QUEUE_OR_TOPIC_NAME);
+
+            await sender.SendMessageAsync(cloneMessage);
+            await sender.CloseAsync();
+
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Processa erros durante a recepção de mensagens.
+    /// </summary>
+    /// <param name="exceptionReceivedEventArgs">Dados do evento de exceção.</param>
+    /// <returns>Task.</returns>
+    private Task ProcessErrorAsync(
+        ProcessErrorEventArgs exceptionReceivedEventArgs)
+    {
+        var context 
+            = exceptionReceivedEventArgs.Exception;
+
+        Log.Error($"[LOG ERROR] - Exception: {context.Message} - {JsonConvert.SerializeObject(context)}\n");
+
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Processa a mensagem com base no tipo de evento.
+    /// </summary>
+    /// <param name="eventType">Tipo de evento</param>
+    /// <param name="data">Dados do evento</param>
+    /// <returns>Task</returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task ProccesByEventTypeAsync(EventType eventType, object data)
+    {
+        switch(eventType)
+        {
+            case EventType.Email:
+                await ProccessEmailAsync(data); 
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// Processa mensagens de e-mail.
+    /// </summary>
+    /// <param name="data">Mensagem de e-mail a ser processada.</param>
+    /// <returns>Task.</returns>
+    private async Task ProccessEmailAsync(
+        object data)
+    {
+        if (data == null) 
+            throw new Exception("Mensagem de e-mail recebida é nula");
+
+        var defaultEmailMessage
+            = JsonConvert.DeserializeObject<DefaultEmailMessage>(
+                JsonConvert.SerializeObject(data));
+
+        await emailProvider
+            .SendEmailAsync(defaultEmailMessage);
+
+        Log.Information(
+                $"[LOG INFORMATION] - {nameof(EventServiceBusSubscriber)} - METHOD {nameof(ProccessEmailAsync)} - Email enviado com sucesso: {JsonConvert.SerializeObject(defaultEmailMessage)}.\n");
+
+        await Task.CompletedTask;
+    }
+}

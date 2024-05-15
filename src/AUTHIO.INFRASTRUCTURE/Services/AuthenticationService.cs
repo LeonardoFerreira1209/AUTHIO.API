@@ -3,7 +3,6 @@
 using AUTHIO.DATABASE.Context;
 using AUTHIO.DOMAIN.Auth.Token;
 using AUTHIO.DOMAIN.Builders.Creates;
-using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
@@ -38,13 +37,8 @@ public sealed class AuthenticationService(
     CustomUserManager<UserEntity> customUserManager,
     CustomSignInManager<UserEntity> customSignInManager,
     IUnitOfWork<AuthIoContext> unitOfWork,
-    IEventRepository eventRepository,
-    //IEmailProviderFactory emailProviderFactory,
-    IEventServiceBusProvider eventServiceBusProvider) : IAuthenticationService
+    IEventRepository eventRepository) : IAuthenticationService
 {
-    //private readonly IEmailProvider emailProvider
-    //    = emailProviderFactory.GetSendGridEmailProvider();
-
     /// <summary>
     /// Método de registro de usuário.
     /// </summary>
@@ -109,11 +103,6 @@ public sealed class AuthenticationService(
                                         await unitOfWork.CommitAsync();
                                         await transaction.CommitAsync(); 
                                     }).Unwrap();
-
-                                //eventServiceBusProvider.SendAsync(new EventMessage<EmailEvent>(
-                                //    new EmailEvent(CreateDefaultEmailMessage
-                                //        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                //           EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL))));
 
                                 return new OkObjectResult(
                                     new ApiResponse<UserResponse>(
