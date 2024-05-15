@@ -280,8 +280,8 @@ public class TenantService(
                                         registerUserRequest, identityResult.Errors.Select((e)
                                             => new DadosNotificacao(e.Description)).ToList());
 
-                                await unitOfWork.CommitAsync().ContinueWith((task) => {
-                                    emailProvider.SendEmail(CreateDefaultEmailMessage
+                                await unitOfWork.CommitAsync().ContinueWith(async (task) => {
+                                    await emailProvider.SendEmailAsync(CreateDefaultEmailMessage
                                         .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
                                            EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, 
                                            EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL, tenantEntity.TenantConfiguration.TenantEmailConfiguration.SendersName,

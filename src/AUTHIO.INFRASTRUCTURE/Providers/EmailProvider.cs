@@ -13,7 +13,7 @@ public class EmailProvider : IEmailProvider
     /// </summary>
     /// <param name="message"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public void SendEmail(DefaultEmailMessage message)
+    public async Task SendEmailAsync(DefaultEmailMessage message)
     {
         throw new NotImplementedException();
     }

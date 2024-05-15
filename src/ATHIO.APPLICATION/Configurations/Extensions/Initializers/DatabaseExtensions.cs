@@ -22,8 +22,8 @@ public static class DatabaseExtensions
             string connectionString = Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations
                     .GetConnectionString("Database");
 
-            options.UseLazyLoadingProxies().UseMySQL(connectionString)
-                        .LogTo(Console.WriteLine, LogLevel.Debug);
+            options.UseLazyLoadingProxies().UseMySQL(connectionString);
+                        //.LogTo(Console.WriteLine, LogLevel.Debug);
 
         }, ServiceLifetime.Scoped);
 }
