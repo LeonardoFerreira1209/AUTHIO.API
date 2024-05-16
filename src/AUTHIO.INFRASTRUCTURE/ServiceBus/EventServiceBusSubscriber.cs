@@ -5,11 +5,11 @@ using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Email;
 using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Enums;
+using AUTHIO.INFRASTRUCTURE.ServiceBus.Base;
 using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
-using System.Text;
 
 namespace AUTHIO.INFRASTRUCTURE.ServiceBus;
 
@@ -20,7 +20,8 @@ namespace AUTHIO.INFRASTRUCTURE.ServiceBus;
 /// <param name="emailProviderFactory"></param>
 public class EventServiceBusSubscriber(
     IOptions<AppSettings> appSettings,
-    IEmailProviderFactory emailProviderFactory) : IEventServiceBusSubscriber
+    IEmailProviderFactory emailProviderFactory) 
+    : ServiceBusSubscriberBase(appSettings, QUEUE_OR_TOPIC_NAME), IServiceBusSubscriber
 {
     /// <summary>
     /// Const de nome da queue ou topico.
@@ -28,64 +29,22 @@ public class EventServiceBusSubscriber(
     private const string QUEUE_OR_TOPIC_NAME = "events";
 
     /// <summary>
-    /// Instancia de ServiceBusCient.
-    /// </summary>
-    private ServiceBusClient _busClient;
-
-    /// <summary>
     /// String de conexão do service bus.
     /// </summary>
-    private readonly string busConnection
-        = Environment.GetEnvironmentVariable("SERVICEBUS_CONNECTION_STRING")
+    private readonly string busConnection = Environment.GetEnvironmentVariable("SERVICEBUS_CONNECTION_STRING")
             ?? appSettings.Value.ServiceBus.ConnectionString;
 
     /// <summary>
     /// Provider de email.
     /// </summary>
-    private readonly IEmailProvider emailProvider
-        = emailProviderFactory.GetSendGridEmailProvider();
-
-    /// <summary>
-    /// Registra o handler de recebimento de mensagens.
-    /// </summary>
-    public void RegisterReceiveMessageHandler()
-    {
-        Log.Information(
-           $"[LOG INFORMATION] - SET TITLE {nameof(EventServiceBusSubscriber)} - METHOD {nameof(RegisterReceiveMessageHandler)} - Subscriber inicializado\n");
-
-        _busClient =
-            new ServiceBusClient(busConnection);
-
-        var messageHandlerOptions
-            = new ServiceBusProcessorOptions
-            {
-                MaxConcurrentCalls = 1,
-                AutoCompleteMessages = true,
-            };
-
-        try
-        {
-            ServiceBusProcessor processor
-                = _busClient.CreateProcessor(
-                    QUEUE_OR_TOPIC_NAME, messageHandlerOptions);
-
-            processor.ProcessMessageAsync += ProcessMensageAsync;
-            processor.ProcessErrorAsync += ProcessErrorAsync;
-
-            processor.StartProcessingAsync();
-        }
-        catch (Exception exception)
-        {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
-        }
-    }
+    private readonly IEmailProvider emailProvider = emailProviderFactory.GetSendGridEmailProvider();
 
     /// <summary>
     /// Processa as mensagens.
     /// </summary>
     /// <param name="messageEvent"></param>
     /// <returns></returns>
-    private async Task ProcessMensageAsync(
+    public override async Task ProcessMensageAsync(
         ProcessMessageEventArgs messageEvent)
     {
         var message = messageEvent.Message;
@@ -119,22 +78,6 @@ public class EventServiceBusSubscriber(
 
             throw;
         }
-    }
-
-    /// <summary>
-    /// Processa erros durante a recepção de mensagens.
-    /// </summary>
-    /// <param name="exceptionReceivedEventArgs">Dados do evento de exceção.</param>
-    /// <returns>Task.</returns>
-    private Task ProcessErrorAsync(
-        ProcessErrorEventArgs exceptionReceivedEventArgs)
-    {
-        var context 
-            = exceptionReceivedEventArgs.Exception;
-
-        Log.Error($"[LOG ERROR] - Exception: {context.Message} - {JsonConvert.SerializeObject(context)}\n");
-
-        return Task.CompletedTask;
     }
 
     /// <summary>

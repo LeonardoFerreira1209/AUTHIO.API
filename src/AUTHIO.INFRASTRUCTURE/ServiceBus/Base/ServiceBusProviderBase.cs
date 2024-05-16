@@ -3,7 +3,7 @@ using AUTHIO.DOMAIN.Helpers.Extensions;
 using Azure.Messaging.ServiceBus;
 using System.Text;
 
-namespace AUTHIO.INFRASTRUCTURE.ServiceBus;
+namespace AUTHIO.INFRASTRUCTURE.ServiceBus.Base;
 
 /// <summary>
 /// Classe de provider base do service bus.
@@ -17,7 +17,7 @@ public abstract class ServiceBusProviderBase(
     /// <summary>
     /// Instancia de ServiceBusClient.
     /// </summary>
-    private readonly ServiceBusClient serviceBusClient 
+    private readonly ServiceBusClient serviceBusClient
         = new(busConnection);
 
     /// <summary>
@@ -33,7 +33,7 @@ public abstract class ServiceBusProviderBase(
         var sender
            = serviceBusClient.CreateSender(queueOrTopicName);
 
-        ServiceBusMessage serviceBusMessage 
+        ServiceBusMessage serviceBusMessage
             = DataToMessage(message, headers);
 
         await sender.SendMessageAsync(serviceBusMessage);
@@ -66,7 +66,7 @@ public abstract class ServiceBusProviderBase(
         var sender
            = serviceBusClient.CreateSender(queueOrTopicName);
 
-        ServiceBusMessage serviceBusMessage 
+        ServiceBusMessage serviceBusMessage
             = DataToMessage(message, message.Headers, dateTime);
 
         await sender.SendMessageAsync(serviceBusMessage);
@@ -88,7 +88,7 @@ public abstract class ServiceBusProviderBase(
             SessionId = Guid.NewGuid().ToString()
         };
 
-        if(dateTime != null)
+        if (dateTime != null)
             message.ScheduledEnqueueTime = dateTime.Value;
 
         if (headers != null)
