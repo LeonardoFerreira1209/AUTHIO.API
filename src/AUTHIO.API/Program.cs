@@ -46,7 +46,7 @@ try
         .ConfigureApplicationCookie()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
-        .ConfigureHamgfire(configurations)
+        .ConfigureHangfire(configurations)
         .AddControllers(options =>
         {
             options.EnableEndpointRouting = false;
@@ -84,10 +84,12 @@ try
         .UseHealthChecks()
         .UseSwaggerConfigurations(configurations);
 
-    applicationbuilder.UseHangfireDashboard();
-
-    if (applicationbuilder.Environment.IsProduction())
+    if (applicationbuilder.Environment.IsProduction()) {
         applicationbuilder.UseHsts();
+    }
+    else {
+        applicationbuilder.UseHangfireDashboard();
+    }
 
     applicationbuilder.MapControllers();
 

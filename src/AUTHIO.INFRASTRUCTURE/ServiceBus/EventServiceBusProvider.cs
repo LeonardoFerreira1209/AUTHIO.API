@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Dtos.Configurations;
+using AUTHIO.INFRASTRUCTURE.ServiceBus.Base;
 using Microsoft.Extensions.Options;
 
 namespace AUTHIO.INFRASTRUCTURE.ServiceBus;

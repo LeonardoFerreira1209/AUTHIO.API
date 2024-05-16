@@ -18,7 +18,7 @@ public static class HangFireExtensions
     /// <param name="services"></param>
     /// <param name="configurations"></param>
     /// <returns></returns>
-    public static IServiceCollection ConfigureHamgfire(
+    public static IServiceCollection ConfigureHangfire(
         this IServiceCollection services, IConfiguration configurations)
     {
         services.AddHangfire(config => config
