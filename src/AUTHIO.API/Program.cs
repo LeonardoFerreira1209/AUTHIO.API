@@ -60,14 +60,6 @@ try
     builder.Services
            .ConfigureSwagger(configurations);
 
-    /// <sumary>
-    /// Configura as configurações de inicialização que só devem ser usadas em Produção.
-    /// </sumary>
-    //if (builder.Environment.IsProduction())
-    //    builder.Services
-    //        .ConfigureTelemetry(configurations)
-    //            .ConfigureApplicationInsights(configurations);
-
     var applicationbuilder = builder.Build();
 
     applicationbuilder

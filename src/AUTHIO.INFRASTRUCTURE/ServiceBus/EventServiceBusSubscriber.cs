@@ -1,12 +1,16 @@
-﻿using AUTHIO.DOMAIN.Contracts.Factories;
+﻿using AUTHIO.DATABASE.Context;
+using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
+using AUTHIO.DOMAIN.Contracts.Repositories;
+using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Email;
 using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Enums;
 using AUTHIO.INFRASTRUCTURE.ServiceBus.Base;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
@@ -19,6 +23,7 @@ namespace AUTHIO.INFRASTRUCTURE.ServiceBus;
 /// <param name="appSettings"></param>
 /// <param name="emailProviderFactory"></param>
 public class EventServiceBusSubscriber(
+    IServiceProvider serviceProvider,
     IOptions<AppSettings> appSettings,
     IEmailProviderFactory emailProviderFactory) 
     : ServiceBusSubscriberBase(appSettings, QUEUE_OR_TOPIC_NAME), IServiceBusSubscriber
@@ -42,8 +47,8 @@ public class EventServiceBusSubscriber(
     /// <summary>
     /// Processa as mensagens.
     /// </summary>
-    /// <param name="messageEvent"></param>
-    /// <returns></returns>
+    /// <param name="messageEvent">Dados da mensagem do evento.</param>
+    /// <returns>Task</returns>
     public override async Task ProcessMensageAsync(
         ProcessMessageEventArgs messageEvent)
     {
@@ -56,7 +61,36 @@ public class EventServiceBusSubscriber(
                     message.Body.ToString());
 
             await ProccesByEventTypeAsync(
-                eventMessage.EventType, eventMessage.Data);
+                eventMessage.EventType, eventMessage.Data)
+                    .ContinueWith(async (task) => {
+
+                        using var scope 
+                            = serviceProvider.CreateScope();
+
+                        var eventRepository 
+                            = scope.ServiceProvider
+                                .GetService<IEventRepository>();
+
+                        await eventRepository.GetAsync(even
+                            => even.Id == eventMessage.Id).ContinueWith(async (evenTask) =>
+                            {
+                                var eventEntity
+                                    = evenTask.Result;
+
+                                eventEntity.Processed 
+                                    = DateTime.Now;
+
+                                await eventRepository
+                                    .UpdateAsync(eventEntity);
+
+                                var unitOfWork = scope.ServiceProvider
+                                    .GetService<IUnitOfWork<AuthIoContext>>();
+
+                                await unitOfWork.CommitAsync();
+
+                            }).Unwrap();
+
+                    }).Unwrap();
 
             Log.Information(
                 $"[LOG INFORMATION] - {nameof(EventServiceBusSubscriber)} - METHOD {nameof(ProcessMensageAsync)} - Memsagem consumida com sucesso: {JsonConvert.SerializeObject(eventMessage.Data)}.\n");
