@@ -10,7 +10,7 @@ namespace AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
 /// </summary>
 /// <param name="recurringJobManager"></param>
 public class HangfireJobsProvider(
-    IRecurringJobManagerV2 recurringJobManager) : IHangFireJobsProvider
+    IRecurringJobManager recurringJobManager) : IHangFireJobsProvider
 {
     /// <summary>
     /// Registra os jobs.

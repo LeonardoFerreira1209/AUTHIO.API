@@ -29,12 +29,12 @@ public static class HangFireExtensions
                     Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations.GetConnectionString("Database"),
                         new MySqlStorageOptions
                         {
-                            QueuePollInterval = TimeSpan.FromSeconds(10),
+                            QueuePollInterval = TimeSpan.FromSeconds(1),
                             JobExpirationCheckInterval = TimeSpan.FromHours(1),
                             CountersAggregateInterval = TimeSpan.FromMinutes(5),
                             PrepareSchemaIfNecessary = true,
                             DashboardJobListLimit = 25000,
-                            TransactionTimeout = TimeSpan.FromMinutes(1),
+                            TransactionTimeout = TimeSpan.FromMinutes(10),
                             TablesPrefix = "Hangfire"
                         }
                     )

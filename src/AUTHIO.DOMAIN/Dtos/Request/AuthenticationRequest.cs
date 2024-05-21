@@ -23,5 +23,5 @@ public class AuthenticationRequest
     /// Chave do tenant.
     /// </summary>
     [FromHeader]
-    public string TenatKey { get; set; }
+    public string TenantKey { get; set; }
 }
