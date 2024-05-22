@@ -51,6 +51,7 @@ public static class DependenciesExtensions
             .AddScoped<IPasswordIdentityConfigurationRepository, PasswordIdentityConfigurationRepository>()
             .AddScoped<ILockoutIdentityConfigurationRepository, LockoutIdentityConfigurationRepository>()
             .AddScoped<ITenantEmailConfigurationRepository, TenantEmailConfigurationRepository>()
+            .AddScoped<ISendGridConfigurationRepository, SendGridConfigurationRepository>()
             .AddScoped<IEventRepository, EventRepository>()
             .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
             .AddScoped<ICustomUserStore<UserEntity>, CustomUserStore<UserEntity>>()

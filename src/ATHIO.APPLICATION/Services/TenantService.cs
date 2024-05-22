@@ -5,9 +5,11 @@ using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
+using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Exceptions;
 using AUTHIO.DOMAIN.Helpers.Consts;
@@ -15,6 +17,7 @@ using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
 using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
 using System.Net;
@@ -30,6 +33,7 @@ namespace AUTHIO.APPLICATION.Services;
 /// ctor
 /// </remarks>
 public class TenantService(
+    IOptions<AppSettings> appSettings,
     IUnitOfWork<AuthIoContext> unitOfWork,
     ITenantRepository tenantRepository,
     ITenantConfigurationRepository tenantConfigurationRepository,
@@ -38,12 +42,18 @@ public class TenantService(
     IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
     ILockoutIdentityConfigurationRepository lockoutIdentityConfigurationRepository,
     ITenantEmailConfigurationRepository tenantEmailConfigurationRepository,
+    ISendGridConfigurationRepository sendGridConfigurationRepository,
+    IEventRepository eventRepository,
     IContextService contextService,
     IEmailProviderFactory emailProviderFactory,
     CustomUserManager<UserEntity> customUserManager) : ITenantService
 {
     private readonly IEmailProvider emailProvider
        = emailProviderFactory.GetSendGridEmailProvider();
+
+    private readonly string sendGridApiKey
+        = Environment.GetEnvironmentVariable("SENDGRID_APIKEY")
+                ?? appSettings.Value.Email.SendGrid.ApiKey;
 
     /// <summary>
     /// Método responsável por criar um Tenant.
@@ -105,25 +115,40 @@ public class TenantService(
                                                                     var tenantIdentityConfiguration
                                                                         = tenantIdentityConfigurationEntityTask.Result;
 
-                                                                    await Task.WhenAll(
-                                                                        userIdentityConfigurationRepository.CreateAsync(
-                                                                            CreateUserIdentityConfiguration.CreateDefault(
-                                                                                tenantIdentityConfiguration.Id)
-                                                                            ),
-                                                                        passwordIdentityConfigurationRepository.CreateAsync(
-                                                                            CreatePasswordIdentityConfiguration.CreateDefault(
-                                                                                tenantIdentityConfiguration.Id)
-                                                                            ),
-                                                                        lockoutIdentityConfigurationRepository.CreateAsync(
-                                                                            CreateLockoutIdentityConfiguration.CreateDefault(
-                                                                                tenantIdentityConfiguration.Id)
-                                                                            ),
-                                                                        tenantEmailConfigurationRepository.CreateAsync(
-                                                                            CreateTenantEmailConfiguration.CreateDefault(
-                                                                                tenantConfiguration.Id,
-                                                                                    createTenantRequest.Name, createTenantRequest.Email, true)
-                                                                            )
+
+                                                                    await userIdentityConfigurationRepository.CreateAsync(
+                                                                         CreateUserIdentityConfiguration.CreateDefault(
+                                                                             tenantIdentityConfiguration.Id)
+                                                                         );
+
+                                                                    await passwordIdentityConfigurationRepository.CreateAsync(
+                                                                        CreatePasswordIdentityConfiguration.CreateDefault(
+                                                                            tenantIdentityConfiguration.Id)
                                                                         );
+
+                                                                    await lockoutIdentityConfigurationRepository.CreateAsync(
+                                                                        CreateLockoutIdentityConfiguration.CreateDefault(
+                                                                            tenantIdentityConfiguration.Id)
+                                                                        );
+
+                                                                    await tenantEmailConfigurationRepository.CreateAsync(
+                                                                        CreateTenantEmailConfiguration.CreateDefault(
+                                                                            tenantConfiguration.Id,
+                                                                                createTenantRequest.Name, createTenantRequest.Email, true)
+
+                                                                        ).ContinueWith(async (tenantEmailConfigurationTask) =>
+                                                                        {
+                                                                            var tenantEmailConfiguration
+                                                                                = tenantEmailConfigurationTask.Result;
+
+                                                                            await sendGridConfigurationRepository.CreateAsync(
+                                                                                CreateSendGridConfiguration.CreateDefault(
+                                                                                    tenantEmailConfiguration.Id,
+                                                                                    createTenantRequest.SendGridApiKey ?? sendGridApiKey,
+                                                                                    createTenantRequest.WelcomeTemplateId)
+                                                                                );
+
+                                                                        }).Unwrap();
 
                                                                     await unitOfWork.CommitAsync();
 
@@ -255,48 +280,62 @@ public class TenantService(
 
                     }).Unwrap();
 
-            return await tenantRepository.GetAsync(tenant => tenant.TenantConfiguration.TenantKey.Equals(tenantKey))
-                .ContinueWith(async (taskResut) =>
-                {
-                    var tenantEntity
-                      = taskResut.Result
-                         ?? throw new NotFoundTenantException(tenantKey);
 
-                    if (!tenantEntity.UserId.Equals(contextService.GetCurrentUserId()))
-                        throw new NotPermissionTenantException();
+            var transaction =
+                await unitOfWork.BeginTransactAsync();
 
-                    var userEntity
-                       = registerUserRequest.ToUserTenantEntity(tenantEntity.Id);
+            try
+            {
 
-                    return await customUserManager.CreateAsync(
-                         userEntity, registerUserRequest.Password)
-                            .ContinueWith(async identityResultTask =>
-                            {
-                                var identityResult
-                                        = identityResultTask.Result;
+                return await tenantRepository.GetAsync(tenant => tenant.TenantConfiguration.TenantKey.Equals(tenantKey))
+                    .ContinueWith(async (taskResut) =>
+                    {
+                        var tenantEntity
+                          = taskResut.Result
+                             ?? throw new NotFoundTenantException(tenantKey);
 
-                                if (identityResult.Succeeded is false)
-                                    throw new CreateUserFailedException(
-                                        registerUserRequest, identityResult.Errors.Select((e)
-                                            => new DadosNotificacao(e.Description)).ToList());
+                        if (!tenantEntity.UserId.Equals(contextService.GetCurrentUserId()))
+                            throw new NotPermissionTenantException();
 
-                                await unitOfWork.CommitAsync().ContinueWith(async (task) => {
-                                    await emailProvider.SendEmailAsync(CreateDefaultEmailMessage
-                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                           EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, 
-                                           EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL, tenantEntity.TenantConfiguration.TenantEmailConfiguration.SendersName,
-                                           tenantEntity.TenantConfiguration.TenantEmailConfiguration.SendersEmail));
-                                });
+                        var userEntity
+                           = registerUserRequest.ToUserTenantEntity(tenantEntity.Id);
 
-                                return new OkObjectResult(
-                                    new ApiResponse<UserResponse>(
-                                        identityResult.Succeeded,
-                                            HttpStatusCode.Created,
-                                            userEntity.ToResponse(), [
-                                                 new DadosNotificacao("Usuário criado com sucesso e vinculado ao Tenant!")]));
-                            }).Unwrap();
+                        return await customUserManager.CreateAsync(
+                             userEntity, registerUserRequest.Password)
+                                .ContinueWith(async identityResultTask =>
+                                {
+                                    var identityResult
+                                            = identityResultTask.Result;
 
-                }).Unwrap();
+                                    if (identityResult.Succeeded is false)
+                                        throw new CreateUserFailedException(
+                                            registerUserRequest, identityResult.Errors.Select((e)
+                                                => new DadosNotificacao(e.Description)).ToList());
+
+                                    var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
+                                               .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                                  EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)));
+
+                                    await eventRepository.CreateAsync(CreateEvent
+                                       .CreateEmailEvent(jsonBody)).ContinueWith(async (task) => {
+                                           await unitOfWork.CommitAsync();
+                                           await transaction.CommitAsync();
+                                       }).Unwrap();
+
+                                    return new OkObjectResult(
+                                        new ApiResponse<UserResponse>(
+                                            identityResult.Succeeded,
+                                                HttpStatusCode.Created,
+                                                userEntity.ToResponse(), [
+                                                     new DadosNotificacao("Usuário criado com sucesso e vinculado ao Tenant!")]));
+                                }).Unwrap();
+
+                    }).Unwrap();
+            }
+            catch   
+            {
+                transaction.Rollback(); throw;
+            }
         }
         catch (Exception exception)
         {

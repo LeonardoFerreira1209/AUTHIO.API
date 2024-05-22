@@ -28,20 +28,20 @@ public class TenantIdentityConfigurationResponse
     /// <summary>
     /// Entidade do tenant configuration.
     /// </summary>
-    public virtual TenantConfigurationResponse TenantConfiguration { get; set; }
+    public TenantConfigurationResponse TenantConfiguration { get; set; }
 
     /// <summary>
     /// Entidade de user identity configuration.
     /// </summary>
-    public virtual UserIdentityConfigurationResponse UserIdentityConfiguration { get; set; }
+    public UserIdentityConfigurationResponse UserIdentityConfiguration { get; set; }
 
     /// <summary>
     /// Entidade de password identity configuration.
     /// </summary>
-    public virtual PasswordIdentityConfigurationResponse PasswordIdentityConfiguration { get; set; }
+    public PasswordIdentityConfigurationResponse PasswordIdentityConfiguration { get; set; }
 
     /// <summary>
     /// Entidade de lockout identity configuration.
     /// </summary>
-    public virtual LockoutIdentityConfigurationResponse LockoutIdentityConfiguration { get; set; }
+    public LockoutIdentityConfigurationResponse LockoutIdentityConfiguration { get; set; }
 }

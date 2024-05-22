@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     /// <inheritdoc />
-    public partial class INITIAL15052024 : Migration
+    public partial class V1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -339,6 +339,29 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "SendGridConfigurations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    SendGridApiKey = table.Column<string>(type: "longtext", nullable: true),
+                    WelcomeTemplateId = table.Column<string>(type: "longtext", nullable: true),
+                    TenantEmailConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SendGridConfigurations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SendGridConfigurations_TenantEmailConfigurations_TenantEmail~",
+                        column: x => x.TenantEmailConfigurationId,
+                        principalTable: "TenantEmailConfigurations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "LockoutIdentityConfigurations",
                 columns: table => new
                 {
@@ -415,17 +438,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("e60631cd-cf85-43fb-b983-3bcdec776207"), null, new DateTime(2024, 5, 15, 1, 9, 42, 847, DateTimeKind.Local).AddTicks(6314), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("57206763-24e2-4358-9d4c-b03f43ca2126"), null, new DateTime(2024, 5, 22, 1, 18, 45, 56, DateTimeKind.Local).AddTicks(1438), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") },
-                    { 2, "Tenants", "GET", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") },
-                    { 3, "Tenants", "PATCH", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") },
-                    { 4, "Tenants", "PUT", new Guid("e60631cd-cf85-43fb-b983-3bcdec776207") }
+                    { 1, "Tenants", "POST", new Guid("57206763-24e2-4358-9d4c-b03f43ca2126") },
+                    { 2, "Tenants", "GET", new Guid("57206763-24e2-4358-9d4c-b03f43ca2126") },
+                    { 3, "Tenants", "PATCH", new Guid("57206763-24e2-4358-9d4c-b03f43ca2126") },
+                    { 4, "Tenants", "PUT", new Guid("57206763-24e2-4358-9d4c-b03f43ca2126") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -484,6 +507,12 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 name: "IX_PasswordIdentityConfigurations_TenantIdentityConfigurationId",
                 table: "PasswordIdentityConfigurations",
                 column: "TenantIdentityConfigurationId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SendGridConfigurations_TenantEmailConfigurationId",
+                table: "SendGridConfigurations",
+                column: "TenantEmailConfigurationId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -547,7 +576,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 name: "PasswordIdentityConfigurations");
 
             migrationBuilder.DropTable(
-                name: "TenantEmailConfigurations");
+                name: "SendGridConfigurations");
 
             migrationBuilder.DropTable(
                 name: "TenantUserAdmins");
@@ -557,6 +586,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "TenantEmailConfigurations");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

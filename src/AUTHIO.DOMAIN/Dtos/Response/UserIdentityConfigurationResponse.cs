@@ -30,5 +30,5 @@ public class UserIdentityConfigurationResponse : UserOptions
     /// <summary>
     /// Entidade do tenant identity configuration.
     /// </summary>
-    public virtual TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
+    public TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
 }

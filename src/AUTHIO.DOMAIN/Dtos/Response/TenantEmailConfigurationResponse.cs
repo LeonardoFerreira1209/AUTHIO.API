@@ -41,7 +41,12 @@ public class TenantEmailConfigurationResponse
     public Guid TenantConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant configuration.
+    /// Response do sendgrid configuration.
     /// </summary>
-    public virtual TenantConfigurationResponse TenantConfiguration { get; set; }
+    public SendGridConfigurationResponse SendGridConfiguration { get; set; }
+
+    /// <summary>
+    /// Response do tenant configuration.
+    /// </summary>
+    public TenantConfigurationResponse TenantConfiguration { get; set; }
 }

@@ -65,6 +65,11 @@ public sealed class AuthIoContext(
     public DbSet<TenantEmailConfigurationEntity> TenantEmailConfigurations => Set<TenantEmailConfigurationEntity>();
 
     /// <summary>
+    /// Tabela de configuração do SendGrid.
+    /// </summary>
+    public DbSet<SendGridConfigurationEntity> SendGridConfigurations => Set<SendGridConfigurationEntity>();
+
+    /// <summary>
     /// Tabela de Feature Flags.
     /// </summary>
     public DbSet<FeatureFlagsEntity> FeatureFlags => Set<FeatureFlagsEntity>();
