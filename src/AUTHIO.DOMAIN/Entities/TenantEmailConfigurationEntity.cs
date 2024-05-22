@@ -1,7 +1,7 @@
 ﻿namespace AUTHIO.DOMAIN.Entities;
 
 /// <summary>
-/// Classe de vinculo entre usuário admin e tenant.
+/// Classe de Configuração de email do tenant.
 /// </summary>
 public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
 {
@@ -64,6 +64,11 @@ public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
     /// Email do Remetente confirmado.
     /// </summary>
     public bool IsEmailConfirmed { get; set; }
+
+    /// <summary>
+    /// Entidade do SendGrid configuration.
+    /// </summary>
+    public virtual SendGridConfigurationEntity SendGridConfiguration {  get; set; }
 
     /// <summary>
     /// Id do tenant configuration Id.

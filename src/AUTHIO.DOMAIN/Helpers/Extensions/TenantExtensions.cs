@@ -195,8 +195,30 @@ public static class TenantExtensions
             SendersEmail = tenantEmailConfigurationEntity.SendersEmail,
             IsEmailConfirmed = tenantEmailConfigurationEntity.IsEmailConfirmed,
             TenantConfigurationId = tenantEmailConfigurationEntity.TenantConfigurationId,
+            SendGridConfiguration = tenantEmailConfigurationEntity?.SendGridConfiguration?.ToResponse(false),
             TenantConfiguration = includeTenantConfiguration
                 ? tenantEmailConfigurationEntity?.TenantConfiguration?.ToResponse()
+                : null
+        };
+
+    /// <summary>
+    /// Transforma um SendGridConfigurationEntity em response.
+    /// </summary>
+    /// <param name="sendGridConfigurationEntity"></param>
+    /// <param name="includeTenantEmailConfiguration"></param>
+    /// <returns></returns>
+    public static SendGridConfigurationResponse ToResponse(this SendGridConfigurationEntity sendGridConfigurationEntity,
+        bool includeTenantEmailConfiguration)
+        => new()
+        {
+            Id = sendGridConfigurationEntity.Id,
+            Created = sendGridConfigurationEntity.Created,
+            Updated = sendGridConfigurationEntity.Updated,
+            SendGridApiKey = sendGridConfigurationEntity.SendGridApiKey,
+            WelcomeTemplateId = sendGridConfigurationEntity.WelcomeTemplateId,
+            TenantEmailConfigurationId = sendGridConfigurationEntity.TenantEmailConfigurationId,
+            TenantEmailConfiguration = includeTenantEmailConfiguration
+                ? sendGridConfigurationEntity?.TenantEmailConfiguration?.ToResponse()
                 : null
         };
 }

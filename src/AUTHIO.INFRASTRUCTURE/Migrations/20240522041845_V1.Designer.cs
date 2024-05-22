@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240515040943_INITIAL-15052024")]
-    partial class INITIAL15052024
+    [Migration("20240522041845_V1")]
+    partial class V1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -199,13 +199,42 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e60631cd-cf85-43fb-b983-3bcdec776207"),
-                            Created = new DateTime(2024, 5, 15, 1, 9, 42, 847, DateTimeKind.Local).AddTicks(6314),
+                            Id = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126"),
+                            Created = new DateTime(2024, 5, 22, 1, 18, 45, 56, DateTimeKind.Local).AddTicks(1438),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
                             System = true
                         });
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SendGridConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("SendGridApiKey")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("TenantEmailConfigurationId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("WelcomeTemplateId")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantEmailConfigurationId")
+                        .IsUnique();
+
+                    b.ToTable("SendGridConfigurations");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
@@ -479,28 +508,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("e60631cd-cf85-43fb-b983-3bcdec776207")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("e60631cd-cf85-43fb-b983-3bcdec776207")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("e60631cd-cf85-43fb-b983-3bcdec776207")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("e60631cd-cf85-43fb-b983-3bcdec776207")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         });
                 });
 
@@ -615,6 +644,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SendGridConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", "TenantEmailConfiguration")
+                        .WithOne("SendGridConfiguration")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.SendGridConfigurationEntity", "TenantEmailConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TenantEmailConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
@@ -746,6 +786,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("TenantEmailConfiguration");
 
                     b.Navigation("TenantIdentityConfiguration");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
+                {
+                    b.Navigation("SendGridConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEntity", b =>

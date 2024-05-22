@@ -19,4 +19,14 @@ public sealed class CreateTenantRequest
     /// Email do tenant.
     /// </summary>
     public string Email { get; set; }
+
+    /// <summary>
+    /// Chave de Api do SendGrid.
+    /// </summary>
+    public string SendGridApiKey { get; set; } = null;
+
+    /// <summary>
+    /// Id do template de bem vindo e confirmação de email do usuário.
+    /// </summary>
+    public string WelcomeTemplateId { get; set; } = null;
 }
