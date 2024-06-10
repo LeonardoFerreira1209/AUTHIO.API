@@ -21,8 +21,8 @@ public class HangfireJobsProvider(
         {
             Log.Information($"[LOG INFORMATION] - Inicializando os Jobs do Hangfire.\n");
 
-            recurringJobManager.AddOrUpdate<IEventService>(
-                "SendEventsToBus", x => x.SendEventsToBusAsync(), Cron.Minutely());
+            /*recurringJobManager.AddOrUpdate<IEventService>(
+                "SendEventsToBus", x => x.SendEventsToBusAsync(), Cron.Minutely());*/
         }
         catch(Exception exception) 
         {
