@@ -42,6 +42,7 @@ public class TenantService(
     IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
     ILockoutIdentityConfigurationRepository lockoutIdentityConfigurationRepository,
     ITenantEmailConfigurationRepository tenantEmailConfigurationRepository,
+    ITenantTokenConfigurationRepository tenantTokenConfigurationRepository,
     ISendGridConfigurationRepository sendGridConfigurationRepository,
     IEventRepository eventRepository,
     IContextService contextService,
@@ -115,7 +116,6 @@ public class TenantService(
                                                                     var tenantIdentityConfiguration
                                                                         = tenantIdentityConfigurationEntityTask.Result;
 
-
                                                                     await userIdentityConfigurationRepository.CreateAsync(
                                                                          CreateUserIdentityConfiguration.CreateDefault(
                                                                              tenantIdentityConfiguration.Id)
@@ -129,6 +129,37 @@ public class TenantService(
                                                                     await lockoutIdentityConfigurationRepository.CreateAsync(
                                                                         CreateLockoutIdentityConfiguration.CreateDefault(
                                                                             tenantIdentityConfiguration.Id)
+                                                                        );
+
+                                                                    await tenantEmailConfigurationRepository.CreateAsync(
+                                                                        CreateTenantEmailConfiguration.CreateDefault(
+                                                                            tenantConfiguration.Id,
+                                                                                createTenantRequest.Name, createTenantRequest.Email, true)
+
+                                                                        ).ContinueWith(async (tenantEmailConfigurationTask) =>
+                                                                        {
+                                                                            var tenantEmailConfiguration
+                                                                                = tenantEmailConfigurationTask.Result;
+
+                                                                            await sendGridConfigurationRepository.CreateAsync(
+                                                                                CreateSendGridConfiguration.CreateDefault(
+                                                                                    tenantEmailConfiguration.Id,
+                                                                                    createTenantRequest.SendGridApiKey ?? sendGridApiKey,
+                                                                                    createTenantRequest.WelcomeTemplateId)
+                                                                                );
+
+                                                                        }).Unwrap();
+
+                                                                    TokenConfigurationRequest tokenConfiguration 
+                                                                        = createTenantRequest.TokenConfigurationRequest;
+
+                                                                    await tenantTokenConfigurationRepository.CreateAsync(
+                                                                        CreateTenantTokenConfiguration.CreateDefault(
+                                                                                tenantConfiguration.Id,
+                                                                                tokenConfiguration.SecurityKey,
+                                                                                tokenConfiguration.Issuer,
+                                                                                tokenConfiguration.Audience
+                                                                            )
                                                                         );
 
                                                                     await tenantEmailConfigurationRepository.CreateAsync(

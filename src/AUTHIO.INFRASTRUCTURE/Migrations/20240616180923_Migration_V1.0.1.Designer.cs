@@ -3,6 +3,7 @@ using System;
 using AUTHIO.DATABASE.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    partial class AuthIoContextModelSnapshot : ModelSnapshot
+    [Migration("20240616180923_Migration_V1.0.1")]
+    partial class Migration_V101
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -828,11 +831,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("TenantIdentityConfiguration");
 
                     b.Navigation("TenantTokenConfiguration");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
-                {
-                    b.Navigation("SendGridConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>

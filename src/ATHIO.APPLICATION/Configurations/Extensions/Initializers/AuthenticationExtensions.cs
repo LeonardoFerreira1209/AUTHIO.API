@@ -56,14 +56,17 @@ public static class AuthenticationExtensions
 
                         if (tenantKey is not null)
                         {
-                            ITenantConfigurationRepository tenantService =
+                            ITenantConfigurationRepository tenantConfigurationRepository =
                                 context.HttpContext
-                                .RequestServices
-                                .GetRequiredService<ITenantConfigurationRepository>();
+                                    .RequestServices
+                                        .GetRequiredService<ITenantConfigurationRepository>();
 
-                            var tokenValidationParameters =
-                                await tenantService
-                                .GetAsync(x => x.TenantKey == tenantKey);
+                            var tenantConfigurationEntity =
+                                await tenantConfigurationRepository
+                                    .GetAsync(x => x.TenantKey == tenantKey);
+
+                            var tenantTokenConfiguration = 
+                                tenantConfigurationEntity.TenantTokenConfiguration;
 
                             context.Options.TokenValidationParameters = new TokenValidationParameters
                             {
@@ -74,9 +77,9 @@ public static class AuthenticationExtensions
                                 ValidateIssuerSigningKey = true,
                                 ClockSkew = TimeSpan.FromHours(3),
 
-                                ValidIssuer = "sdfsdfsdfdsfdsfsdfsdfds",
-                                ValidAudience = "sdfsdfsdfdsfdsfsdfsdfds",
-                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configurations.GetValue<string>("Auth:SecurityKey")))
+                                ValidIssuer = tenantTokenConfiguration.Issuer,
+                                ValidAudience = tenantTokenConfiguration.Audience,
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tenantTokenConfiguration.SecurityKey))
                             };
                         }
 

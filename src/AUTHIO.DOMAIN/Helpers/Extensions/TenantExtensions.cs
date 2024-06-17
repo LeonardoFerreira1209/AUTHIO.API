@@ -60,7 +60,7 @@ public static class TenantExtensions
     /// <param name="tenantConfigurationEntity"></param>
     /// <returns></returns>
     public static TenantConfigurationResponse ToResponse(this TenantConfigurationEntity tenantConfigurationEntity,
-        bool includeTenant = false, bool includeTenantIdentityConfiguration = true, bool includeTenantEmailConfiguration = true)
+        bool includeTenant = false, bool includeTenantIdentityConfiguration = true, bool includeTenantEmailConfiguration = true, bool includeTenantTokenConfiguration = true)
         => new()
         {
             Id = tenantConfigurationEntity.Id,
@@ -75,6 +75,10 @@ public static class TenantExtensions
 
             TenantEmailConfiguration = includeTenantEmailConfiguration 
                 ? tenantConfigurationEntity.TenantEmailConfiguration?.ToResponse() 
+                : null,
+
+            TenantTokenConfiguration = includeTenantTokenConfiguration
+                ? tenantConfigurationEntity.TenantTokenConfiguration?.ToResponse()
                 : null,
 
             Tenant = includeTenant
@@ -219,6 +223,27 @@ public static class TenantExtensions
             TenantEmailConfigurationId = sendGridConfigurationEntity.TenantEmailConfigurationId,
             TenantEmailConfiguration = includeTenantEmailConfiguration
                 ? sendGridConfigurationEntity?.TenantEmailConfiguration?.ToResponse()
+                : null
+        };
+  
+    /// <summary>
+    /// Transforma um TenantTokenConfigurationEntity em response.
+    /// </summary>
+    /// <param name="tenantTokenConfigurationEntity"></param>
+    /// <returns>TenantTokenConfigurationResponse</returns>
+    public static TenantTokenConfigurationResponse ToResponse(this TenantTokenConfigurationEntity tenantTokenConfigurationEntity,
+        bool includeTenantConfiguration = false)
+        => new()
+        {
+            Id = tenantTokenConfigurationEntity.Id,
+            Created = tenantTokenConfigurationEntity.Created,
+            Updated = tenantTokenConfigurationEntity.Updated,
+            SecurityKey = tenantTokenConfigurationEntity.SecurityKey,
+            Issuer = tenantTokenConfigurationEntity.Issuer,
+            Audience = tenantTokenConfigurationEntity.Audience,
+            TenantConfigurationId = tenantTokenConfigurationEntity.TenantConfigurationId,
+            TenantConfiguration = includeTenantConfiguration
+                ? tenantTokenConfigurationEntity?.TenantConfiguration?.ToResponse()
                 : null
         };
 }

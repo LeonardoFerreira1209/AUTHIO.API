@@ -16,6 +16,8 @@ namespace AUTHIO.API.Controllers;
 /// Controller que cuida do fluxo de autenticação.
 /// </summary>
 /// <param name="featureFlags"></param>
+[ApiController]
+[Route("authentication/api")]
 public class AuthenticationController(
     IFeatureFlagsService featureFlags, IAuthenticationService authenticationService)
         : BaseController(featureFlags)
@@ -29,7 +31,7 @@ public class AuthenticationController(
     /// <param name="registerUserRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("register")]
+    [HttpPost("registrar/usuario")]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Registrar usuário", Description = "Método responsável por registrar um usuário no sistema!")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status201Created)]
@@ -54,7 +56,7 @@ public class AuthenticationController(
     /// </summary>
     /// <param name="authenticationRequest"></param>
     /// <returns></returns>
-    [HttpGet("authetication")]
+    [HttpGet("autenticar/usuario")]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Autenticação do usuário", Description = "Endpoint responsável por fazer a autenticação do usuário, é retornado um token JWT (Json Web Token).")]
     [ProducesResponseType(typeof(ApiResponse<TokenJWT>), StatusCodes.Status201Created)]

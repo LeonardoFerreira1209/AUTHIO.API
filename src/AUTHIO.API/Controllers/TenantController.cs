@@ -18,7 +18,8 @@ namespace AUTHIO.API.Controllers;
 /// </summary>
 /// <param name="featureFlags"></param>
 /// <param name="tenantService"></param>
-/// <param name="unitOfWork"></param>
+[Controller]
+[Route("tenant/api")]
 public class TenantController(
     IFeatureFlagsService featureFlags, ITenantService tenantService)
         : BaseController(featureFlags)
@@ -32,7 +33,7 @@ public class TenantController(
     /// <param name="createTenantRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("create")]
+    [HttpPost("registrar")]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "POST")]
     [SwaggerOperation(Summary = "Registrar tenant", Description = "Método responsável por registrar um tenant!")]
@@ -60,7 +61,7 @@ public class TenantController(
     /// <param name="pageSize"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("get-all")]
+    [HttpPost("recuperar/todos")]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "GET")]
     [SwaggerOperation(Summary = "Buscar todos os tenants", Description = "Método responsável por buscar todos os tenants do usuário!")]
@@ -86,7 +87,7 @@ public class TenantController(
     /// <param name="tenantKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("register/user")]
+    [HttpPost("registrar/usuario")]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "PUT")]
     [SwaggerOperation(Summary = "Registrar usuário no tenant", Description = "Método responsável por registrar um usuário no tenant!")]
