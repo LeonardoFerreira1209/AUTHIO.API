@@ -1,12 +1,12 @@
 ﻿namespace AUTHIO.DOMAIN.Dtos.Response;
 
 /// <summary>
-/// Classe de response de TenantEmailConfiguration.
+/// Classe de response de TenantTokenConfiguration.
 /// </summary>
-public class TenantEmailConfigurationResponse
+public class TenantTokenConfigurationResponse
 {
     /// <summary>
-    /// User Id
+    /// Id
     /// </summary>
     public Guid Id { get; set; }
 
@@ -21,29 +21,24 @@ public class TenantEmailConfigurationResponse
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Nome do Remetente.
+    /// String de segurança para validação do token.
     /// </summary>
-    public string SendersName { get; set; }
+    public string SecurityKey { get; set; }
 
     /// <summary>
-    /// Email do Remetente.
+    /// String de issuer valido para validação do token.
     /// </summary>
-    public string SendersEmail { get; set; }
+    public string Issuer { get; set; }
 
     /// <summary>
-    /// Email do Remetente confirmado.
+    /// String de audience valido para validação do token.
     /// </summary>
-    public bool IsEmailConfirmed { get; set; }
+    public string Audience { get; set; }
 
     /// <summary>
     /// Id do tenant configuration Id.
     /// </summary>
     public Guid TenantConfigurationId { get; set; }
-
-    /// <summary>
-    /// Response do sendgrid configuration.
-    /// </summary>
-    public SendGridConfigurationResponse SendGridConfiguration { get; set; }
 
     /// <summary>
     /// Response do tenant configuration.
