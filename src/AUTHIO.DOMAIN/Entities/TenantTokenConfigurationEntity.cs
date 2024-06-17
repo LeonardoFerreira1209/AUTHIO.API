@@ -1,14 +1,14 @@
 ﻿namespace AUTHIO.DOMAIN.Entities;
 
 /// <summary>
-/// Classe de Configuração de email do tenant.
+/// Classe de Configuração de token do tenant.
 /// </summary>
-public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
+public class TenantTokenConfigurationEntity : IEntityPrimaryKey<Guid>
 {
     /// <summary>
     /// ctor
     /// </summary>
-    public TenantEmailConfigurationEntity()
+    public TenantTokenConfigurationEntity()
     {
 
     }
@@ -19,24 +19,24 @@ public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <param name="tenantConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
-    /// <param name="serdersName"></param>
-    /// <param name="serdersEmail"></param>
-    /// <param name="isEmailConfirmed"></param>
-    public TenantEmailConfigurationEntity(
+    /// <param name="securityKey"></param>
+    /// <param name="issuer"></param>
+    /// <param name="audience"></param>
+    public TenantTokenConfigurationEntity(
         Guid tenantConfigurationId, DateTime created,
-        DateTime? updated, string serdersName, string serdersEmail,
-        bool isEmailConfirmed)
+        DateTime? updated, string securityKey, string issuer,
+        string audience)
     {
         TenantConfigurationId = tenantConfigurationId;
         Created = created;
         Updated = updated;
-        SendersName = serdersName;
-        SendersEmail = serdersEmail;
-        IsEmailConfirmed = isEmailConfirmed;
+        SecurityKey = securityKey;
+        Issuer = issuer;
+        Audience = audience;
     }
 
     /// <summary>
-    /// Id
+    /// User Id
     /// </summary>
     public Guid Id { get; set; }
 
@@ -51,24 +51,19 @@ public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Nome do Remetente.
+    /// String de segurança para validação do token.
     /// </summary>
-    public string SendersName { get; set; }
+    public string SecurityKey { get; set; }
 
     /// <summary>
-    /// Email do Remetente.
+    /// String de issuer valido para validação do token.
     /// </summary>
-    public string SendersEmail { get; set; }
+    public string Issuer { get; set; }
 
     /// <summary>
-    /// Email do Remetente confirmado.
+    /// String de audience valido para validação do token.
     /// </summary>
-    public bool IsEmailConfirmed { get; set; }
-
-    /// <summary>
-    /// Entidade do SendGrid configuration.
-    /// </summary>
-    public virtual SendGridConfigurationEntity SendGridConfiguration {  get; set; }
+    public string Audience { get; set; }
 
     /// <summary>
     /// Id do tenant configuration Id.

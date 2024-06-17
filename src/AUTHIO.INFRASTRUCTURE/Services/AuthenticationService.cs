@@ -202,13 +202,13 @@ public sealed class AuthenticationService(
     private async Task<TokenJWT> GenerateTokenJwtAsync(LoginRequest loginRequest)
         => await tokenService.CreateJsonWebToken(
             loginRequest.Username).ContinueWith((tokenTask) =>
-        {
-            var tokenJwt =
-                tokenTask.Result
-                ?? throw new TokenJwtException(loginRequest);
+            {
+                var tokenJwt =
+                    tokenTask.Result
+                    ?? throw new TokenJwtException(loginRequest);
 
-            return tokenJwt;
-        });
+                return tokenJwt;
+            });
 
     /// <summary>
     /// Método responsável por tratar os erros de autenticação.

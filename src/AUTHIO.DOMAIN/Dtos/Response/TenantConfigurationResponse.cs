@@ -41,6 +41,11 @@ public class TenantConfigurationResponse
     public TenantEmailConfigurationResponse TenantEmailConfiguration { get; set; }
 
     /// <summary>
+    /// Response de Configuraçoes de token.
+    /// </summary>
+    public TenantTokenConfigurationResponse TenantTokenConfiguration { get; set; }
+
+    /// <summary>
     /// Chave de acesso.
     /// </summary>
     public string TenantKey { get; set; }

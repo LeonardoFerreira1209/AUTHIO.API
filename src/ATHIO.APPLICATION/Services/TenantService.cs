@@ -42,6 +42,7 @@ public class TenantService(
     IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
     ILockoutIdentityConfigurationRepository lockoutIdentityConfigurationRepository,
     ITenantEmailConfigurationRepository tenantEmailConfigurationRepository,
+    ITenantTokenConfigurationRepository tenantTokenConfigurationRepository,
     ISendGridConfigurationRepository sendGridConfigurationRepository,
     IEventRepository eventRepository,
     IContextService contextService,
@@ -115,7 +116,6 @@ public class TenantService(
                                                                     var tenantIdentityConfiguration
                                                                         = tenantIdentityConfigurationEntityTask.Result;
 
-
                                                                     await userIdentityConfigurationRepository.CreateAsync(
                                                                          CreateUserIdentityConfiguration.CreateDefault(
                                                                              tenantIdentityConfiguration.Id)
@@ -149,6 +149,18 @@ public class TenantService(
                                                                                 );
 
                                                                         }).Unwrap();
+
+                                                                    TokenConfigurationRequest tokenConfiguration 
+                                                                        = createTenantRequest.TokenConfigurationRequest;
+
+                                                                    await tenantTokenConfigurationRepository.CreateAsync(
+                                                                        CreateTenantTokenConfiguration.CreateDefault(
+                                                                                tenantConfiguration.Id,
+                                                                                tokenConfiguration.SecurityKey,
+                                                                                tokenConfiguration.Issuer,
+                                                                                tokenConfiguration.Audience
+                                                                            )
+                                                                        );
 
                                                                     await unitOfWork.CommitAsync();
 

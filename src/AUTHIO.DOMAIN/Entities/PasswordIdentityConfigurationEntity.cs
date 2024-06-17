@@ -21,8 +21,12 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     /// <param name="tenantIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
-    /// <param name="requireUniqueEmail"></param>
-    /// <param name="allowedUserNameCharacters"></param>
+    /// <param name="requiredLength"></param>
+    /// <param name="requireDigit"></param>
+    /// <param name="requiredUniqueChars"></param>
+    /// <param name="requireNonAlphanumeric"></param>
+    /// <param name="requireLowercase"></param>
+    /// <param name="requireUppercase"></param>
     public PasswordIdentityConfigurationEntity(
         Guid tenantIdentityConfigurationId,
         DateTime created, DateTime? updated, int requiredLength,

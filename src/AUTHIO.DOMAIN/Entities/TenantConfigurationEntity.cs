@@ -66,6 +66,11 @@ public class TenantConfigurationEntity : IEntityPrimaryKey<Guid>, IEntityTenant
     public virtual TenantEmailConfigurationEntity TenantEmailConfiguration { get; set; }
 
     /// <summary>
+    /// Entidade do tenant token configuration.
+    /// </summary>
+    public virtual TenantTokenConfigurationEntity TenantTokenConfiguration { get; set; }
+
+    /// <summary>
     /// Chave de acesso do tenant.
     /// </summary>
     public string TenantKey { get; set; }

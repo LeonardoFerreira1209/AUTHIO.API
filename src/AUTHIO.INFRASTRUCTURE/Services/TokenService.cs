@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Auth.Token;
 using AUTHIO.DOMAIN.Builders.Token;
+using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Entities;
@@ -29,7 +30,8 @@ public class TokenService(
     CustomUserManager<UserEntity> userManager,
     RoleManager<RoleEntity> roleManager,
     IContextService contextService,
-    IOptions<AppSettings> appsettings) : ITokenService
+    IOptions<AppSettings> appsettings,
+    ITenantTokenConfigurationRepository tenantTokenConfigurationRepository) : ITokenService
 {
     /// <summary>
     /// Cria o JWT TOKEN
@@ -95,13 +97,27 @@ public class TokenService(
 
         Log.Information($"[LOG INFORMATION] - Criando o token do usuário.\n");
 
+        var tenantTokenConfiguration = await tenantTokenConfigurationRepository
+            .GetAsync(ttc => !userEntity.System && 
+                ttc.TenantConfigurationId == userEntity.Tenant.TenantConfiguration.Id);
+
+        var tokenConfigs = new {
+
+            SecurityKey = tenantTokenConfiguration?.SecurityKey 
+                ?? appsettings.Value.Auth.SecurityKey,
+            ValidIssuer = tenantTokenConfiguration?.Issuer 
+                ?? appsettings.Value.Auth.ValidIssuer,
+            ValidAudience = tenantTokenConfiguration?.Audience
+                ?? appsettings.Value.Auth.ValidAudience
+        };
+
         return await Task.FromResult(
             new TokenJwtBuilder()
               .AddUsername(username)
-                .AddSecurityKey(JwtSecurityKey.Create(appsettings.Value.Auth.SecurityKey))
+                .AddSecurityKey(JwtSecurityKey.Create(tokenConfigs.SecurityKey))
                    .AddSubject("HYPER.IO PROJECTS L.T.D.A")
-                      .AddIssuer(appsettings.Value.Auth.ValidIssuer)
-                          .AddAudience(appsettings.Value.Auth.ValidAudience)
+                      .AddIssuer(tokenConfigs.ValidIssuer)
+                          .AddAudience(tokenConfigs.ValidAudience)
                               .AddExpiry(appsettings.Value.Auth.ExpiresIn)
                                   .AddRoles(roles)
                                       .AddClaims(claims)

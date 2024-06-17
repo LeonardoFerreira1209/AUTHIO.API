@@ -29,4 +29,17 @@ public sealed class CreateTenantRequest
     /// Id do template de bem vindo e confirmação de email do usuário.
     /// </summary>
     public string WelcomeTemplateId { get; set; } = null;
+
+    /// <summary>
+    /// Configurações do token.
+    /// </summary>
+    public TokenConfigurationRequest TokenConfigurationRequest { get; set; }
 }
+
+/// <summary>
+/// Record de request de configurações do token.
+/// </summary>
+/// <param name="SecurityKey"></param>
+/// <param name="Issuer"></param>
+/// <param name="Audience"></param>
+public record TokenConfigurationRequest(string SecurityKey, string Issuer, string Audience);
