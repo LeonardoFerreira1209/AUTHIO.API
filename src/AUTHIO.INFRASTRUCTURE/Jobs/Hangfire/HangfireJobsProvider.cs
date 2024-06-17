@@ -10,7 +10,7 @@ namespace AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
 /// </summary>
 /// <param name="recurringJobManager"></param>
 public class HangfireJobsProvider(
-    IRecurringJobManagerV2 recurringJobManager) : IHangFireJobsProvider
+    IRecurringJobManager recurringJobManager) : IHangFireJobsProvider
 {
     /// <summary>
     /// Registra os jobs.
@@ -21,8 +21,8 @@ public class HangfireJobsProvider(
         {
             Log.Information($"[LOG INFORMATION] - Inicializando os Jobs do Hangfire.\n");
 
-            recurringJobManager.AddOrUpdate<IEventService>(
-                "SendEventsToBus", x => x.SendEventsToBusAsync(), Cron.Minutely());
+            /*recurringJobManager.AddOrUpdate<IEventService>(
+                "SendEventsToBus", x => x.SendEventsToBusAsync(), Cron.Minutely());*/
         }
         catch(Exception exception) 
         {

@@ -225,7 +225,7 @@ public static class TenantExtensions
                 ? sendGridConfigurationEntity?.TenantEmailConfiguration?.ToResponse()
                 : null
         };
-
+  
     /// <summary>
     /// Transforma um TenantTokenConfigurationEntity em response.
     /// </summary>

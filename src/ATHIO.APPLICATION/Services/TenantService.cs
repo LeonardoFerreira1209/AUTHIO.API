@@ -162,6 +162,25 @@ public class TenantService(
                                                                             )
                                                                         );
 
+                                                                    await tenantEmailConfigurationRepository.CreateAsync(
+                                                                        CreateTenantEmailConfiguration.CreateDefault(
+                                                                            tenantConfiguration.Id,
+                                                                                createTenantRequest.Name, createTenantRequest.Email, true)
+
+                                                                        ).ContinueWith(async (tenantEmailConfigurationTask) =>
+                                                                        {
+                                                                            var tenantEmailConfiguration
+                                                                                = tenantEmailConfigurationTask.Result;
+
+                                                                            await sendGridConfigurationRepository.CreateAsync(
+                                                                                CreateSendGridConfiguration.CreateDefault(
+                                                                                    tenantEmailConfiguration.Id,
+                                                                                    createTenantRequest.SendGridApiKey ?? sendGridApiKey,
+                                                                                    createTenantRequest.WelcomeTemplateId)
+                                                                                );
+
+                                                                        }).Unwrap();
+
                                                                     await unitOfWork.CommitAsync();
 
                                                                 }).Unwrap();

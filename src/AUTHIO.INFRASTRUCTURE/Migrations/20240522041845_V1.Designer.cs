@@ -3,6 +3,7 @@ using System;
 using AUTHIO.DATABASE.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    partial class AuthIoContextModelSnapshot : ModelSnapshot
+    [Migration("20240522041845_V1")]
+    partial class V1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,8 +199,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238"),
-                            Created = new DateTime(2024, 6, 16, 15, 9, 22, 749, DateTimeKind.Local).AddTicks(5765),
+                            Id = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126"),
+                            Created = new DateTime(2024, 5, 22, 1, 18, 45, 56, DateTimeKind.Local).AddTicks(1438),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -361,38 +364,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("TenantUserAdmins", (string)null);
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantTokenConfigurationEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Audience")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Issuer")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SecurityKey")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("TenantConfigurationId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantConfigurationId")
-                        .IsUnique();
-
-                    b.ToTable("TenantTokenConfigurations");
-                });
-
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -537,28 +508,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("57206763-24e2-4358-9d4c-b03f43ca2126")
                         });
                 });
 
@@ -738,17 +709,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantTokenConfigurationEntity", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", "TenantConfiguration")
-                        .WithOne("TenantTokenConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.TenantTokenConfigurationEntity", "TenantConfigurationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TenantConfiguration");
-                });
-
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
@@ -826,13 +786,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("TenantEmailConfiguration");
 
                     b.Navigation("TenantIdentityConfiguration");
-
-                    b.Navigation("TenantTokenConfiguration");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
-                {
-                    b.Navigation("SendGridConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
