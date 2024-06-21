@@ -76,12 +76,8 @@ try
         .UseHealthChecks()
         .UseSwaggerConfigurations(configurations);
 
-    if (applicationbuilder.Environment.IsProduction()) {
-        applicationbuilder.UseHsts();
-    }
-    else {
-        applicationbuilder.UseHangfireDashboard();
-    }
+    applicationbuilder.UseHsts();
+    applicationbuilder.UseHangfireDashboard();
 
     applicationbuilder.MapControllers();
 
