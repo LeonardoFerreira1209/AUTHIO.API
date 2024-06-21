@@ -33,7 +33,7 @@ public sealed class CreateTenantRequest
     /// <summary>
     /// Configurações do token.
     /// </summary>
-    public TokenConfigurationRequest TokenConfigurationRequest { get; set; }
+    public TokenConfigurationRequest TokenConfiguration { get; set; }
 }
 
 /// <summary>
