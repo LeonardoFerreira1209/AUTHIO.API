@@ -11,6 +11,7 @@ public sealed class AppSettings
     public Auth Auth { get; set; }
     public Email Email { get; set; }
     public ServiceBus ServiceBus { get; set; }
+    public Hangfire Hangfire { get; set; }
 }
 
 /// <summary>
@@ -93,4 +94,15 @@ public sealed class ServiceBus
     /// String de conexão do service bus.
     /// </summary>
     public string ConnectionString { get; set; }
+}
+
+/// <summary>
+/// Classe de config de hangfire.
+/// </summary>
+public sealed class Hangfire
+{
+    /// <summary>
+    /// Executar job de envio de eventos para o bus.
+    /// </summary>
+    public bool ExecuteSendEventsToBusJob { get; set; }
 }

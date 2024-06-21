@@ -151,7 +151,7 @@ public class TenantService(
                                                                         }).Unwrap();
 
                                                                     TokenConfigurationRequest tokenConfiguration 
-                                                                        = createTenantRequest.TokenConfigurationRequest;
+                                                                        = createTenantRequest.TokenConfiguration;
 
                                                                     await tenantTokenConfigurationRepository.CreateAsync(
                                                                         CreateTenantTokenConfiguration.CreateDefault(

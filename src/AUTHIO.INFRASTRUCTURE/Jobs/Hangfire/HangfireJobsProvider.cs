@@ -1,6 +1,8 @@
 ﻿using AUTHIO.DOMAIN.Contracts;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Dtos.Configurations;
 using Hangfire;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
@@ -10,7 +12,7 @@ namespace AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
 /// </summary>
 /// <param name="recurringJobManager"></param>
 public class HangfireJobsProvider(
-    IRecurringJobManager recurringJobManager) : IHangFireJobsProvider
+    IRecurringJobManager recurringJobManager, IOptions<AppSettings> configurations) : IHangFireJobsProvider
 {
     /// <summary>
     /// Registra os jobs.
@@ -21,8 +23,13 @@ public class HangfireJobsProvider(
         {
             Log.Information($"[LOG INFORMATION] - Inicializando os Jobs do Hangfire.\n");
 
-            /*recurringJobManager.AddOrUpdate<IEventService>(
-                "SendEventsToBus", x => x.SendEventsToBusAsync(), Cron.Minutely());*/
+            if (configurations.Value.Hangfire.ExecuteSendEventsToBusJob)
+            {
+                Log.Information($"[LOG INFORMATION] - Job SendEventsToBusAsync iniciado com sucesso.\n");
+
+                recurringJobManager.AddOrUpdate<IEventService>(
+                    "SendEventsToBus", x => x.SendEventsToBusAsync(), Cron.Minutely());
+            }
         }
         catch(Exception exception) 
         {
