@@ -11,8 +11,8 @@ public static class CustomLambdaExpressions
     /// Uni duas expressões.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="leftExpression"></param>
-    /// <param name="rightExpression"></param>
+    /// <param name="expr1"></param>
+    /// <param name="expr2"></param>
     /// <returns></returns>
     public static Expression<Func<T, bool>> Or<T>(Expression<Func<T, bool>> expr1, Expression<Func<T, bool>> expr2)
     {
@@ -36,6 +36,8 @@ public static class CustomLambdaExpressions
     /// <summary>
     /// Classe de replace de expressão.
     /// </summary>
+    /// <param name="oldValue"></param>
+    /// <param name="newValue"></param>
     internal class ReplaceExpressionVisitor(
         Expression oldValue, Expression newValue) : ExpressionVisitor
     {

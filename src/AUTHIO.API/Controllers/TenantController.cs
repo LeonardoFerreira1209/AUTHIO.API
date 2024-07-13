@@ -33,7 +33,7 @@ public class TenantController(
     /// <param name="createTenantRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("registrar")]
+    [HttpPost("register")]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "POST")]
     [SwaggerOperation(Summary = "Registrar tenant", Description = "Método responsável por registrar um tenant!")]
@@ -61,7 +61,7 @@ public class TenantController(
     /// <param name="pageSize"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("recuperar/todos")]
+    [HttpGet("getall")]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "GET")]
     [SwaggerOperation(Summary = "Buscar todos os tenants", Description = "Método responsável por buscar todos os tenants do usuário!")]
@@ -87,7 +87,7 @@ public class TenantController(
     /// <param name="tenantKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("registrar/usuario")]
+    [HttpPost("register/user")]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "PUT")]
     [SwaggerOperation(Summary = "Registrar usuário no tenant", Description = "Método responsável por registrar um usuário no tenant!")]

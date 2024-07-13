@@ -40,7 +40,7 @@ public static class LogExtensions
                 .Enrich.WithThreadId()
                 .Enrich.WithThreadName()
                 .WriteTo.Console()
-                .WriteTo.ApplicationInsights(_telemetryConfig, TelemetryConverter.Traces, LogEventLevel.Information)
+                //.WriteTo.ApplicationInsights(_telemetryConfig, TelemetryConverter.Traces, LogEventLevel.Information)
                 .WriteTo.MySQL(connectionString)
                 .CreateLogger();
 

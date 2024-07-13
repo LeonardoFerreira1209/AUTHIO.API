@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-//using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
 
@@ -22,8 +22,8 @@ public static class DatabaseExtensions
             string connectionString = Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations
                     .GetConnectionString("Database");
 
-            options.UseLazyLoadingProxies().UseMySQL(connectionString);
-                        //.LogTo(Console.WriteLine, LogLevel.Debug);
+            options.UseLazyLoadingProxies().UseMySQL(connectionString)
+                        .LogTo(Console.WriteLine, LogLevel.Warning);
 
         }, ServiceLifetime.Scoped);
 }

@@ -13,6 +13,7 @@ using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Exceptions;
 using AUTHIO.DOMAIN.Helpers.Consts;
+using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
 using AUTHIO.INFRASTRUCTURE.Services.Identity;
@@ -184,7 +185,6 @@ public class TenantService(
                                                                     await unitOfWork.CommitAsync();
 
                                                                 }).Unwrap();
-
                                                }).Unwrap();
 
                                    await _transaction.CommitAsync();
@@ -193,7 +193,8 @@ public class TenantService(
                                        new ApiResponse<TenantResponse>(
                                            true,
                                            HttpStatusCode.Created,
-                                           tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")]));
+                                           tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")])
+                                       );
 
                                }).Unwrap();
                     }
@@ -226,21 +227,27 @@ public class TenantService(
 
         try
         {
-            return await tenantRepository.GetAllAsyncPaginated(pageNumber, pageSize, null)
-                    .ContinueWith(taskResult =>
-                    {
-                        var pagination
-                                = taskResult.Result;
+            return await tenantRepository.GetAllAsyncPaginated(
+                pageNumber,
+                pageSize,
+                TenantFilters.FilterByAdmin(
+                    contextService.GetCurrentUserId()
+                )
+            )
+            .ContinueWith(taskResult =>
+            {
+                var pagination
+                        = taskResult.Result;
 
-                        return new OkObjectResult(
-                            new PaginationApiResponse<TenantResponse>(
-                                true,
-                                HttpStatusCode.OK,
-                                pagination.ConvertPaginationData
-                                    (pagination.Items.Select(
-                                        tenant => tenant.ToResponse()).ToList()), [
-                                            new DadosNotificacao("Tenants reuperados com sucesso!")]));
-                    });
+                return new OkObjectResult(
+                    new PaginationApiResponse<TenantResponse>(
+                        true,
+                        HttpStatusCode.OK,
+                        pagination.ConvertPaginationData
+                            (pagination.Items.Select(
+                                tenant => tenant.ToResponse()).ToList()), [
+                                    new DadosNotificacao("Tenants reuperados com sucesso!")]));
+            });
         }
         catch (Exception exception)
         {
@@ -311,13 +318,11 @@ public class TenantService(
 
                     }).Unwrap();
 
-
             var transaction =
                 await unitOfWork.BeginTransactAsync();
 
             try
             {
-
                 return await tenantRepository.GetAsync(tenant => tenant.TenantConfiguration.TenantKey.Equals(tenantKey))
                     .ContinueWith(async (taskResut) =>
                     {

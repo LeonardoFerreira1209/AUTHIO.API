@@ -1,6 +1,5 @@
 using AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
 using AUTHIO.DOMAIN.Dtos.Configurations;
-using AUTHIO.INFRASTRUCTURE.Middlewares;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -63,7 +62,7 @@ try
     var applicationbuilder = builder.Build();
 
     applicationbuilder
-        .UseMiddleware<ErrorHandlerMiddleware>()
+        .UseMiddlewareConfiguration()
         .UseHttpsRedirection()
         .UseRateLimiter()
         .UseDefaultFiles()

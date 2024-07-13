@@ -37,6 +37,7 @@ public static class DependenciesExtensions
             .AddTransient<IFeatureFlagsService, FeatureFlagsService>()
             .AddTransient<IContextService, ContextService>()
             .AddTransient<IAuthenticationService, AuthenticationService>()
+            .AddTransient<IUserService, UserService>()
             .AddTransient<ITokenService, TokenService>()
             .AddTransient<ITenantService, TenantService>()
             .AddTransient<IEventService, EventService>()
