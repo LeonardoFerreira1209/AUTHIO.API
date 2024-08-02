@@ -25,6 +25,7 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 public sealed class AuthenticationService(
     ITokenService tokenService,
     IContextService contextService,
+    ICachingService cachingService,
     CustomUserManager<UserEntity> customUserManager,
     CustomSignInManager<UserEntity> customSignInManager) : IAuthenticationService
 {
