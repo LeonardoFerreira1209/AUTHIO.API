@@ -60,7 +60,6 @@ try
     builder.Services
            .ConfigureSwagger(configurations);
 
-
     var applicationbuilder = builder.Build();
 
     applicationbuilder
