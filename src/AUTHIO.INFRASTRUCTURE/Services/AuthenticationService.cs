@@ -25,9 +25,15 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 public sealed class AuthenticationService(
     ITokenService tokenService,
     IContextService contextService,
+    ICachingService cachingService,
     CustomUserManager<UserEntity> customUserManager,
     CustomSignInManager<UserEntity> customSignInManager) : IAuthenticationService
 {
+    /// <summary>
+    /// Recupera a chave do tenant passada no contexto.
+    /// </summary>
+    private readonly string CurrentTanantKey 
+        = contextService.GetCurrentTenantKey();
 
     /// <summary>
     /// Método responsável por fazer a authorização do usuário.
@@ -55,7 +61,7 @@ public sealed class AuthenticationService(
             return await customUserManager.FindByNameWithExpressionAsync(
                 loginRequest.Username,
                 UserFilters<UserEntity>.FilterSystemOrTenantUsers(
-                    contextService.GetCurrentTenantKey())).ContinueWith(async (userEntityTask) =>
+                    CurrentTanantKey)).ContinueWith(async (userEntityTask) =>
                     {
                         var userEntity =
                             userEntityTask.Result
@@ -74,20 +80,25 @@ public sealed class AuthenticationService(
                             $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
 
                         return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
-                            (tokenJwtTask) =>
-                            {
-                                var tokenJWT =
-                                    tokenJwtTask.Result
-                                    ?? throw new TokenJwtException(null);
+                           (tokenJwtTask) =>
+                           {
 
-                                Log.Information(
-                                    $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
+                               var tokenJWT =
+                                   tokenJwtTask.Result
+                                   ?? throw new TokenJwtException(null);
 
-                                return new OkObjectResult(
+                               Log.Information(
+                                   $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
+
+                               ObjectResult response = new(
                                     new ApiResponse<TokenJWT>(
                                         true, HttpStatusCode.Created, tokenJWT, [
-                                            new("Token criado com sucesso!")]));
-                            });
+                                            new("Token criado com sucesso!")]
+                                        )
+                                    );
+
+                               return response;
+                           });
 
                     }).Unwrap();
         }

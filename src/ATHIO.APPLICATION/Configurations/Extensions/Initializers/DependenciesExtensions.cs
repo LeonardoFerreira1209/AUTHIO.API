@@ -62,6 +62,7 @@ public static class DependenciesExtensions
             .AddTransient<IEmailProviderFactory, EmailProviderFactory>()
             .AddTransient<IEventFactory, EventFactory>()
             .AddTransient<IEventServiceBusProvider, EventServiceBusProvider>()
+            .AddSingleton<ICachingService, CachingService>()
             .AddSingleton<EventServiceBusSubscriber>();
 
         return services;

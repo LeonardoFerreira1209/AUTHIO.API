@@ -45,6 +45,7 @@ try
         .ConfigureApplicationCookie()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
+        .AddMemoryCache()
         .ConfigureHangfire(configurations)
         .AddControllers(options =>
         {

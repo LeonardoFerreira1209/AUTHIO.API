@@ -48,6 +48,7 @@ public class TenantService(
     IEventRepository eventRepository,
     IContextService contextService,
     IEmailProviderFactory emailProviderFactory,
+    ICachingService cachingService,
     CustomUserManager<UserEntity> customUserManager) : ITenantService
 {
     private readonly IEmailProvider emailProvider
@@ -56,6 +57,12 @@ public class TenantService(
     private readonly string sendGridApiKey
         = Environment.GetEnvironmentVariable("SENDGRID_APIKEY")
                 ?? appSettings.Value.Email.SendGrid.ApiKey;
+
+    /// <summary>
+    /// Id do usuário logado.
+    /// </summary>
+    private readonly Guid CurrentUserId
+        = contextService.GetCurrentUserId();
 
     /// <summary>
     /// Método responsável por criar um Tenant.
@@ -225,6 +232,16 @@ public class TenantService(
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
 
+        string cacheKey =
+            $"getall-tenants-{pageNumber}-{pageSize}-{CurrentUserId}";
+
+        ObjectResult tenantsCache =
+            await cachingService
+                .GetAsync<ObjectResult>(cacheKey);
+
+        if (tenantsCache is not null)
+            return tenantsCache;
+
         try
         {
             return await tenantRepository.GetAllAsyncPaginated(
@@ -234,20 +251,28 @@ public class TenantService(
                     contextService.GetCurrentUserId()
                 )
             )
-            .ContinueWith(taskResult =>
+            .ContinueWith(async (taskResult) =>
             {
                 var pagination
                         = taskResult.Result;
 
-                return new OkObjectResult(
+                ObjectResult response = new(
                     new PaginationApiResponse<TenantResponse>(
                         true,
                         HttpStatusCode.OK,
                         pagination.ConvertPaginationData
                             (pagination.Items.Select(
                                 tenant => tenant.ToResponse()).ToList()), [
-                                    new DadosNotificacao("Tenants reuperados com sucesso!")]));
-            });
+                                    new DadosNotificacao("Tenants reuperados com sucesso!")]
+                                )
+                    );
+
+                await cachingService
+                    .SetAsync(cacheKey, response);
+
+                return response;
+
+            }).Unwrap() ;
         }
         catch (Exception exception)
         {
@@ -266,22 +291,37 @@ public class TenantService(
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetTenantByKeyAsync)}\n");
 
+        string cacheKey = $"get-tenant-{key}";
+
+        ObjectResult tenantCache =
+           await cachingService
+               .GetAsync<ObjectResult>(cacheKey);
+
+        if (tenantCache is not null)
+            return tenantCache;
+
         try
         {
             return await tenantRepository.GetAsync(
                 x => x.TenantConfiguration.TenantKey == key)
-                    .ContinueWith(taskResult =>
+                    .ContinueWith(async (taskResult) =>
                     {
                         var tenantEntity
                                 = taskResult.Result;
 
-                        return new OkObjectResult(
+                        ObjectResult response = new(
                             new ApiResponse<TenantResponse>(
                                 true,
                                 HttpStatusCode.OK,
                                 tenantEntity.ToResponse(), [
                                 new DadosNotificacao("Tenant recuperado com sucesso!")]));
-                    });
+
+                        await cachingService
+                            .SetAsync(cacheKey, response);
+
+                        return response;
+
+                    }).Unwrap();
         }
         catch (Exception exception)
         {
