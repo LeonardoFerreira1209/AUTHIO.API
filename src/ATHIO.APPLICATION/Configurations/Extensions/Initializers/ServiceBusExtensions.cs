@@ -1,5 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
-using AUTHIO.INFRASTRUCTURE.ServiceBus;
+﻿using AUTHIO.INFRASTRUCTURE.ServiceBus;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,5 +23,4 @@ public static class ServiceBusExtensions
 
         return webApplication;
     }
-
 }

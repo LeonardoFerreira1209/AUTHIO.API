@@ -16,7 +16,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -196,8 +196,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238"),
-                            Created = new DateTime(2024, 6, 16, 15, 9, 22, 749, DateTimeKind.Local).AddTicks(5765),
+                            Id = new Guid("3afdc106-9d16-46c8-b156-e52cb2985665"),
+                            Created = new DateTime(2024, 8, 2, 0, 9, 21, 184, DateTimeKind.Local).AddTicks(7965),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -537,28 +537,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("3afdc106-9d16-46c8-b156-e52cb2985665")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("3afdc106-9d16-46c8-b156-e52cb2985665")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("3afdc106-9d16-46c8-b156-e52cb2985665")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("ae174957-8cf2-4d0d-9c76-1336221cb238")
+                            RoleId = new Guid("3afdc106-9d16-46c8-b156-e52cb2985665")
                         });
                 });
 
@@ -828,11 +828,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("TenantIdentityConfiguration");
 
                     b.Navigation("TenantTokenConfiguration");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
-                {
-                    b.Navigation("SendGridConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>

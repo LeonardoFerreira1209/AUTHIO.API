@@ -37,6 +37,7 @@ public static class DependenciesExtensions
             .AddTransient<IFeatureFlagsService, FeatureFlagsService>()
             .AddTransient<IContextService, ContextService>()
             .AddTransient<IAuthenticationService, AuthenticationService>()
+            .AddTransient<IUserService, UserService>()
             .AddTransient<ITokenService, TokenService>()
             .AddTransient<ITenantService, TenantService>()
             .AddTransient<IEventService, EventService>()
@@ -61,6 +62,7 @@ public static class DependenciesExtensions
             .AddTransient<IEmailProviderFactory, EmailProviderFactory>()
             .AddTransient<IEventFactory, EventFactory>()
             .AddTransient<IEventServiceBusProvider, EventServiceBusProvider>()
+            .AddSingleton<ICachingService, CachingService>()
             .AddSingleton<EventServiceBusSubscriber>();
 
         return services;
