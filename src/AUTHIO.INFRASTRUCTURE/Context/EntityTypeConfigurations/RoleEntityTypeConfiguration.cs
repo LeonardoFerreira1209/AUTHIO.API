@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AUTHIO.DATABASE.Context.EntityTypeConfigurations;
+namespace AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
 
 /// <summary>
 /// Configuração de modelo de RoleEntity.

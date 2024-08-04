@@ -1,11 +1,11 @@
-﻿using AUTHIO.DATABASE.Context;
-using AUTHIO.DOMAIN.Contracts.Factories;
+﻿using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Email;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.INFRASTRUCTURE.Context;
 using Newtonsoft.Json;
 using Serilog;
 

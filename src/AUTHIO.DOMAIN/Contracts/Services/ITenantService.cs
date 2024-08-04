@@ -1,4 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Dtos.Request;
+using AUTHIO.DOMAIN.Dtos.Request.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AUTHIO.DOMAIN.Contracts.Services;
@@ -19,8 +20,10 @@ public interface ITenantService
     /// <summary>
     /// Recupera todos os tenants com paginação.
     /// </summary>
+    /// <param name="filterRequest"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ObjectResult> GetAllAsync(int pageNumber, int PageSize, CancellationToken cancellationToken);
+    Task<ObjectResult> GetAllAsync(FilterRequest filterRequest, CancellationToken cancellationToken);
 
     /// <summary>
     /// Recupera um tenant pela chave.

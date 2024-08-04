@@ -1,13 +1,13 @@
-﻿using AUTHIO.DATABASE.Context.EntityTypeConfigurations;
-using AUTHIO.DOMAIN.Contracts;
+﻿using AUTHIO.DOMAIN.Contracts;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Enums;
+using AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AUTHIO.DATABASE.Context;
+namespace AUTHIO.INFRASTRUCTURE.Context;
 
 /// <summary>
 /// Classe de contexto.

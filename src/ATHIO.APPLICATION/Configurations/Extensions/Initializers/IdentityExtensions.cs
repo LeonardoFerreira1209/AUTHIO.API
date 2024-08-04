@@ -1,6 +1,6 @@
-﻿using AUTHIO.DATABASE.Context;
-using AUTHIO.DOMAIN.Entities;
+﻿using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Extensions;
+using AUTHIO.INFRASTRUCTURE.Context;
 using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

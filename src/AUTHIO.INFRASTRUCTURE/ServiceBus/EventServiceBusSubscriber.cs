@@ -1,5 +1,4 @@
-﻿using AUTHIO.DATABASE.Context;
-using AUTHIO.DOMAIN.Contracts.Factories;
+﻿using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories;
@@ -8,6 +7,7 @@ using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Email;
 using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Enums;
+using AUTHIO.INFRASTRUCTURE.Context;
 using AUTHIO.INFRASTRUCTURE.ServiceBus.Base;
 using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;

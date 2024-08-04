@@ -1,10 +1,10 @@
-﻿using AUTHIO.DATABASE.Context;
-using AUTHIO.DATABASE.Repositories.BASE;
-using AUTHIO.DOMAIN.Contracts.Repositories;
+﻿using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.INFRASTRUCTURE.Context;
+using AUTHIO.INFRASTRUCTURE.Repositories.BASE;
 using Microsoft.EntityFrameworkCore;
 
-namespace AUTHIO.DATABASE.Repositories;
+namespace AUTHIO.INFRASTRUCTURE.Repositories;
 
 /// <summary>
 /// Feature flags provider
