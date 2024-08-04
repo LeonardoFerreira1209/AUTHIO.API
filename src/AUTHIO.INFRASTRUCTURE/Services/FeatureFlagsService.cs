@@ -1,11 +1,11 @@
-﻿using AUTHIO.DATABASE.Context;
-using AUTHIO.DOMAIN.Contracts.Repositories;
+﻿using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Enums;
 using AUTHIO.DOMAIN.Exceptions.Base;
 using AUTHIO.DOMAIN.Helpers;
+using AUTHIO.INFRASTRUCTURE.Context;
 using System.Net;
 
 namespace AUTHIO.INFRASTRUCTURE.Services;

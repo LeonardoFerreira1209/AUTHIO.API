@@ -5,7 +5,7 @@ using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AUTHIO.DATABASE.Repositories.BASE;
+namespace AUTHIO.INFRASTRUCTURE.Repositories.BASE;
 
 /// <summary>
 /// Repositório genérico com Entity.
@@ -53,7 +53,7 @@ public class GenericEntityCoreRepository<T>(DbContext context)
     {
         _context.Set<T>().Update(entity);
 
-        return await 
+        return await
             Task.FromResult(entity);
     }
 

@@ -2,6 +2,7 @@
 using AUTHIO.DOMAIN.Auth.CustomAuthorize.Attribute;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Request;
+using AUTHIO.DOMAIN.Dtos.Request.Base;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Enums;
@@ -57,8 +58,7 @@ public class TenantController(
     /// <summary>
     /// Endpoint responsável por buscar os tenants do usuário logado.
     /// </summary>
-    /// <param name="pageNumber"></param>
-    /// <param name="pageSize"></param>
+    /// <param name="filterRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet("getall")]
@@ -69,14 +69,14 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync(
-        int pageNumber, int pageSize, CancellationToken cancellationToken)
+        FilterRequest filterRequest, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))
         {
             return await ExecuteAsync(nameof(GetAllAsync),
                  () => _tenantService.GetAllAsync(
-                     pageNumber, pageSize, cancellationToken), "Buscar todos os tenants.");
+                     filterRequest, cancellationToken), "Buscar todos os tenants.");
         }
     }
 

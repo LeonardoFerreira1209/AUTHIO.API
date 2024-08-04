@@ -1,7 +1,4 @@
-﻿
-
-using AUTHIO.DATABASE.Context;
-using AUTHIO.DOMAIN.Builders.Creates;
+﻿using AUTHIO.DOMAIN.Builders.Creates;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
@@ -13,6 +10,7 @@ using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Consts;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
+using AUTHIO.INFRASTRUCTURE.Context;
 using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -20,7 +18,7 @@ using Serilog;
 using System.Net;
 using static AUTHIO.DOMAIN.Exceptions.CustomUserException;
 
-namespace AUTHIO.INFRASTRUCTURE.Services;
+namespace AUTHIO.APPLICATION.Services;
 
 /// <summary>
 /// Serviço de usuarios.
@@ -54,7 +52,8 @@ public sealed class UserService(
                     {
                         var validation = validationTask.Result;
 
-                        if (validation.IsValid is false) await validation.GetValidationErrors();
+                        if (validation.IsValid is false) 
+                            await validation.GetValidationErrors();
 
                     }).Unwrap();
 
@@ -93,12 +92,13 @@ public sealed class UserService(
                                                EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)));
 
                                 await eventRepository.CreateAsync(CreateEvent
-                                    .CreateEmailEvent(jsonBody)).ContinueWith(async (task) => {
+                                    .CreateEmailEvent(jsonBody)).ContinueWith(async (task) =>
+                                    {
                                         await unitOfWork.CommitAsync();
-                                        await transaction.CommitAsync(); 
+                                        await transaction.CommitAsync();
                                     }).Unwrap();
 
-                                return new OkObjectResult(
+                                return new ObjectResult(
                                     new ApiResponse<UserResponse>(
                                         identityResult.Succeeded,
                                         HttpStatusCode.Created,

@@ -1,5 +1,4 @@
-﻿using AUTHIO.DATABASE.Context;
-using AUTHIO.DOMAIN.Builders.Creates;
+﻿using AUTHIO.DOMAIN.Builders.Creates;
 using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Repositories;
@@ -7,6 +6,7 @@ using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Request;
+using AUTHIO.DOMAIN.Dtos.Request.Base;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
@@ -16,6 +16,7 @@ using AUTHIO.DOMAIN.Helpers.Consts;
 using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
+using AUTHIO.INFRASTRUCTURE.Context;
 using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -227,13 +228,13 @@ public class TenantService(
     /// <param name="pageSize"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ObjectResult> GetAllAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<ObjectResult> GetAllAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
 
         string cacheKey =
-            $"getall-tenants-{pageNumber}-{pageSize}-{CurrentUserId}";
+            $"getall-tenants-{filterRequest.PageNumber}-{filterRequest.PageSize}-{CurrentUserId}";
 
         ObjectResult tenantsCache =
             await cachingService
@@ -245,8 +246,8 @@ public class TenantService(
         try
         {
             return await tenantRepository.GetAllAsyncPaginated(
-                pageNumber,
-                pageSize,
+                filterRequest.PageNumber,
+                filterRequest.PageSize,
                 TenantFilters.FilterByAdmin(
                     contextService.GetCurrentUserId()
                 )
@@ -398,7 +399,7 @@ public class TenantService(
                                            await transaction.CommitAsync();
                                        }).Unwrap();
 
-                                    return new OkObjectResult(
+                                    return new ObjectResult(
                                         new ApiResponse<UserResponse>(
                                             identityResult.Succeeded,
                                                 HttpStatusCode.Created,

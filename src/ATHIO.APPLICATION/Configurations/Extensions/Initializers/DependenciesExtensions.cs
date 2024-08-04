@@ -1,6 +1,4 @@
 ﻿using AUTHIO.APPLICATION.Services;
-using AUTHIO.DATABASE.Repositories;
-using AUTHIO.DATABASE.Repositories.BASE;
 using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
@@ -10,6 +8,8 @@ using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.INFRASTRUCTURE.Factories;
 using AUTHIO.INFRASTRUCTURE.Providers;
+using AUTHIO.INFRASTRUCTURE.Repositories;
+using AUTHIO.INFRASTRUCTURE.Repositories.BASE;
 using AUTHIO.INFRASTRUCTURE.ServiceBus;
 using AUTHIO.INFRASTRUCTURE.Services;
 using AUTHIO.INFRASTRUCTURE.Services.Identity;
