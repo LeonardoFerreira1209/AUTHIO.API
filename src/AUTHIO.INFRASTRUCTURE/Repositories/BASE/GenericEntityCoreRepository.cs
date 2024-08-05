@@ -146,7 +146,8 @@ public class GenericEntityCoreRepository<T>(DbContext context)
         var items
             = await query
                 .Skip(skip)
-                    .Take(pageSize).ToListAsync();
+                    .Take(pageSize)
+                        .OrderBy(x => x.Id).ToListAsync();
 
         return new PaginatedResponse<T>(
                 items, totalCount, pageNumber, pageSize

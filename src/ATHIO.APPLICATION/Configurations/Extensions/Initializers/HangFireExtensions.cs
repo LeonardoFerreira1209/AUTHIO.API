@@ -1,4 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Contracts;
+using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.INFRASTRUCTURE.Factories;
 using AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
 using Hangfire;
 using Hangfire.MySql;
@@ -42,6 +44,7 @@ public static class HangFireExtensions
 
             ).AddHangfireServer();
 
+        services.AddTransient<ITaskJobFactory, TaskJobFactory>();
         services.AddTransient<IHangFireJobsProvider, HangfireJobsProvider>();
 
         services.BuildServiceProvider()

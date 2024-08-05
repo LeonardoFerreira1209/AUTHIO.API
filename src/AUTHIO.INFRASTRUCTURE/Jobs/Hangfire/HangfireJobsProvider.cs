@@ -1,9 +1,11 @@
 ﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using Hangfire;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using static AUTHIO.DOMAIN.Dtos.Configurations.Hangfire;
 
 namespace AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
 
@@ -12,7 +14,9 @@ namespace AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
 /// </summary>
 /// <param name="recurringJobManager"></param>
 public class HangfireJobsProvider(
-    IRecurringJobManager recurringJobManager, IOptions<AppSettings> configurations) : IHangFireJobsProvider
+    IRecurringJobManager recurringJobManager, 
+    IOptions<AppSettings> configurations,
+    ITaskJobFactory taskJobFactory) : IHangFireJobsProvider
 {
     /// <summary>
     /// Registra os jobs.
@@ -23,17 +27,47 @@ public class HangfireJobsProvider(
         {
             Log.Information($"[LOG INFORMATION] - Inicializando os Jobs do Hangfire.\n");
 
-            if (configurations.Value.Hangfire.ExecuteSendEventsToBusJob)
-            {
-                Log.Information($"[LOG INFORMATION] - Job SendEventsToBusAsync iniciado com sucesso.\n");
+            List<Job> jobs
+                = configurations.Value.Hangfire.Jobs;
 
-                recurringJobManager.AddOrUpdate<IEventService>(
-                    "SendEventsToBus", x => x.SendEventsToBusAsync(), Cron.Hourly());
-            }
+            jobs.ToList().ForEach(job =>
+            {
+                AddOrRemoveJob(
+                    job.Name,
+                    job.Cronn.IsNullOrEmpty() ? Cron.Daily() : job.Cronn,
+                    job.Execute
+                );
+            });
         }
-        catch(Exception exception) 
+        catch (Exception exception)
         {
             Log.Error($"[LOG ERRO] - Falha na inicialização dos Jobs do Hangfire. ({exception.Message})\n");
         }
+    }
+
+    /// <summary>
+    /// Adiciona, Atualiza ou Remove um job.
+    /// </summary>
+    /// <param name="jobName"></param>
+    /// <param name="cronn"></param>
+    /// <param name="execute"></param>
+    private void AddOrRemoveJob(
+        string jobName, string cronn, bool execute)
+    {
+        if (!execute)
+        {
+            recurringJobManager.RemoveIfExists(jobName);
+
+            Log.Information($"[LOG INFORMATION] - Job {jobName} desativado com sucesso!\n");
+
+            return;
+        }
+
+        var jobTask = taskJobFactory.GetJobTask(jobName);
+
+        recurringJobManager.AddOrUpdate(
+           jobName, () => jobTask.ExecuteAsync(), cronn);
+
+        Log.Information($"[LOG INFORMATION] - Job {jobName} ativado com sucesso!\n");
     }
 }

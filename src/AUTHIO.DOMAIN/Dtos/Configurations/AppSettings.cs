@@ -102,7 +102,28 @@ public sealed class ServiceBus
 public sealed class Hangfire
 {
     /// <summary>
-    /// Executar job de envio de eventos para o bus.
+    /// Classe de job.
     /// </summary>
-    public bool ExecuteSendEventsToBusJob { get; set; }
+    public sealed class Job
+    {
+        /// <summary>
+        /// Nome do job.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Rotina de execução.
+        /// </summary>
+        public string Cronn { get; set; }
+
+        /// <summary>
+        /// Execução habilitada.
+        /// </summary>
+        public bool Execute { get; set; }
+    }
+
+    /// <summary>
+    /// Jobs que serão executados.
+    /// </summary>
+    public List<Job> Jobs { get; set; }
 }
