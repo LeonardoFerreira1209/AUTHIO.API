@@ -24,13 +24,19 @@ public class EventService(
     IEventRepository eventRepository) : IEventService
 {
     /// <summary>
+    /// Executa uma task.
+    /// </summary>
+    /// <returns></returns>
+    public async Task ExecuteAsync() => await SendEventsToBusAsync();
+
+    /// <summary>
     /// Envia um evento para o service bus.
     /// </summary>
     /// <returns></returns>
     public async Task SendEventsToBusAsync()
     {
         Log.Information(
-            $"[LOG INFORMATION] - SET TITLE {nameof(AuthenticationService)} - METHOD {nameof(SendEventsToBusAsync)}\n");
+            $"[LOG INFORMATION] - SET TITLE {nameof(EventService)} - METHOD {nameof(SendEventsToBusAsync)}\n");
 
         try
         {

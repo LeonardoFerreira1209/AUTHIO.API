@@ -3,11 +3,6 @@
 /// <summary>
 /// Interface de serviço de Evento.
 /// </summary>
-public interface IEventService
+public interface IEventService : IExecuteJobTask
 {
-    /// <summary>
-    /// Envia um evento para o service bus.
-    /// </summary>
-    /// <returns></returns>
-    Task SendEventsToBusAsync();
 }

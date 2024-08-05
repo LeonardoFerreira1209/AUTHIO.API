@@ -462,17 +462,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("3afdc106-9d16-46c8-b156-e52cb2985665"), null, new DateTime(2024, 8, 2, 0, 9, 21, 184, DateTimeKind.Local).AddTicks(7965), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a"), null, new DateTime(2024, 8, 5, 18, 57, 24, 543, DateTimeKind.Local).AddTicks(6854), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("3afdc106-9d16-46c8-b156-e52cb2985665") },
-                    { 2, "Tenants", "GET", new Guid("3afdc106-9d16-46c8-b156-e52cb2985665") },
-                    { 3, "Tenants", "PATCH", new Guid("3afdc106-9d16-46c8-b156-e52cb2985665") },
-                    { 4, "Tenants", "PUT", new Guid("3afdc106-9d16-46c8-b156-e52cb2985665") }
+                    { 1, "Tenants", "POST", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") },
+                    { 2, "Tenants", "GET", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") },
+                    { 3, "Tenants", "PATCH", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") },
+                    { 4, "Tenants", "PUT", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") }
                 });
 
             migrationBuilder.CreateIndex(
