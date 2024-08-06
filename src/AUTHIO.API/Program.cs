@@ -41,7 +41,7 @@ try
         .ConfigureDatabase(configurations)
         .ConfigureIdentityServer(configurations)
         .AddAuthorization()
-        .ConfigureAuthentication(configurations)
+        .ConfigureAuthentication()
         .ConfigureApplicationCookie()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()

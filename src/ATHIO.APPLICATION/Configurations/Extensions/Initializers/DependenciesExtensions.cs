@@ -1,4 +1,5 @@
 ﻿using AUTHIO.APPLICATION.Services;
+using AUTHIO.DOMAIN.Auth;
 using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
@@ -32,7 +33,9 @@ public static class DependenciesExtensions
         this IServiceCollection services, IConfiguration configurations)
     {
         services
+        // Others    
             .AddSingleton(serviceProvider => configurations)
+            .AddScoped<CustomJwtBearerEvents>()
         // Services
             .AddTransient<IFeatureFlagsService, FeatureFlagsService>()
             .AddTransient<IContextService, ContextService>()
