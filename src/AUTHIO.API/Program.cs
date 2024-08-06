@@ -40,7 +40,6 @@ try
         .ConfigureDependencies(configurations)
         .ConfigureDatabase(configurations)
         .ConfigureIdentityServer(configurations)
-        .AddAuthorization()
         .ConfigureAuthentication()
         .ConfigureApplicationCookie()
         .ConfigureHealthChecks(configurations)

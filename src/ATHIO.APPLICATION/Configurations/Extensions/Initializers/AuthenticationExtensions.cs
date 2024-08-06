@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +29,13 @@ public static class AuthenticationExtensions
             options.SaveToken = true;
 
             options.EventsType = typeof(CustomJwtBearerEvents);
+        });
+
+        services.AddAuthorization(auth =>
+        {
+            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser().Build());
         });
 
         return services;
