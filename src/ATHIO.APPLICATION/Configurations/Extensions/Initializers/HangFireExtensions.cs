@@ -29,8 +29,7 @@ public static class HangFireExtensions
                 .UseRecommendedSerializerSettings()
                 .UseStorage(new MySqlStorage(
                     Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations.GetConnectionString("Database"),
-                        new MySqlStorageOptions
-                        {
+                        new MySqlStorageOptions {
                             QueuePollInterval = TimeSpan.FromSeconds(1),
                             JobExpirationCheckInterval = TimeSpan.FromHours(1),
                             CountersAggregateInterval = TimeSpan.FromMinutes(5),

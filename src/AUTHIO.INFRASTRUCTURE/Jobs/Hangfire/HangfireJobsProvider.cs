@@ -2,6 +2,7 @@
 using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using Hangfire;
+using Hangfire.Common;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -27,7 +28,7 @@ public class HangfireJobsProvider(
         {
             Log.Information($"[LOG INFORMATION] - Inicializando os Jobs do Hangfire.\n");
 
-            List<Job> jobs
+            List<JobInfo> jobs
                 = configurations.Value.Hangfire.Jobs;
 
             jobs.ToList().ForEach(job =>
@@ -66,7 +67,7 @@ public class HangfireJobsProvider(
         var jobTask = taskJobFactory.GetJobTask(jobName);
 
         recurringJobManager.AddOrUpdate(
-           jobName, () => jobTask.ExecuteAsync(), cronn);
+           jobName, Job.FromExpression(() => jobTask.ExecuteAsync()), cronn);
 
         Log.Information($"[LOG INFORMATION] - Job {jobName} ativado com sucesso!\n");
     }

@@ -27,7 +27,8 @@ public class EventService(
     /// Executa uma task.
     /// </summary>
     /// <returns></returns>
-    public async Task ExecuteAsync() => await SendEventsToBusAsync();
+    public async Task ExecuteAsync() 
+        => await SendEventsToBusAsync();
 
     /// <summary>
     /// Envia um evento para o service bus.

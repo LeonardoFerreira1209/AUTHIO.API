@@ -3,6 +3,6 @@
 /// <summary>
 /// Interface de serviço de Evento.
 /// </summary>
-public interface IEventService : IExecuteJobTask
-{
+public interface IEventService : IExecuteJobTask {
+
 }
