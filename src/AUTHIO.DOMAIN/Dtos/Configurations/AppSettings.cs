@@ -104,7 +104,7 @@ public sealed class Hangfire
     /// <summary>
     /// Classe de job.
     /// </summary>
-    public sealed class Job
+    public sealed class JobInfo
     {
         /// <summary>
         /// Nome do job.
@@ -125,5 +125,5 @@ public sealed class Hangfire
     /// <summary>
     /// Jobs que serão executados.
     /// </summary>
-    public List<Job> Jobs { get; set; }
+    public List<JobInfo> Jobs { get; set; }
 }
