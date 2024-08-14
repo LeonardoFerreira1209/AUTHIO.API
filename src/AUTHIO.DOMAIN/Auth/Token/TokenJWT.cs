@@ -30,7 +30,7 @@ public class TokenJWT
     /// <summary>
     /// Validade do token
     /// </summary>
-    public DateTime ValidTo => token.ValidTo.AddHours(-3);
+    public DateTime ValidTo => token.ValidTo.AddHours(3);
 
     /// <summary>
     /// Valor do token.
