@@ -35,6 +35,16 @@ public static class AuthenticationExtensions
         })
         .AddJwtBearer(options =>
         {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                LogValidationExceptions = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.FromHours(3),
+            };
+
             options.SaveToken = true;
 
             options.EventsType = typeof(CustomJwtBearerEvents);
