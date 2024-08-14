@@ -189,14 +189,14 @@ public class TokenJwtBuilder
                     issuer: issuer,
                     audience: audience,
                     claims: baseClaims,
-                    expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
+                    expires: DateTime.Now.AddMinutes(expiryInMinutes),
                     signingCredentials: key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)),
 
                 new JwtSecurityToken(
                     issuer: issuer,
                     audience: audience,
                     claims: [new Claim(JwtRegisteredClaimNames.UniqueName, username)],
-                    expires: DateTime.UtcNow.AddHours(expiryRefreshTokenInHours),
+                    expires: DateTime.Now.AddHours(expiryRefreshTokenInHours),
                     signingCredentials: key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256))
                 );
         }
