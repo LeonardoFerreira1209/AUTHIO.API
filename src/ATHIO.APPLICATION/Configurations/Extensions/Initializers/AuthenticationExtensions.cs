@@ -42,7 +42,7 @@ public static class AuthenticationExtensions
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                //ClockSkew = TimeSpan.FromHours(3),
+                ClockSkew = TimeSpan.FromHours(3),
             };
 
             options.SaveToken = true;

@@ -69,7 +69,7 @@ public class TokenService(
                     ValidIssuer = appsettings.Value.Auth.ValidIssuer,
                     ValidateAudience = true,
                     ValidAudience = appsettings.Value.Auth.ValidAudience,
-                    //ClockSkew = TimeSpan.FromHours(3),
+                    ClockSkew = TimeSpan.FromHours(3),
                 });
 
         var username = tokenValidationResult.IsValid
