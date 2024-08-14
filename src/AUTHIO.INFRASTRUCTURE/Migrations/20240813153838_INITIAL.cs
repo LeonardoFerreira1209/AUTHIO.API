@@ -53,6 +53,25 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "SecurityKeys",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    KeyId = table.Column<string>(type: "longtext", nullable: true),
+                    Type = table.Column<string>(type: "longtext", nullable: true),
+                    Parameters = table.Column<string>(type: "varchar(8000)", maxLength: 8000, nullable: false),
+                    IsRevoked = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    RevokedReason = table.Column<string>(type: "longtext", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ExpiredAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SecurityKeys", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Tenants",
                 columns: table => new
                 {
@@ -462,17 +481,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a"), null, new DateTime(2024, 8, 5, 18, 57, 24, 543, DateTimeKind.Local).AddTicks(6854), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856"), null, new DateTime(2024, 8, 13, 12, 38, 38, 397, DateTimeKind.Local).AddTicks(2384), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") },
-                    { 2, "Tenants", "GET", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") },
-                    { 3, "Tenants", "PATCH", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") },
-                    { 4, "Tenants", "PUT", new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a") }
+                    { 1, "Tenants", "POST", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") },
+                    { 2, "Tenants", "GET", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") },
+                    { 3, "Tenants", "PATCH", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") },
+                    { 4, "Tenants", "PUT", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -519,7 +538,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
-                column: "NormalizedUserName");
+                column: "NormalizedUserName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_LockoutIdentityConfigurations_TenantIdentityConfigurationId",
@@ -604,6 +624,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             migrationBuilder.DropTable(
                 name: "PasswordIdentityConfigurations");
+
+            migrationBuilder.DropTable(
+                name: "SecurityKeys");
 
             migrationBuilder.DropTable(
                 name: "SendGridConfigurations");

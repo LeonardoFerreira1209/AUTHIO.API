@@ -13,13 +13,30 @@ namespace AUTHIO.DOMAIN.Builders.Token;
 /// </summary>
 public class TokenJwtBuilder
 {
+    /// <summary>
+    /// Chave de segurança.
+    /// </summary>
     private SecurityKey securityKey = null;
 
+    /// <summary>
+    /// Variaveis 
+    /// </summary>
     private string subject, issuer, audience, username;
 
-    private readonly List<Claim> claims = []; private readonly List<Claim> roles = [];
+    /// <summary>
+    /// Claims
+    /// </summary>
+    private readonly List<Claim> claims 
+        = []; private readonly List<Claim> roles = [];
 
+    /// <summary>
+    /// Tempo de expiração do token.
+    /// </summary>
     private int expiryInMinutes = 10;
+
+    /// <summary>
+    /// Tempo de expiração do refresh token.
+    /// </summary>
     private readonly int expiryRefreshTokenInHours = 24;
 
     /// <summary>
@@ -146,7 +163,7 @@ public class TokenJwtBuilder
     /// Método que cria e retorna o token.
     /// </summary>
     /// <returns></returns>
-    public TokenJWT Builder(UserEntity userEntity)
+    public TokenJWT Builder(UserEntity userEntity, SigningCredentials key = null)
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TokenJwtBuilder)} - METHOD {nameof(Builder)}\n");
 
@@ -157,7 +174,7 @@ public class TokenJwtBuilder
                 new Claim(ClaimTypes.NameIdentifier, userEntity.Id.ToString()),
                 new Claim(ClaimTypes.Name, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.Now.AddHours(-3)).ToString(CultureInfo.CurrentCulture), ClaimValueTypes.Integer64),
+                new Claim(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.Now).ToString(CultureInfo.CurrentCulture), ClaimValueTypes.Integer64),
                 new Claim(JwtRegisteredClaimNames.Typ, "Bearer"),
                 new Claim(JwtRegisteredClaimNames.Email, userEntity.Email),
                 new Claim(ClaimTypes.MobilePhone, userEntity.PhoneNumber ?? string.Empty),
@@ -168,20 +185,20 @@ public class TokenJwtBuilder
             Log.Information($"[LOG INFORMATION] - Token gerado com sucesso.\n");
 
             return new TokenJWT(
-                            new JwtSecurityToken(
-                                issuer: issuer,
-                                audience: audience,
-                                claims: baseClaims,
-                                expires: DateTime.UtcNow.AddHours(-3).AddMinutes(expiryInMinutes),
-                                signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)),
+                new JwtSecurityToken(
+                    issuer: issuer,
+                    audience: audience,
+                    claims: baseClaims,
+                    expires: DateTime.UtcNow.AddHours(-3).AddMinutes(expiryInMinutes),
+                    signingCredentials: key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)),
 
-                            new JwtSecurityToken(
-                                issuer: issuer,
-                                audience: audience,
-                                claims: [new Claim(JwtRegisteredClaimNames.UniqueName, username)],
-                                expires: DateTime.UtcNow.AddHours(expiryRefreshTokenInHours).AddHours(-3),
-                                signingCredentials: new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256))
-                        );
+                new JwtSecurityToken(
+                    issuer: issuer,
+                    audience: audience,
+                    claims: [new Claim(JwtRegisteredClaimNames.UniqueName, username)],
+                    expires: DateTime.UtcNow.AddHours(-3).AddHours(expiryRefreshTokenInHours),
+                    signingCredentials: key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256))
+                );
         }
         catch (Exception exception)
         {

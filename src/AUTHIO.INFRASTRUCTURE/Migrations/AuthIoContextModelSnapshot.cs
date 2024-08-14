@@ -22,6 +22,40 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Dtos.Model.KeyMaterial", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("ExpiredAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("KeyId")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Parameters")
+                        .IsRequired()
+                        .HasMaxLength(8000)
+                        .HasColumnType("varchar(8000)");
+
+                    b.Property<string>("RevokedReason")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityKeys");
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.EventEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -196,8 +230,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a"),
-                            Created = new DateTime(2024, 8, 5, 18, 57, 24, 543, DateTimeKind.Local).AddTicks(6854),
+                            Id = new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856"),
+                            Created = new DateTime(2024, 8, 13, 12, 38, 38, 397, DateTimeKind.Local).AddTicks(2384),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -473,6 +507,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
+                        .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
                     b.HasIndex("TenantId");
@@ -537,28 +572,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a")
+                            RoleId = new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a")
+                            RoleId = new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a")
+                            RoleId = new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("b58b9b7a-8da1-4b0d-9690-dfdbb1ac166a")
+                            RoleId = new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856")
                         });
                 });
 

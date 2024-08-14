@@ -1,7 +1,9 @@
 ﻿using AUTHIO.DOMAIN.Contracts;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Enums;
+using AUTHIO.DOMAIN.Store;
 using AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -18,7 +20,7 @@ namespace AUTHIO.INFRASTRUCTURE.Context;
 /// <param name="options"></param>
 public sealed class AuthIoContext(
     DbContextOptions<AuthIoContext> options, IContextService contextService)
-        : IdentityDbContext<UserEntity, RoleEntity, Guid>(options), IAuthioContext
+        : IdentityDbContext<UserEntity, RoleEntity, Guid>(options), IAuthioContext, ISecurityKeyContext
 {
     public Guid? CurrentUserId { get; init; }
        = contextService.IsAuthenticated ? contextService.GetCurrentUserId() : null;
@@ -84,14 +86,14 @@ public sealed class AuthIoContext(
     /// </summary>
     public DbSet<EventEntity> Events => Set<EventEntity>();
 
+    public DbSet<KeyMaterial> SecurityKeys { get; set; }
+
     /// <summary>
     /// On model creating.
     /// </summary>
     /// <param name="modelBuilder"></param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-
         modelBuilder
            .ApplyConfiguration(new UserEntityTypeConfiguration())
            .ApplyConfiguration(new RoleEntityTypeConfiguration())
@@ -100,7 +102,8 @@ public sealed class AuthIoContext(
            .ApplyConfiguration(new UserIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new PasswordIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new LockoutIdentityConfigurationEntityTypeConfiguration())
-           .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration());
+           .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration())
+           .ApplyConfiguration(new KeyMaterialEntityTypeConfiguration());
 
         var roleEntity = new RoleEntity
         {
@@ -126,24 +129,27 @@ public sealed class AuthIoContext(
                     ClaimType = "Tenants",
                     ClaimValue = "POST"
                 },
-                 new IdentityRoleClaim<Guid>{
+                    new IdentityRoleClaim<Guid>{
                     Id = 2,
                     RoleId = roleEntity.Id,
                     ClaimType = "Tenants",
                     ClaimValue = "GET"
                 },
-                 new IdentityRoleClaim<Guid>{
+                    new IdentityRoleClaim<Guid>{
                     Id = 3,
                     RoleId = roleEntity.Id,
                     ClaimType = "Tenants",
                     ClaimValue = "PATCH"
                 },
-                 new IdentityRoleClaim<Guid>{
+                    new IdentityRoleClaim<Guid>{
                     Id = 4,
                     RoleId = roleEntity.Id,
                     ClaimType = "Tenants",
                     ClaimValue = "PUT"
                 }
-            ]);
+            ]
+        );
+
+        base.OnModelCreating(modelBuilder);
     }
 }

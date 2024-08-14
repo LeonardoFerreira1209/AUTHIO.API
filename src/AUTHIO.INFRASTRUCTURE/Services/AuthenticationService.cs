@@ -79,8 +79,7 @@ public sealed class AuthenticationService(
                             $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
 
                         return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
-                           (tokenJwtTask) =>
-                           {
+                           (tokenJwtTask) => {
 
                                var tokenJWT =
                                    tokenJwtTask.Result
