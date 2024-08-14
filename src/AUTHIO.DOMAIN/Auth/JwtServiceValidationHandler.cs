@@ -62,7 +62,7 @@ public class JwtServiceValidationHandler(
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ClockSkew = TimeSpan.FromHours(3),
+                    ClockSkew = TimeSpan.Zero,
 
                     ValidIssuer = tenantTokenConfiguration.Issuer,
                     ValidAudience = tenantTokenConfiguration.Audience,
@@ -79,7 +79,7 @@ public class JwtServiceValidationHandler(
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ClockSkew = TimeSpan.FromHours(3),
+            ClockSkew = TimeSpan.Zero,
 
             ValidIssuer = configurations.Value.Auth.ValidIssuer,
             ValidAudience = configurations.Value.Auth.ValidAudience,
