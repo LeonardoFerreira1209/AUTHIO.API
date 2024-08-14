@@ -46,8 +46,8 @@ public static class DependenciesExtensions
             .AddTransient<IEventService, EventService>()
         // Repository
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
-            .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
             .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
+            .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
             .AddScoped<ITenantRepository, TenantRepository>()
             .AddScoped<ITenantConfigurationRepository, TenantConfigurationRepository>()
             .AddScoped<ITenantIdentityConfigurationRepository, TenantIdentityConfigurationRepository>()
@@ -60,6 +60,7 @@ public static class DependenciesExtensions
             .AddScoped<IEventRepository, EventRepository>()
             .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
             .AddScoped<ICustomUserStore<UserEntity>, CustomUserStore<UserEntity>>()
+            .AddScoped<ICryptoService, CryptoService>()
         // Infra
             .AddTransient<IEmailProvider, EmailProvider>()
             .AddTransient<IEmailProviderFactory, EmailProviderFactory>()

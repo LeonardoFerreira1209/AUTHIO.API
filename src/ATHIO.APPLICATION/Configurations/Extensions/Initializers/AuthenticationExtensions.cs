@@ -1,8 +1,17 @@
 ﻿using AUTHIO.DOMAIN.Auth;
+using AUTHIO.DOMAIN.Contracts.Jwt;
+using AUTHIO.DOMAIN.Dtos.Configurations;
+using AUTHIO.DOMAIN.Store;
+using AUTHIO.INFRASTRUCTURE.Context;
+using AUTHIO.INFRASTRUCTURE.Services;
+using AUTHIO.INFRASTRUCTURE.Store;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
 
@@ -26,18 +35,91 @@ public static class AuthenticationExtensions
         })
         .AddJwtBearer(options =>
         {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                LogValidationExceptions = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ClockSkew = TimeSpan.FromHours(3),
+            };
+
             options.SaveToken = true;
 
             options.EventsType = typeof(CustomJwtBearerEvents);
         });
 
-        services.AddAuthorization(auth =>
-        {
-            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+        services.AddAuthorizationBuilder()
+            .AddPolicy("Bearer", new AuthorizationPolicyBuilder()
                 .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                .RequireAuthenticatedUser().Build());
-        });
+                    .RequireAuthenticatedUser().Build());
+
+        services
+            .AddJwksManager()
+            .UseJwtValidation()
+            .PersistKeysToDatabaseStore<AuthIoContext>();
 
         return services;
     }
+
+    /// <summary>
+    /// Seta a criação de sign.
+    /// </summary>
+    /// <returns></returns>
+    private static JwksBuilder AddJwksManager(this IServiceCollection services, Action<JwtOptions> action = null)
+    {
+        if (action != null)
+            services.Configure(action);
+
+        services.AddScoped<IJwtService, JwtService>();
+
+        return new JwksBuilder(services);
+    }
+
+    /// <summary>
+    /// Seta credencial do sign.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static IJwksBuilder UseJwtValidation(this IJwksBuilder builder)
+    {
+        builder.Services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>>(s => new JwtPostConfigureOptions(s));
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Persite em memoria.
+    /// </summary>
+    /// <returns></returns>
+    private static IJwksBuilder PersistKeysInMemory(this IJwksBuilder builder)
+    {
+        builder.Services.AddScoped<IJsonWebKeyStore, InMemoryStore>();
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Persiste no banco de dados.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="credential">The credential.</param>
+    /// <returns></returns>
+    public static IJwksBuilder PersistKeysToDatabaseStore<TContext>(this IJwksBuilder builder) where TContext : DbContext, ISecurityKeyContext
+    {
+        builder.Services.AddScoped<IJsonWebKeyStore, DatabaseJsonWebKeyStore<TContext>>();
+
+        return builder;
+    }
+
+    //public static IApplicationBuilder UseJwksDiscovery(this IApplicationBuilder app, string jwtDiscoveryEndpoint = "/jwks")
+    //{
+    //    if (!jwtDiscoveryEndpoint.StartsWith('/')) throw new ArgumentException("The Jwks URI must starts with '/'");
+
+    //    app.Map(new PathString(jwtDiscoveryEndpoint), x =>
+    //        x.UseMiddleware<JwtServiceDiscoveryMiddleware>());
+
+    //    return app;
+    //}
 }

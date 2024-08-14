@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Auth.Token;
 using AUTHIO.DOMAIN.Builders.Token;
+using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Configurations;
@@ -30,6 +31,7 @@ public class TokenService(
     CustomUserManager<UserEntity> userManager,
     RoleManager<RoleEntity> roleManager,
     IContextService contextService,
+    IJwtService jwtService,
     IOptions<AppSettings> appsettings,
     ITenantTokenConfigurationRepository tenantTokenConfigurationRepository) : ITokenService
 {
@@ -111,6 +113,9 @@ public class TokenService(
                 ?? appsettings.Value.Auth.ValidAudience
         };
 
+        SigningCredentials key = 
+            await jwtService.GetCurrentSigningCredentials();
+
         return await Task.FromResult(
             new TokenJwtBuilder()
               .AddUsername(username)
@@ -121,7 +126,7 @@ public class TokenService(
                               .AddExpiry(appsettings.Value.Auth.ExpiresIn)
                                   .AddRoles(roles)
                                       .AddClaims(claims)
-                                          .Builder(userEntity));
+                                          .Builder(userEntity, key));
     }
 
     /// <summary>
