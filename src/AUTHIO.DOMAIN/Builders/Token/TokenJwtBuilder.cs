@@ -196,7 +196,7 @@ public class TokenJwtBuilder
                     issuer: issuer,
                     audience: audience,
                     claims: [new Claim(JwtRegisteredClaimNames.UniqueName, username)],
-                    expires: DateTime.UtcNow.AddHours(-3).AddHours(expiryRefreshTokenInHours),
+                    expires: DateTime.UtcNow.AddHours(3).AddHours(expiryRefreshTokenInHours),
                     signingCredentials: key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256))
                 );
         }
