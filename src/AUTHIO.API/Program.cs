@@ -12,7 +12,7 @@ try
     var configurations = builder.Configuration;
 
     /// <sumary>
-    /// Pega o appsettings baseado no ambiente em execução.
+    /// Pega o appsettings baseado no ambiente em execuÃ§Ã£o.
     /// </sumary>
     configurations
          .SetBasePath(builder.Environment.ContentRootPath)
@@ -26,7 +26,7 @@ try
                    .AddEnvironmentVariables();
 
     /// <sumary>
-    /// Configura as configurações de inicialização da aplicação.
+    /// Configura as configuraÃ§Ãµes de inicializaÃ§Ã£o da aplicaÃ§Ã£o.
     /// </sumary>
     builder.Services
         .ConfigureSerilog(configurations)
@@ -86,7 +86,7 @@ try
     applicationbuilder
        .Lifetime.ApplicationStarted
            .Register(() => Log.Debug(
-                   $"[LOG DEBUG] - Aplicação inicializada com sucesso: [AUTHIO.API]\n"));
+                   $"[LOG DEBUG] - AplicaÃ§Ã£o inicializada com sucesso: [AUTHIO.API]\n"));
 
     applicationbuilder.Run();
 }
