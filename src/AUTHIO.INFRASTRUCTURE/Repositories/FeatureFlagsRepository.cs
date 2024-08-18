@@ -1,7 +1,7 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.INFRASTRUCTURE.Context;
-using AUTHIO.INFRASTRUCTURE.Repositories.BASE;
+using AUTHIO.INFRASTRUCTURE.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace AUTHIO.INFRASTRUCTURE.Repositories;

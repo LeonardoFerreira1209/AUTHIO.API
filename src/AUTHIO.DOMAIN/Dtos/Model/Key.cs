@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using AUTHIO.DOMAIN.Entities;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -9,7 +10,7 @@ namespace AUTHIO.DOMAIN.Dtos.Model;
 /// Classe de key.
 /// </summary>
 [DebuggerDisplay("{Type}-{KeyId}")]
-public class KeyMaterial
+public class KeyMaterial : IEntityTenantNullAble
 {
     /// <summary>
     /// ctor.
@@ -21,7 +22,7 @@ public class KeyMaterial
     /// </summary>
     /// <param name="cryptographicKey"></param>
     public KeyMaterial(
-        CryptographicKey cryptographicKey)
+        CryptographicKey cryptographicKey, Guid? tenantId)
     {
         CreationDate = DateTime.UtcNow;
 
@@ -31,6 +32,8 @@ public class KeyMaterial
         Type = cryptographicKey.Algorithm.Kty();
 
         KeyId = cryptographicKey.Key.KeyId;
+
+        TenantId = tenantId;
     }
 
     /// <summary>
@@ -42,6 +45,11 @@ public class KeyMaterial
     /// Id da chave.
     /// </summary>
     public string KeyId { get; set; }
+
+    /// <summary>
+    /// Id do tenant.
+    /// </summary>
+    public Guid? TenantId {  get; set; }
 
     /// <summary>
     /// Tipo

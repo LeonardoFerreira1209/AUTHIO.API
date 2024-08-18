@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace AUTHIO.INFRASTRUCTURE.Repositories.BASE;
+namespace AUTHIO.INFRASTRUCTURE.Repositories.Base;
 
 /// <summary>
 /// Unidade de trabalho de banco de daods e controle de transações.

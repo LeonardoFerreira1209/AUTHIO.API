@@ -1,4 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Jwt;
+using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Model;
@@ -9,10 +10,18 @@ using System.Collections.ObjectModel;
 namespace AUTHIO.INFRASTRUCTURE.Services
 {
     public class JwtService(
-        IJsonWebKeyStore store, ICryptoService cryptoService, IOptions<JwtOptions> options) : IJwtService
+        IJsonWebKeyStore store, 
+        ICryptoService cryptoService, 
+        IContextService contextService,
+        IOptions<JwtOptions> options,
+        ITenantRepository tenantRepository) : IJwtService
     {
         private readonly IJsonWebKeyStore _store = store;
         private readonly IOptions<JwtOptions> _options = options;
+
+        private readonly Guid? _currentTenantId
+          = tenantRepository.GetAsync(
+              x => x.TenantConfiguration.TenantKey == contextService.GetCurrentTenantKey())?.Result?.Id;
 
         /// <summary>
         /// Gerar chave.
@@ -22,7 +31,7 @@ namespace AUTHIO.INFRASTRUCTURE.Services
         {
             var key = new CryptographicKey(cryptoService, _options.Value.Jws);
 
-            var model = new KeyMaterial(key);
+            var model = new KeyMaterial(key, _currentTenantId);
             await _store.Store(model);
 
             return model.GetSecurityKey();

@@ -94,6 +94,8 @@ public sealed class AuthIoContext(
     /// <param name="modelBuilder"></param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder
            .ApplyConfiguration(new UserEntityTypeConfiguration())
            .ApplyConfiguration(new RoleEntityTypeConfiguration())
@@ -149,7 +151,5 @@ public sealed class AuthIoContext(
                 }
             ]
         );
-
-        base.OnModelCreating(modelBuilder);
     }
 }

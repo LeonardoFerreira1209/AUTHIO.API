@@ -5,7 +5,7 @@ using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AUTHIO.INFRASTRUCTURE.Repositories.BASE;
+namespace AUTHIO.INFRASTRUCTURE.Repositories.Base;
 
 /// <summary>
 /// Repositório genérico com Entity.

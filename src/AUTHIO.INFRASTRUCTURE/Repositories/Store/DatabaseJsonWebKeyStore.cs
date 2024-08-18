@@ -1,49 +1,35 @@
 using AUTHIO.DOMAIN.Constants;
 using AUTHIO.DOMAIN.Contracts.Jwt;
+using AUTHIO.DOMAIN.Contracts.Repositories;
+using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Store;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Serilog;
 using System.Collections.ObjectModel;
 
-namespace AUTHIO.INFRASTRUCTURE.Store;
+namespace AUTHIO.INFRASTRUCTURE.Repositories.Store;
 
 /// <summary>
-/// Armazenamento de chaves na base.
+/// Armazenamento de chaves na Base.
 /// </summary>
 /// <typeparam name="TContext"></typeparam>
 /// <param name="context"></param>
-/// <param name="logger"></param>
 /// <param name="options"></param>
 /// <param name="memoryCache"></param>
-public class DatabaseJsonWebKeyStore<TContext>(
+public class DataBaseJsonWebKeyStore<TContext>(
     TContext context,
-    ILogger<DatabaseJsonWebKeyStore<TContext>> logger,
     IOptions<JwtOptions> options,
-    IMemoryCache memoryCache) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
+    IMemoryCache memoryCache,
+    IContextService contextService,
+    ITenantRepository tenantRepository) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
 {
-    /// <summary>
-    /// Contexto.
-    /// </summary>
-    private readonly TContext _context = context;
-
-    /// <summary>
-    /// Opções de Jwt.
-    /// </summary>
-    private readonly IOptions<JwtOptions> _options = options;
-
-    /// <summary>
-    /// Cache de memoria.
-    /// </summary>
-    private readonly IMemoryCache _memoryCache = memoryCache;
-
-    /// <summary>
-    /// Logs.
-    /// </summary>
-    private readonly ILogger<DatabaseJsonWebKeyStore<TContext>> _logger = logger;
+    private readonly Guid? _currentTenantId 
+        = tenantRepository.GetAsync(
+            x => x.TenantConfiguration.TenantKey == contextService.GetCurrentTenantKey())?.Result?.Id;
 
     /// <summary>
     /// Armazenar.
@@ -52,11 +38,11 @@ public class DatabaseJsonWebKeyStore<TContext>(
     /// <returns></returns>
     public async Task Store(KeyMaterial securityParamteres)
     {
-        await _context.SecurityKeys.AddAsync(securityParamteres);
+        await context.SecurityKeys.AddAsync(securityParamteres);
 
-        _logger.LogInformation($"Saving new SecurityKeyWithPrivate {securityParamteres.Id}", typeof(TContext).Name);
+        Log.Information($"Saving new SecurityKeyWithPrivate {securityParamteres.Id}", typeof(TContext).Name);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         ClearCache();
     }
@@ -67,21 +53,32 @@ public class DatabaseJsonWebKeyStore<TContext>(
     /// <returns></returns>
     public async Task<KeyMaterial> GetCurrent()
     {
-        if (!_memoryCache.TryGetValue(JwkContants.CurrentJwkCache, out KeyMaterial credentials))
+        string cacheKey =
+            $"{JwkContants.CurrentJwkCache}{_currentTenantId?.ToString()}";
+
+        if (!memoryCache.TryGetValue(
+            cacheKey, 
+            out KeyMaterial credentials))
         {
-            credentials = await _context.SecurityKeys.Where(
-                X => X.IsRevoked == false)
+            IQueryable<KeyMaterial> query 
+                = context.SecurityKeys;
+
+            if(_currentTenantId.HasValue)
+                query = query.Where(
+                    x => x.TenantId == _currentTenantId);
+
+            credentials = await query.Where(keyMa => !keyMa.IsRevoked)
                     .OrderByDescending(d => d.CreationDate)
                         .AsNoTrackingWithIdentityResolution()
-                        .FirstOrDefaultAsync();
+                            .FirstOrDefaultAsync();
 
             // Set cache options.
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 // Keep in cache for this time, reset time if accessed.
-                .SetSlidingExpiration(_options.Value.CacheTime);
+                .SetSlidingExpiration(options.Value.CacheTime);
 
             if (credentials != null)
-                _memoryCache.Set(JwkContants.CurrentJwkCache, credentials, cacheEntryOptions);
+                memoryCache.Set(cacheKey, credentials, cacheEntryOptions);
 
             return credentials;
         }
@@ -96,22 +93,26 @@ public class DatabaseJsonWebKeyStore<TContext>(
     /// <returns></returns>
     public async Task<ReadOnlyCollection<KeyMaterial>> GetLastKeys(int quantity = 5)
     {
-        if (!_memoryCache.TryGetValue(
-            JwkContants.JwksCache, out ReadOnlyCollection<KeyMaterial> keys)) {
+        string cacheKey =
+            $"{JwkContants.JwksCache}{_currentTenantId?.ToString()}";
 
-            keys = _context.SecurityKeys.OrderByDescending(
+        if (!memoryCache.TryGetValue(
+            cacheKey, out ReadOnlyCollection<KeyMaterial> keys))
+        {
+
+            keys = context.SecurityKeys.OrderByDescending(
                 d => d.CreationDate).Take(quantity)
                     .AsNoTrackingWithIdentityResolution().ToList().AsReadOnly();
 
             // Set cache options.
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 // Keep in cache for this time, reset time if accessed.
-                .SetSlidingExpiration(_options.Value.CacheTime);
+                .SetSlidingExpiration(options.Value.CacheTime);
 
             if (keys.Count != 0)
-                _memoryCache.Set(JwkContants.JwksCache, keys, cacheEntryOptions);
+                memoryCache.Set(cacheKey, keys, cacheEntryOptions);
 
-           return await Task.FromResult(keys);
+            return await Task.FromResult(keys);
         }
 
         return await Task.FromResult(keys); ;
@@ -122,8 +123,8 @@ public class DatabaseJsonWebKeyStore<TContext>(
     /// </summary>
     /// <param name="keyId"></param>
     /// <returns></returns>
-    public Task<KeyMaterial> Get(string keyId) 
-        => _context.SecurityKeys.FirstOrDefaultAsync(f => f.KeyId == keyId);
+    public Task<KeyMaterial> Get(string keyId)
+        => context.SecurityKeys.FirstOrDefaultAsync(f => f.KeyId == keyId);
 
     /// <summary>
     /// Limpar.
@@ -131,10 +132,10 @@ public class DatabaseJsonWebKeyStore<TContext>(
     /// <returns></returns>
     public async Task Clear()
     {
-        foreach (var securityKeyWithPrivate in _context.SecurityKeys)
-            _context.SecurityKeys.Remove(securityKeyWithPrivate);
+        foreach (var securityKeyWithPrivate in context.SecurityKeys)
+            context.SecurityKeys.Remove(securityKeyWithPrivate);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         ClearCache();
     }
@@ -153,11 +154,11 @@ public class DatabaseJsonWebKeyStore<TContext>(
 
         securityKeyWithPrivate.Revoke(reason);
 
-        _context.Attach(securityKeyWithPrivate);
+        context.Attach(securityKeyWithPrivate);
 
-        _context.SecurityKeys.Update(securityKeyWithPrivate);
+        context.SecurityKeys.Update(securityKeyWithPrivate);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         ClearCache();
     }
@@ -167,8 +168,14 @@ public class DatabaseJsonWebKeyStore<TContext>(
     /// </summary>
     private void ClearCache()
     {
-        _memoryCache.Remove(JwkContants.JwksCache);
+        string cacheKey =
+            $"{JwkContants.JwksCache}{_currentTenantId?.ToString()}";
 
-        _memoryCache.Remove(JwkContants.CurrentJwkCache);
+        string currentCacheKey =
+           $"{JwkContants.CurrentJwkCache}{_currentTenantId?.ToString()}";
+
+        memoryCache.Remove(cacheKey);
+
+        memoryCache.Remove(currentCacheKey);
     }
 }

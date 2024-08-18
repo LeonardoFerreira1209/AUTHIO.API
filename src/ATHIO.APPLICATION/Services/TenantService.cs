@@ -394,7 +394,8 @@ public class TenantService(
                                                   EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)));
 
                                     await eventRepository.CreateAsync(CreateEvent
-                                       .CreateEmailEvent(jsonBody)).ContinueWith(async (task) => {
+                                       .CreateEmailEvent(jsonBody)).ContinueWith(async (task) =>
+                                       {
                                            await unitOfWork.CommitAsync();
                                            await transaction.CommitAsync();
                                        }).Unwrap();

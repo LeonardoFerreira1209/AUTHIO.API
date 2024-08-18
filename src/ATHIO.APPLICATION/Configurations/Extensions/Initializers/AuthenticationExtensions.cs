@@ -3,15 +3,14 @@ using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Store;
 using AUTHIO.INFRASTRUCTURE.Context;
+using AUTHIO.INFRASTRUCTURE.Repositories.Store;
 using AUTHIO.INFRASTRUCTURE.Services;
-using AUTHIO.INFRASTRUCTURE.Store;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
 
@@ -48,7 +47,7 @@ public static class AuthenticationExtensions
         services
             .AddJwksManager()
             .UseJwtValidation()
-            .PersistKeysToDatabaseStore<AuthIoContext>();
+            .PersistKeysToDataBaseStore<AuthIoContext>();
 
         return services;
     }
@@ -96,9 +95,9 @@ public static class AuthenticationExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="credential">The credential.</param>
     /// <returns></returns>
-    public static IJwksBuilder PersistKeysToDatabaseStore<TContext>(this IJwksBuilder builder) where TContext : DbContext, ISecurityKeyContext
+    public static IJwksBuilder PersistKeysToDataBaseStore<TContext>(this IJwksBuilder builder) where TContext : DbContext, ISecurityKeyContext
     {
-        builder.Services.AddScoped<IJsonWebKeyStore, DatabaseJsonWebKeyStore<TContext>>();
+        builder.Services.AddScoped<IJsonWebKeyStore, DataBaseJsonWebKeyStore<TContext>>();
 
         return builder;
     }
