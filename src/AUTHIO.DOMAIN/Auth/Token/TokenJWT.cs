@@ -29,11 +29,6 @@ public class TokenJWT
     }
 
     /// <summary>
-    /// Validade do token
-    /// </summary>
-    public DateTime ValidTo => token.ValidTo;
-
-    /// <summary>
     /// Valor do token.
     /// </summary>
     public string Token => new JsonWebTokenHandler().CreateToken(token);
