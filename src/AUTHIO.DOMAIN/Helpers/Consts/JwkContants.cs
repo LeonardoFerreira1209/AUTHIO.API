@@ -1,4 +1,4 @@
-﻿namespace AUTHIO.DOMAIN.Constants;
+﻿namespace AUTHIO.DOMAIN.Helpers.Consts;
 
 /// <summary>
 /// Constants do Jwks
