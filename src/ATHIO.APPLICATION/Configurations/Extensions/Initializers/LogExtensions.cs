@@ -25,7 +25,7 @@ public static class LogExtensions
     /// <returns></returns>
     public static IServiceCollection ConfigureSerilog(this IServiceCollection services, IConfiguration configurations)
     {
-        string connectionString = Environment.GetEnvironmentVariable("MYSQL_DATABase") ?? configurations
+        string connectionString = Environment.GetEnvironmentVariable("MYSQL_DATABASE") ?? configurations
                    .GetConnectionString("DataBase");
 
         Log.Logger = new LoggerConfiguration()
