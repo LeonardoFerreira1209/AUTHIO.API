@@ -2,7 +2,7 @@
 using AUTHIO.DOMAIN.Dtos.Model;
 using System.Collections.ObjectModel;
 
-namespace AUTHIO.INFRASTRUCTURE.Store;
+namespace AUTHIO.INFRASTRUCTURE.Repositories.Store;
 
 /// <summary>
 /// Armazenamento de chaves em memoria.
@@ -31,7 +31,7 @@ public class InMemoryStore : IJsonWebKeyStore
     /// Buscar atual.
     /// </summary>
     /// <returns></returns>
-    public Task<KeyMaterial> GetCurrent() 
+    public Task<KeyMaterial> GetCurrent()
         => Task.FromResult(_store.OrderByDescending(s => s.CreationDate).FirstOrDefault());
 
     /// <summary>
@@ -79,7 +79,7 @@ public class InMemoryStore : IJsonWebKeyStore
     /// </summary>
     /// <param name="keyId"></param>
     /// <returns></returns>
-    public Task<KeyMaterial> Get(string keyId) 
+    public Task<KeyMaterial> Get(string keyId)
         => Task.FromResult(_store.FirstOrDefault(w => w.KeyId == keyId));
 
     /// <summary>

@@ -26,7 +26,7 @@ public class TokenJwtBuilder
     /// <summary>
     /// Claims
     /// </summary>
-    private readonly List<Claim> claims 
+    private readonly List<Claim> claims
         = []; private readonly List<Claim> roles = [];
 
     /// <summary>
@@ -185,20 +185,23 @@ public class TokenJwtBuilder
             Log.Information($"[LOG INFORMATION] - Token gerado com sucesso.\n");
 
             return new TokenJWT(
-                new JwtSecurityToken(
-                    issuer: issuer,
-                    audience: audience,
-                    claims: baseClaims,
-                    expires: DateTime.Now.AddMinutes(expiryInMinutes),
-                    signingCredentials: key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)),
-
-                new JwtSecurityToken(
-                    issuer: issuer,
-                    audience: audience,
-                    claims: [new Claim(JwtRegisteredClaimNames.UniqueName, username)],
-                    expires: DateTime.Now.AddHours(expiryRefreshTokenInHours),
-                    signingCredentials: key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256))
-                );
+                new SecurityTokenDescriptor
+                {
+                    Issuer = issuer,
+                    Audience = audience,
+                    Subject = new ClaimsIdentity(baseClaims),
+                    Expires = DateTime.Now.AddMinutes(expiryInMinutes),
+                    SigningCredentials = key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
+                },
+                new SecurityTokenDescriptor
+                {
+                    Issuer = issuer,
+                    Audience = audience,
+                    Subject = new ClaimsIdentity([new Claim(JwtRegisteredClaimNames.UniqueName, username)]),
+                    Expires = DateTime.Now.AddMinutes(expiryInMinutes),
+                    SigningCredentials = key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
+                }
+            );
         }
         catch (Exception exception)
         {

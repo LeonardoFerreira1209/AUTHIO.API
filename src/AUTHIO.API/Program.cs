@@ -38,7 +38,7 @@ try
         .ConfigureLanguage()
         .ConfigureFixedRateLimit()
         .ConfigureDependencies(configurations)
-        .ConfigureDatabase(configurations)
+        .ConfigureDataBase(configurations)
         .ConfigureIdentityServer(configurations)
         .ConfigureAuthentication()
         .ConfigureApplicationCookie()

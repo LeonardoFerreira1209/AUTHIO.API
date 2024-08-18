@@ -58,6 +58,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false),
                     KeyId = table.Column<string>(type: "longtext", nullable: true),
+                    TenantId = table.Column<Guid>(type: "char(36)", nullable: true),
                     Type = table.Column<string>(type: "longtext", nullable: true),
                     Parameters = table.Column<string>(type: "varchar(8000)", maxLength: 8000, nullable: false),
                     IsRevoked = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -481,17 +482,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856"), null, new DateTime(2024, 8, 13, 12, 38, 38, 397, DateTimeKind.Local).AddTicks(2384), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a"), null, new DateTime(2024, 8, 18, 1, 45, 23, 130, DateTimeKind.Local).AddTicks(1994), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") },
-                    { 2, "Tenants", "GET", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") },
-                    { 3, "Tenants", "PATCH", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") },
-                    { 4, "Tenants", "PUT", new Guid("7d3d2cf1-c234-4bb0-8c1f-48e3f1c8f856") }
+                    { 1, "Tenants", "POST", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
+                    { 2, "Tenants", "GET", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
+                    { 3, "Tenants", "PATCH", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
+                    { 4, "Tenants", "PUT", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -538,8 +539,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
-                column: "NormalizedUserName",
-                unique: true);
+                column: "NormalizedUserName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LockoutIdentityConfigurations_TenantIdentityConfigurationId",

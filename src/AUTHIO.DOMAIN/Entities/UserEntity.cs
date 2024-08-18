@@ -1,7 +1,5 @@
-﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Enums;
+﻿using AUTHIO.DOMAIN.Enums;
 using Microsoft.AspNetCore.Identity;
-using System.Linq.Expressions;
 
 namespace AUTHIO.DOMAIN.Entities;
 

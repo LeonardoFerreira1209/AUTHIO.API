@@ -10,10 +10,10 @@ using AUTHIO.DOMAIN.Entities;
 using AUTHIO.INFRASTRUCTURE.Factories;
 using AUTHIO.INFRASTRUCTURE.Providers;
 using AUTHIO.INFRASTRUCTURE.Repositories;
-using AUTHIO.INFRASTRUCTURE.Repositories.BASE;
+using AUTHIO.INFRASTRUCTURE.Repositories.Base;
+using AUTHIO.INFRASTRUCTURE.Repositories.Store;
 using AUTHIO.INFRASTRUCTURE.ServiceBus;
 using AUTHIO.INFRASTRUCTURE.Services;
-using AUTHIO.INFRASTRUCTURE.Services.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
