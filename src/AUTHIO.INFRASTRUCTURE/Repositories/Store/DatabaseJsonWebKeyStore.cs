@@ -27,9 +27,13 @@ public class DataBaseJsonWebKeyStore<TContext>(
     IContextService contextService,
     ITenantRepository tenantRepository) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
 {
+    /// <summary>
+    /// Id do tenant atual.
+    /// </summary>
     private readonly Guid? _currentTenantId 
         = tenantRepository.GetAsync(
-            x => x.TenantConfiguration.TenantKey == contextService.GetCurrentTenantKey())?.Result?.Id;
+            x => x.TenantConfiguration.TenantKey 
+                == contextService.GetCurrentTenantKey())?.Result?.Id;
 
     /// <summary>
     /// Armazenar.
@@ -54,7 +58,13 @@ public class DataBaseJsonWebKeyStore<TContext>(
     public async Task<KeyMaterial> GetCurrent()
     {
         string cacheKey =
-            $"{JwkContants.CurrentJwkCache}{_currentTenantId?.ToString()}";
+            JwkContants.CurrentJwkCache;
+
+        bool hasCurrentTenantId = 
+            _currentTenantId.HasValue;
+
+        if (hasCurrentTenantId)
+            cacheKey += $".{_currentTenantId}";
 
         if (!memoryCache.TryGetValue(
             cacheKey, 
@@ -63,7 +73,7 @@ public class DataBaseJsonWebKeyStore<TContext>(
             IQueryable<KeyMaterial> query 
                 = context.SecurityKeys;
 
-            if(_currentTenantId.HasValue)
+            if(hasCurrentTenantId)
                 query = query.Where(
                     x => x.TenantId == _currentTenantId);
 
@@ -94,7 +104,13 @@ public class DataBaseJsonWebKeyStore<TContext>(
     public async Task<ReadOnlyCollection<KeyMaterial>> GetLastKeys(int quantity = 5)
     {
         string cacheKey =
-            $"{JwkContants.JwksCache}{_currentTenantId?.ToString()}";
+           JwkContants.CurrentJwkCache;
+
+        bool hasCurrentTenantId =
+            _currentTenantId.HasValue;
+
+        if (hasCurrentTenantId)
+            cacheKey += $".{_currentTenantId}";
 
         if (!memoryCache.TryGetValue(
             cacheKey, out ReadOnlyCollection<KeyMaterial> keys))
@@ -169,10 +185,19 @@ public class DataBaseJsonWebKeyStore<TContext>(
     private void ClearCache()
     {
         string cacheKey =
-            $"{JwkContants.JwksCache}{_currentTenantId?.ToString()}";
+           JwkContants.CurrentJwkCache;
 
         string currentCacheKey =
-           $"{JwkContants.CurrentJwkCache}{_currentTenantId?.ToString()}";
+           JwkContants.CurrentJwkCache;
+
+        bool hasCurrentTenantId =
+            _currentTenantId.HasValue;
+
+        if (hasCurrentTenantId)
+        {
+            cacheKey += $".{_currentTenantId}";
+            currentCacheKey += $".{_currentTenantId}";
+        }
 
         memoryCache.Remove(cacheKey);
 
