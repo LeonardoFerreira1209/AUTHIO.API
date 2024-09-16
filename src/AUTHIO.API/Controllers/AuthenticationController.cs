@@ -16,7 +16,7 @@ namespace AUTHIO.API.Controllers;
 /// </summary>
 /// <param name="featureFlags"></param>
 [ApiController]
-[Route("authentication/api")]
+[Route("api/authentication")]
 public class AuthenticationController(
     IFeatureFlagsService featureFlags, IAuthenticationService authenticationService)
         : BaseController(featureFlags)

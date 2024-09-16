@@ -66,6 +66,11 @@ public class TenantTokenConfigurationEntity : IEntityPrimaryKey<Guid>
     public string Audience { get; set; }
 
     /// <summary>
+    /// Token deve ser encriptado.
+    /// </summary>
+    public bool Encrypted { get; set; }
+
+    /// <summary>
     /// Id do tenant configuration Id.
     /// </summary>
     public Guid TenantConfigurationId { get; set; }

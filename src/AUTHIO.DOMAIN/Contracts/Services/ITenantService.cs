@@ -18,6 +18,15 @@ public interface ITenantService
         CreateTenantRequest createTenantRequest, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Método responsável por atualizar um tenant. 
+    /// </summary>
+    /// <param name="updateTenantRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<ObjectResult> UpdateAsync(
+       UpdateTenantRequest updateTenantRequest, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Recupera todos os tenants com paginação.
     /// </summary>
     /// <param name="filterRequest"></param>

@@ -159,7 +159,7 @@ public class TenantService(
 
                                                                         }).Unwrap();
 
-                                                                    TokenConfigurationRequest tokenConfiguration 
+                                                                    TokenConfigurationRequest tokenConfiguration
                                                                         = createTenantRequest.TokenConfiguration;
 
                                                                     await tenantTokenConfigurationRepository.CreateAsync(
@@ -222,10 +222,63 @@ public class TenantService(
     }
 
     /// <summary>
+    /// Método responsável por atualizar um Tenant.
+    /// </summary>
+    /// <param name="updateTenantRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="NotFoundTenantException"></exception>
+    public async Task<ObjectResult> UpdateAsync(
+       UpdateTenantRequest updateTenantRequest, CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(UpdateAsync)}\n");
+
+        try
+        {
+            await new UpdateTenantRequestValidator()
+                .ValidateAsync(updateTenantRequest, cancellationToken)
+                    .ContinueWith(async (validationTask) =>
+                    {
+                        var validation = validationTask.Result;
+
+                        if (validation.IsValid is false)
+                            await validation.GetValidationErrors();
+
+                    }).Unwrap();
+
+            return await tenantRepository.GetByIdAsync(updateTenantRequest.Id).ContinueWith(
+                async (tenantEntityTask) =>
+                {
+                    var tenant
+                        = tenantEntityTask.Result 
+                        ?? throw new NotFoundTenantException();
+
+                    await tenantRepository.UpdateAsync(
+                        updateTenantRequest
+                            .UpdateEntity(tenant));
+
+                    await unitOfWork.CommitAsync();
+
+                    return new OkObjectResult(
+                        new ApiResponse<TenantResponse>(
+                            true,
+                            HttpStatusCode.OK,
+                            tenant.ToResponse(), [new DadosNotificacao("Tenant atualizado com sucesso!")])
+                        );
+
+                }).Unwrap();
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+        }
+    }
+
+    /// <summary>
     /// Recupera todos os dados de tenants.
     /// </summary>
-    /// <param name="pageNumber"></param>
-    /// <param name="pageSize"></param>
+    /// <param name="filterRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<ObjectResult> GetAllAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
@@ -273,7 +326,7 @@ public class TenantService(
 
                 return response;
 
-            }).Unwrap() ;
+            }).Unwrap();
         }
         catch (Exception exception)
         {
@@ -394,11 +447,9 @@ public class TenantService(
                                                   EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)));
 
                                     await eventRepository.CreateAsync(CreateEvent
-                                       .CreateEmailEvent(jsonBody)).ContinueWith(async (task) =>
-                                       {
-                                           await unitOfWork.CommitAsync();
-                                           await transaction.CommitAsync();
-                                       }).Unwrap();
+                                       .CreateEmailEvent(jsonBody));
+
+                                    await transaction.CommitAsync();
 
                                     return new ObjectResult(
                                         new ApiResponse<UserResponse>(
@@ -410,7 +461,7 @@ public class TenantService(
 
                     }).Unwrap();
             }
-            catch   
+            catch
             {
                 transaction.Rollback(); throw;
             }

@@ -20,7 +20,7 @@ namespace AUTHIO.API.Controllers;
 /// <param name="featureFlags"></param>
 /// <param name="tenantService"></param>
 [Controller]
-[Route("tenant/api")]
+[Route("api/tenant")]
 public class TenantController(
     IFeatureFlagsService featureFlags, ITenantService tenantService)
         : BaseController(featureFlags)
@@ -34,7 +34,7 @@ public class TenantController(
     /// <param name="createTenantRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("register")]
+    [HttpPost]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "POST")]
     [SwaggerOperation(Summary = "Registrar tenant", Description = "Método responsável por registrar um tenant!")]
@@ -56,12 +56,39 @@ public class TenantController(
     }
 
     /// <summary>
+    /// Endpoint responsável pela atualização de um tenant.
+    /// </summary>
+    /// <param name="createTenantRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [EnableRateLimiting("fixed")]
+    [CustomAuthorize(Claims.Tenants, "PUT")]
+    [SwaggerOperation(Summary = "Atualizar tenant", Description = "Método responsável por atualizar um tenant!")]
+    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateAsync(
+        [FromBody] UpdateTenantRequest updateTenantRequest,
+        CancellationToken cancellationToken)
+    {
+        using (LogContext.PushProperty("Controller", "TenantController"))
+        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(updateTenantRequest)))
+        using (LogContext.PushProperty("Metodo", "UpdateAsync"))
+        {
+            return await ExecuteAsync(nameof(UpdateAsync),
+                 () => _tenantService.UpdateAsync(
+                     updateTenantRequest, cancellationToken), "Atualizar tenant.");
+        }
+    }
+
+    /// <summary>
     /// Endpoint responsável por buscar os tenants do usuário logado.
     /// </summary>
     /// <param name="filterRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet("getall")]
+    [HttpGet]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "GET")]
     [SwaggerOperation(Summary = "Buscar todos os tenants", Description = "Método responsável por buscar todos os tenants do usuário!")]
@@ -87,9 +114,9 @@ public class TenantController(
     /// <param name="tenantKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("register/user")]
+    [HttpPatch("user")]
     [EnableRateLimiting("fixed")]
-    [CustomAuthorize(Claims.Tenants, "PUT")]
+    [CustomAuthorize(Claims.Tenants, "PATCH")]
     [SwaggerOperation(Summary = "Registrar usuário no tenant", Description = "Método responsável por registrar um usuário no tenant!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]

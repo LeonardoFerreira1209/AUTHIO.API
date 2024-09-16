@@ -8,12 +8,12 @@ public sealed class CreateTenantRequest
     /// <summary>
     /// Nomde do tenant.
     /// </summary>
-    public required string Name { get; set; } = null;
+    public required string Name { get; set; }
 
     /// <summary>
     /// Descrição do tenant.
     /// </summary>
-    public string Description { get; set; } = null;
+    public string Description { get; set; }
 
     /// <summary>
     /// Email do tenant.
@@ -42,4 +42,4 @@ public sealed class CreateTenantRequest
 /// <param name="SecurityKey"></param>
 /// <param name="Issuer"></param>
 /// <param name="Audience"></param>
-public record TokenConfigurationRequest(string SecurityKey, string Issuer, string Audience);
+public record TokenConfigurationRequest(string SecurityKey, string Issuer, string Audience, bool Encrypted);
