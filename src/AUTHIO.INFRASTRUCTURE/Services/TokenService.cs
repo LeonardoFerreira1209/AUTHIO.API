@@ -126,7 +126,8 @@ public class TokenService(
                               .AddExpiry(appsettings.Value.Auth.ExpiresIn)
                                   .AddRoles(roles)
                                       .AddClaims(claims)
-                                          .Builder(userEntity, key));
+                                        .IsEncrypyted(tenantTokenConfiguration?.Encrypted ?? false)
+                                            .Builder(userEntity, key));
     }
 
     /// <summary>

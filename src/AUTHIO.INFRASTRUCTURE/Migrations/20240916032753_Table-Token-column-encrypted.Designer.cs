@@ -3,6 +3,7 @@ using System;
 using AUTHIO.INFRASTRUCTURE.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    partial class AuthIoContextModelSnapshot : ModelSnapshot
+    [Migration("20240916032753_Table-Token-column-encrypted")]
+    partial class TableTokencolumnencrypted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

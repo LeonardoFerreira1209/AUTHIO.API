@@ -37,7 +37,12 @@ public class TokenJwtBuilder
     /// <summary>
     /// Tempo de expiração do refresh token.
     /// </summary>
-    private readonly int expiryRefreshTokenInHours = 24;
+    private int expiryRefreshTokenInHours = 24;
+
+    /// <summary>
+    /// Deve encriptar o token.
+    /// </summary>
+    private bool encrypted = false;
 
     /// <summary>
     /// Método que adiciona o username.
@@ -160,6 +165,18 @@ public class TokenJwtBuilder
     }
 
     /// <summary>
+    ///  Método que adiciona a flag se deve ou não encriptar o token.
+    /// </summary>
+    /// <param name="encrypted"></param>
+    /// <returns></returns>
+    public TokenJwtBuilder IsEncrypyted(bool encrypted)
+    {
+        this.encrypted = encrypted;
+
+        return this;
+    }
+
+    /// <summary>
     /// Método que cria e retorna o token.
     /// </summary>
     /// <returns></returns>
@@ -198,7 +215,7 @@ public class TokenJwtBuilder
                     Issuer = issuer,
                     Audience = audience,
                     Subject = new ClaimsIdentity([new Claim(JwtRegisteredClaimNames.UniqueName, username)]),
-                    Expires = DateTime.Now.AddMinutes(expiryInMinutes),
+                    Expires = DateTime.Now.AddHours(expiryRefreshTokenInHours),
                     SigningCredentials = key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
                 }
             );

@@ -16,7 +16,7 @@ namespace AUTHIO.API.Controllers;
 /// </summary>
 /// <param name="featureFlags"></param>
 [ApiController]
-[Route("user/api")]
+[Route("api/user")]
 public class UserController(
     IFeatureFlagsService featureFlags, IUserService userService)
         : BaseController(featureFlags)
@@ -27,7 +27,7 @@ public class UserController(
     /// <param name="registerUserRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPost("register")]
+    [HttpPost]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Registrar usuário", Description = "Método responsável por registrar um usuário no sistema!")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status201Created)]
