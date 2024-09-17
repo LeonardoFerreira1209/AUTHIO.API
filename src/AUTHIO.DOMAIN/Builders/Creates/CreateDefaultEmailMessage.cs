@@ -21,8 +21,9 @@ public static class CreateDefaultEmailMessage
         string subject, string plainTextContent, string htmlContent, string fromName = "HYPER.IO", string fromEmail = "HYPER.IO@outlook.com")
             => new DefaultEmailMessageBuilder()
                 .AddTo(toName, toEmail)
-                    .AddFrom(fromName, fromEmail)
-                        .AddSubject(subject)
-                            .AddPlainTextContent(plainTextContent)
-                                .AddHtmlContent(htmlContent).Builder();
+                .AddFrom(fromName, fromEmail)
+                .AddSubject(subject)
+                .AddPlainTextContent(plainTextContent)
+                .AddHtmlContent(htmlContent)
+                .Builder();
 }

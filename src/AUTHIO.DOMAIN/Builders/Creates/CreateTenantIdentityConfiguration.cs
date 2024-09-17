@@ -10,11 +10,20 @@ public static class CreateTenantIdentityConfiguration
     /// <summary>
     /// Cria um tenant identity configuration com os dados de cadastro inicial.
     /// </summary>
-    /// <param name="tenantKey"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="tenantConfigurationId"></param>
+    /// <param name="userIdentityConfiguration"></param>
+    /// <param name="passwordIdentityConfiguration"></param>
+    /// <param name="lockoutIdentityConfiguration"></param>
     /// <returns></returns>
-    public static TenantIdentityConfigurationEntity CreateDefault(Guid tenantConfigurationId)
-        => new TenantIdentityConfigurationBuilder()
-                .AddTenantConfigurationId(tenantConfigurationId)
-                    .AddCreated().Builder();
+    public static TenantIdentityConfigurationEntity CreateDefault(Guid tenantConfigurationId,
+        UserIdentityConfigurationEntity userIdentityConfiguration,
+        PasswordIdentityConfigurationEntity passwordIdentityConfiguration,
+        LockoutIdentityConfigurationEntity lockoutIdentityConfiguration)
+    => new TenantIdentityConfigurationBuilder()
+        .AddTenantConfigurationId(tenantConfigurationId)
+        .AddCreated()
+        .AddUserIdentityConfiguration(userIdentityConfiguration)
+        .AddPasswordIdentityConfiguration(passwordIdentityConfiguration)
+        .AddLockoutIdentityConfiguration(lockoutIdentityConfiguration)
+        .Builder();
 }

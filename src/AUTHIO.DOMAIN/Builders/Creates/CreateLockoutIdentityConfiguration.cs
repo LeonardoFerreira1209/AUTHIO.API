@@ -20,8 +20,9 @@ public static class CreateLockoutIdentityConfiguration
     public static LockoutIdentityConfigurationEntity CreateDefault(Guid tenantIdentityConfigurationId)
             => new LockoutIdentityConfigurationBuilder()
                 .AddTenantConfigurationId(tenantIdentityConfigurationId)
-                    .AddCreated(DateTime.Now)
-                        .AddAllowedForNewUsers(true)
-                            .AddMaxFailedAccessAttempts(3)
-                                .AddDefaultLockoutTimeSpan(TimeSpan.FromMinutes(5)).Builder();
+                .AddCreated(DateTime.Now)
+                .AddAllowedForNewUsers(true)
+                .AddMaxFailedAccessAttempts(3)
+                .AddDefaultLockoutTimeSpan(TimeSpan.FromMinutes(5))
+                .Builder();
 }

@@ -42,4 +42,9 @@ public sealed class CreateTenantRequest
 /// <param name="SecurityKey"></param>
 /// <param name="Issuer"></param>
 /// <param name="Audience"></param>
-public record TokenConfigurationRequest(string SecurityKey, string Issuer, string Audience, bool Encrypted);
+/// <param name="Encrypted"></param>
+public record TokenConfigurationRequest(
+    string SecurityKey, 
+    string Issuer, 
+    string Audience, 
+    bool Encrypted);

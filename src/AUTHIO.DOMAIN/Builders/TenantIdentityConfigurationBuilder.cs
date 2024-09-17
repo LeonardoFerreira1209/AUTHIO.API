@@ -7,9 +7,15 @@ namespace AUTHIO.DOMAIN.Builders;
 /// </summary>
 public sealed class TenantIdentityConfigurationBuilder
 {
+    /// <summary>
+    /// Private properties.
+    /// </summary>
     private Guid tenantConfigurationId;
     private DateTime? updated = null;
     private DateTime created;
+    private UserIdentityConfigurationEntity userIdentityConfiguration;
+    private PasswordIdentityConfigurationEntity passwordIdentityConfiguration;
+    private LockoutIdentityConfigurationEntity lockoutIdentityConfiguration;
 
     /// <summary>
     /// Adiciona um Tenant configuration Id.
@@ -52,9 +58,51 @@ public sealed class TenantIdentityConfigurationBuilder
     }
 
     /// <summary>
+    /// Adiciona Identity user configuration.
+    /// </summary>
+    /// <param name="userIdentityConfiguration"></param>
+    /// <returns></returns>
+    public TenantIdentityConfigurationBuilder AddUserIdentityConfiguration(UserIdentityConfigurationEntity userIdentityConfiguration)
+    {
+        this.userIdentityConfiguration = userIdentityConfiguration;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona Identity password configuration.
+    /// </summary>
+    /// <param name="passwordIdentityConfiguration"></param>
+    /// <returns></returns>
+    public TenantIdentityConfigurationBuilder AddPasswordIdentityConfiguration(PasswordIdentityConfigurationEntity passwordIdentityConfiguration)
+    {
+        this.passwordIdentityConfiguration = passwordIdentityConfiguration;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona Identity lockout configuration.
+    /// </summary>
+    /// <param name="lockoutIdentityConfiguration"></param>
+    /// <returns></returns>
+    public TenantIdentityConfigurationBuilder AddLockoutIdentityConfiguration(LockoutIdentityConfigurationEntity lockoutIdentityConfiguration)
+    {
+        this.lockoutIdentityConfiguration = lockoutIdentityConfiguration;
+
+        return this;
+    }
+
+    /// <summary>
     /// Cria a entidade.
     /// </summary>
     /// <returns></returns>
     public TenantIdentityConfigurationEntity Builder()
-        => new(tenantConfigurationId, created, updated);
+        => new(tenantConfigurationId, 
+            created, 
+            updated,
+            userIdentityConfiguration,
+            passwordIdentityConfiguration,
+            lockoutIdentityConfiguration
+        );
 }

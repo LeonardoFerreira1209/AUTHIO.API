@@ -17,15 +17,15 @@ public static class CreateUser
     public static UserEntity CreateUserSystem(this RegisterUserRequest registerUserRequest)
         => new UserBuilder()
             .AddFirstName(registerUserRequest.FirstName)
-                .AddUserName(registerUserRequest.UserName)
-                    .AddLastName(registerUserRequest.LastName)
-                        .AddEmail(registerUserRequest.Email)
-                            .AddPhoneNumber(registerUserRequest.PhoneNumber)
-                                .AddCreated(DateTime.Now)
-                                    .AddEmailConfirmed(true)
-                                        .AddStatus(Status.Ativo)
-                                            .AddSystem(true)
-                                              .Builder();
+            .AddUserName(registerUserRequest.UserName)
+            .AddLastName(registerUserRequest.LastName)
+            .AddEmail(registerUserRequest.Email)
+            .AddPhoneNumber(registerUserRequest.PhoneNumber)
+            .AddCreated(DateTime.Now)
+            .AddEmailConfirmed(true)
+            .AddStatus(Status.Ativo)
+            .AddSystem(true)
+            .Builder();
 
     /// <summary>
     /// Constroi um usuário de tenants.
@@ -35,14 +35,14 @@ public static class CreateUser
     /// <returns></returns>
     public static UserEntity CreateUserTenant(this RegisterUserRequest registerUserRequest, Guid tenantId)
        => new UserBuilder()
-           .AddFirstName(registerUserRequest.FirstName)
-               .AddUserName(registerUserRequest.UserName)
-                   .AddLastName(registerUserRequest.LastName)
-                       .AddEmail(registerUserRequest.Email)
-                           .AddPhoneNumber(registerUserRequest.PhoneNumber)
-                               .AddCreated(DateTime.Now)
-                                   .AddEmailConfirmed(true)
-                                       .AddStatus(Status.Ativo)
-                                          .AddTenantId(tenantId)
-                                             .Builder();
+            .AddFirstName(registerUserRequest.FirstName)
+            .AddUserName(registerUserRequest.UserName)
+            .AddLastName(registerUserRequest.LastName)
+            .AddEmail(registerUserRequest.Email)
+            .AddPhoneNumber(registerUserRequest.PhoneNumber)
+            .AddCreated(DateTime.Now)
+            .AddEmailConfirmed(true)
+            .AddStatus(Status.Ativo)
+            .AddTenantId(tenantId)
+            .Builder();
 }

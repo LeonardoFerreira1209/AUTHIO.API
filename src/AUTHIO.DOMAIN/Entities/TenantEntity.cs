@@ -16,6 +16,20 @@ public class TenantEntity : IEntityBase
         Roles = [];
     }
 
+    public TenantEntity(Guid userId, 
+        DateTime created, DateTime? updated,
+        Status status, string name, string description,
+        TenantConfigurationEntity tenantConfiguration)
+    {
+        UserId = userId;
+        Created = created;
+        Updated = updated;
+        Status = status;
+        Name = name;
+        Description = description;
+        TenantConfiguration = tenantConfiguration;
+    }
+
     /// <summary>
     /// Id.
     /// </summary>

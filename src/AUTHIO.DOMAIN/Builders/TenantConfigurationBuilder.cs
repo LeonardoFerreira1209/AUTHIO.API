@@ -11,6 +11,9 @@ public sealed class TenantConfigurationBuilder
     private Guid tenantId;
     private DateTime? updated = null;
     private DateTime created;
+    private TenantIdentityConfigurationEntity tenantIdentityConfiguration;
+    private TenantEmailConfigurationEntity tenantEmailConfiguration;
+    private TenantTokenConfigurationEntity tenantTokenConfiguration;
 
     /// <summary>
     /// Adiciona uma tenantKey.
@@ -50,7 +53,6 @@ public sealed class TenantConfigurationBuilder
         return this;
     }
 
-
     /// <summary>
     /// Adiciona a data de atualização.
     /// </summary>
@@ -66,9 +68,50 @@ public sealed class TenantConfigurationBuilder
     }
 
     /// <summary>
+    /// Adiciona Tenant identity configuration.
+    /// </summary>
+    /// <param name="tenantIdentityConfiguration"></param>
+    /// <returns></returns>
+    public TenantConfigurationBuilder AddTenantIdentityConfiguration(TenantIdentityConfigurationEntity tenantIdentityConfiguration)
+    {
+        this.tenantIdentityConfiguration = tenantIdentityConfiguration;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona Tenant email configuration.
+    /// </summary>
+    /// <param name="tenantEmailConfiguration"></param>
+    /// <returns></returns>
+    public TenantConfigurationBuilder AddTenantEmailConfiguration(TenantEmailConfigurationEntity tenantEmailConfiguration)
+    {
+        this.tenantEmailConfiguration = tenantEmailConfiguration;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona Tenant token configuration.
+    /// </summary>
+    /// <param name="tenantTokenConfiguration"></param>
+    /// <returns></returns>
+    public TenantConfigurationBuilder AddTenantTokenConfiguration(TenantTokenConfigurationEntity tenantTokenConfiguration)
+    {
+        this.tenantTokenConfiguration = tenantTokenConfiguration;
+
+        return this;
+    }
+
+    /// <summary>
     /// Cria a entidade.
     /// </summary>
     /// <returns></returns>
     public TenantConfigurationEntity Builder()
-        => new(tenantKey, tenantId, created, updated);
+        => new(tenantKey, tenantId, 
+            created, updated,
+            tenantIdentityConfiguration, 
+            tenantEmailConfiguration, 
+            tenantTokenConfiguration
+        );
 }

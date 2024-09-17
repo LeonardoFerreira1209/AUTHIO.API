@@ -1,7 +1,7 @@
-﻿using AUTHIO.DOMAIN.Dtos.Request;
+﻿using AUTHIO.DOMAIN.Builders.Creates;
+using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Entities;
-using AUTHIO.DOMAIN.Enums;
 
 namespace AUTHIO.DOMAIN.Helpers.Extensions;
 
@@ -13,17 +13,41 @@ public static class TenantExtensions
     /// <summary>
     /// Transforma created request para entity.
     /// </summary>
-    /// <param name="tenantProvisionRequest"></param>
+    /// <param name="createTenantRequest"></param>
+    /// <param name="userId"></param>
     /// <returns></returns>
     public static TenantEntity ToEntity(this CreateTenantRequest createTenantRequest, Guid userId)
-        => new()
-        {
-            Name = createTenantRequest.Name,
-            Description = createTenantRequest.Description,
-            Status = Status.Ativo,
-            Created = DateTime.Now,
-            UserId = userId
-        };
+        => CreateTenant.CreateDefault(
+            userId,
+            createTenantRequest.Name,
+            createTenantRequest.Description,
+            CreateTenantConfiguration.CreateDefault(
+                Guid.Empty,
+                CreateTenantIdentityConfiguration.CreateDefault(
+                    Guid.Empty,
+                    CreateUserIdentityConfiguration.CreateDefault(Guid.Empty),
+                    CreatePasswordIdentityConfiguration.CreateDefault(Guid.Empty),
+                    CreateLockoutIdentityConfiguration.CreateDefault(Guid.Empty)
+                ),
+                CreateTenantEmailConfiguration.CreateDefault(
+                    Guid.Empty,
+                    createTenantRequest.Name,
+                    createTenantRequest.Email,
+                    true,
+                    CreateSendGridConfiguration.CreateDefault(
+                        Guid.Empty,
+                        createTenantRequest.SendGridApiKey,
+                        createTenantRequest.WelcomeTemplateId
+                    )
+                ),
+                CreateTenantTokenConfiguration.CreateDefault(
+                    Guid.Empty,
+                    createTenantRequest?.TokenConfiguration?.SecurityKey,
+                    createTenantRequest?.TokenConfiguration?.Issuer,
+                    createTenantRequest?.TokenConfiguration?.Audience
+                )
+            )
+        );
 
     /// <summary>
     /// Atualiza a entidade de Tenant.

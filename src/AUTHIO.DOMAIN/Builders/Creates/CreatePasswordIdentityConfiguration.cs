@@ -14,13 +14,13 @@ public static class CreatePasswordIdentityConfiguration
     /// <returns></returns>
     public static PasswordIdentityConfigurationEntity CreateDefault(Guid tenantConfigurationId)
         => new PasswordIdentityConfigurationBuilder()
-                .AddRequiredLength(15)
-                    .AddRequiredUniqueChars(1)
-                        .AddRequireNonAlphanumeric(true)
-                            .AddRequireLowercase(true)
-                                .AddRequireUppercase(true)
-                                    .AddRequireDigit(true)
-                                        .AddTenantIdentityConfigurationId(tenantConfigurationId)
-                                            .AddCreated()
-                                                .Builder();
+            .AddRequiredLength(15)
+            .AddRequiredUniqueChars(1)
+            .AddRequireNonAlphanumeric(true)
+            .AddRequireLowercase(true)
+            .AddRequireUppercase(true)
+            .AddRequireDigit(true)
+            .AddTenantIdentityConfigurationId(tenantConfigurationId)
+            .AddCreated()
+            .Builder();
 }
