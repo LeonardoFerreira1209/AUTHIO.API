@@ -22,12 +22,18 @@ public class TenantConfigurationEntity : IEntityPrimaryKey<Guid>, IEntityTenant
     /// <param name="updated"></param>
     public TenantConfigurationEntity(
         string tenantKey, Guid tenantId,
-        DateTime created, DateTime? updated)
+        DateTime created, DateTime? updated,
+        TenantIdentityConfigurationEntity tenantIdentityConfiguration,
+        TenantEmailConfigurationEntity tenantEmailConfiguration,
+        TenantTokenConfigurationEntity tenantTokenConfiguration)
     {
         TenantKey = tenantKey;
         TenantId = tenantId;
         Created = created;
         Updated = updated;
+        TenantIdentityConfiguration = tenantIdentityConfiguration;
+        TenantEmailConfiguration = tenantEmailConfiguration;
+        TenantTokenConfiguration = tenantTokenConfiguration;
     }
 
     /// <summary>

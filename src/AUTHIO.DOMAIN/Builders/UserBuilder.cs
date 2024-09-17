@@ -8,6 +8,9 @@ namespace AUTHIO.DOMAIN.Builders;
 /// </summary>
 public sealed class UserBuilder
 {
+    /// <summary>
+    /// Private properties.
+    /// </summary>
     private string firstName, userName, lastName, phoneNumber, email;
     private DateTime created;
     private DateTime? updated;
@@ -51,25 +54,26 @@ public sealed class UserBuilder
 
         return this;
     }
-
     /// <summary>
-    /// Adiciona data de criação.
+    /// Adiciona a data de criação.
     /// </summary>
     /// <param name="created"></param>
     /// <returns></returns>
-    public UserBuilder AddCreated(DateTime created)
+    public UserBuilder AddCreated(DateTime? created = null)
     {
-        this.created = created;
+        this.created
+            = created
+            ?? DateTime.Now;
 
         return this;
     }
 
     /// <summary>
-    /// Adiciona data de atualização.
+    /// Adiciona a data de atualização.
     /// </summary>
     /// <param name="updated"></param>
     /// <returns></returns>
-    public UserBuilder AddUpdated(DateTime? updated)
+    public UserBuilder AddUpdated(DateTime? updated = null)
     {
         this.updated
            = updated
@@ -157,5 +161,9 @@ public sealed class UserBuilder
     /// <returns></returns>
     public UserEntity Builder() => new(
         firstName, lastName, userName,
-        email, phoneNumber, status, created, emailConfirmed, updated, tenantId, system);
+        email, phoneNumber, 
+        status, created, 
+        emailConfirmed, updated, 
+        tenantId, system
+    );
 }

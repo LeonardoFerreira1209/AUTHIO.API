@@ -31,30 +31,33 @@ namespace AUTHIO.APPLICATION.Services;
 /// <summary>
 /// Classe de serviço de Tenants.
 /// </summary>
-/// <remarks>
-/// ctor
-/// </remarks>
+/// <param name="appSettings"></param>
+/// <param name="unitOfWork"></param>
+/// <param name="tenantRepository"></param>
+/// <param name="eventRepository"></param>
+/// <param name="contextService"></param>
+/// <param name="emailProviderFactory"></param>
+/// <param name="cachingService"></param>
+/// <param name="customUserManager"></param>
 public class TenantService(
     IOptions<AppSettings> appSettings,
     IUnitOfWork<AuthIoContext> unitOfWork,
     ITenantRepository tenantRepository,
-    ITenantConfigurationRepository tenantConfigurationRepository,
-    ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
-    IUserIdentityConfigurationRepository userIdentityConfigurationRepository,
-    IPasswordIdentityConfigurationRepository passwordIdentityConfigurationRepository,
-    ILockoutIdentityConfigurationRepository lockoutIdentityConfigurationRepository,
-    ITenantEmailConfigurationRepository tenantEmailConfigurationRepository,
-    ITenantTokenConfigurationRepository tenantTokenConfigurationRepository,
-    ISendGridConfigurationRepository sendGridConfigurationRepository,
     IEventRepository eventRepository,
     IContextService contextService,
     IEmailProviderFactory emailProviderFactory,
     ICachingService cachingService,
     CustomUserManager<UserEntity> customUserManager) : ITenantService
 {
+    /// <summary>
+    /// Email provider.
+    /// </summary>
     private readonly IEmailProvider emailProvider
        = emailProviderFactory.GetSendGridEmailProvider();
 
+    /// <summary>
+    /// SendGrid apikey.
+    /// </summary>
     private readonly string sendGridApiKey
         = Environment.GetEnvironmentVariable("SENDGRID_APIKEY")
                 ?? appSettings.Value.Email.SendGrid.ApiKey;
@@ -91,127 +94,82 @@ public class TenantService(
 
                     }).Unwrap();
 
-            return await tenantRepository.GetAsync(tenant => tenant.Name == createTenantRequest.Name)
-                .ContinueWith(async (tenantResult) =>
+            return await tenantRepository.GetAsync(
+                tenant => tenant.Name.Equals(createTenantRequest.Name))
+                    .ContinueWith(async (tenantResult) => {
+
+                        if (tenantResult.Result is not null)
+                            throw new DuplicatedTenantException(createTenantRequest);
+                            
+                         TenantEntity tenant 
+                            = await tenantRepository
+                                .CreateAsync(
+                                    createTenantRequest.ToEntity(CurrentUserId)
+                                );
+
+                        await unitOfWork.CommitAsync();
+
+                        return new OkObjectResult(
+                            new ApiResponse<TenantResponse>(
+                                true,
+                                HttpStatusCode.Created,
+                                tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")]
+                            )
+                        );
+
+                    }).Unwrap();
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+        }
+    }
+
+    /// <summary>
+    /// Método responsável por atualizar um Tenant.
+    /// </summary>
+    /// <param name="updateTenantRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="NotFoundTenantException"></exception>
+    public async Task<ObjectResult> UpdateAsync(
+       UpdateTenantRequest updateTenantRequest, CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(UpdateAsync)}\n");
+
+        try
+        {
+            await new UpdateTenantRequestValidator()
+                .ValidateAsync(updateTenantRequest, cancellationToken)
+                    .ContinueWith(async (validationTask) =>
+                    {
+                        var validation = validationTask.Result;
+
+                        if (validation.IsValid is false)
+                            await validation.GetValidationErrors();
+
+                    }).Unwrap();
+
+            return await tenantRepository.GetByIdAsync(updateTenantRequest.Id).ContinueWith(
+                async (tenantEntityTask) =>
                 {
-                    if (tenantResult.Result is not null)
-                        throw new DuplicatedTenantException(createTenantRequest);
+                    var tenant
+                        = tenantEntityTask.Result 
+                        ?? throw new NotFoundTenantException();
 
-                    var _transaction
-                        = await unitOfWork.BeginTransactAsync();
+                    await tenantRepository.UpdateAsync(
+                        updateTenantRequest
+                            .UpdateEntity(tenant));
 
-                    try
-                    {
-                        return await tenantRepository.CreateAsync(
-                           createTenantRequest.ToEntity(contextService.GetCurrentUserId()))
-                               .ContinueWith(async (tenantEntityTask) =>
-                               {
-                                   var tenant
-                                       = tenantEntityTask.Result;
+                    await unitOfWork.CommitAsync();
 
-                                   await tenantConfigurationRepository.CreateAsync(
-                                        CreateTenantConfiguration.CreateDefault(
-                                            tenant.Id)).ContinueWith(
-                                               async (tenantConfigurationEntityTask) =>
-                                               {
-                                                   var tenantConfiguration
-                                                        = tenantConfigurationEntityTask.Result;
-
-                                                   await tenantIdentityConfigurationRepository.CreateAsync(
-                                                       CreateTenantIdentityConfiguration.CreateDefault(
-                                                            tenantConfiguration.Id)).ContinueWith(
-                                                                async (tenantIdentityConfigurationEntityTask) =>
-                                                                {
-                                                                    var tenantIdentityConfiguration
-                                                                        = tenantIdentityConfigurationEntityTask.Result;
-
-                                                                    await userIdentityConfigurationRepository.CreateAsync(
-                                                                         CreateUserIdentityConfiguration.CreateDefault(
-                                                                             tenantIdentityConfiguration.Id)
-                                                                         );
-
-                                                                    await passwordIdentityConfigurationRepository.CreateAsync(
-                                                                        CreatePasswordIdentityConfiguration.CreateDefault(
-                                                                            tenantIdentityConfiguration.Id)
-                                                                        );
-
-                                                                    await lockoutIdentityConfigurationRepository.CreateAsync(
-                                                                        CreateLockoutIdentityConfiguration.CreateDefault(
-                                                                            tenantIdentityConfiguration.Id)
-                                                                        );
-
-                                                                    await tenantEmailConfigurationRepository.CreateAsync(
-                                                                        CreateTenantEmailConfiguration.CreateDefault(
-                                                                            tenantConfiguration.Id,
-                                                                                createTenantRequest.Name, createTenantRequest.Email, true)
-
-                                                                        ).ContinueWith(async (tenantEmailConfigurationTask) =>
-                                                                        {
-                                                                            var tenantEmailConfiguration
-                                                                                = tenantEmailConfigurationTask.Result;
-
-                                                                            await sendGridConfigurationRepository.CreateAsync(
-                                                                                CreateSendGridConfiguration.CreateDefault(
-                                                                                    tenantEmailConfiguration.Id,
-                                                                                    createTenantRequest.SendGridApiKey ?? sendGridApiKey,
-                                                                                    createTenantRequest.WelcomeTemplateId)
-                                                                                );
-
-                                                                        }).Unwrap();
-
-                                                                    TokenConfigurationRequest tokenConfiguration
-                                                                        = createTenantRequest.TokenConfiguration;
-
-                                                                    await tenantTokenConfigurationRepository.CreateAsync(
-                                                                        CreateTenantTokenConfiguration.CreateDefault(
-                                                                                tenantConfiguration.Id,
-                                                                                tokenConfiguration.SecurityKey,
-                                                                                tokenConfiguration.Issuer,
-                                                                                tokenConfiguration.Audience
-                                                                            )
-                                                                        );
-
-                                                                    await tenantEmailConfigurationRepository.CreateAsync(
-                                                                        CreateTenantEmailConfiguration.CreateDefault(
-                                                                            tenantConfiguration.Id,
-                                                                                createTenantRequest.Name, createTenantRequest.Email, true)
-
-                                                                        ).ContinueWith(async (tenantEmailConfigurationTask) =>
-                                                                        {
-                                                                            var tenantEmailConfiguration
-                                                                                = tenantEmailConfigurationTask.Result;
-
-                                                                            await sendGridConfigurationRepository.CreateAsync(
-                                                                                CreateSendGridConfiguration.CreateDefault(
-                                                                                    tenantEmailConfiguration.Id,
-                                                                                    createTenantRequest.SendGridApiKey ?? sendGridApiKey,
-                                                                                    createTenantRequest.WelcomeTemplateId)
-                                                                                );
-
-                                                                        }).Unwrap();
-
-                                                                    await unitOfWork.CommitAsync();
-
-                                                                }).Unwrap();
-                                               }).Unwrap();
-
-                                   await _transaction.CommitAsync();
-
-                                   return new OkObjectResult(
-                                       new ApiResponse<TenantResponse>(
-                                           true,
-                                           HttpStatusCode.Created,
-                                           tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")])
-                                       );
-
-                               }).Unwrap();
-                    }
-                    catch (Exception exception)
-                    {
-                        Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
-
-                        await _transaction.RollbackAsync(); throw;
-                    }
+                    return new OkObjectResult(
+                        new ApiResponse<TenantResponse>(
+                            true,
+                            HttpStatusCode.OK,
+                            tenant.ToResponse(), [new DadosNotificacao("Tenant atualizado com sucesso!")])
+                        );
 
                 }).Unwrap();
         }

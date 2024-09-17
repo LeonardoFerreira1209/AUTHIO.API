@@ -18,7 +18,8 @@ public static class CreateSendGridConfiguration
         string sendGridApiKey, string welcomeTemplateId)
             => new SendGridConfigurationBuilder()
                 .AddTenantEmailConfigurationId(tenantEmailConfigurationId)
-                    .AddCreated(DateTime.Now)
-                        .AddSendGridApiKey(sendGridApiKey)
-                            .AddWelcomeTemplateId(welcomeTemplateId).Builder();
+                .AddCreated(DateTime.Now)
+                .AddSendGridApiKey(sendGridApiKey)
+                .AddWelcomeTemplateId(welcomeTemplateId)
+                .Builder();
 }

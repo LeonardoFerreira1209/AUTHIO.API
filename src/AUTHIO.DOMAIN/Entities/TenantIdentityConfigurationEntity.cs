@@ -21,11 +21,17 @@ public class TenantIdentityConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <param name="updated"></param>
     public TenantIdentityConfigurationEntity(
         Guid tenantConfigurationId,
-        DateTime created, DateTime? updated)
+        DateTime created, DateTime? updated,
+        UserIdentityConfigurationEntity userIdentityConfiguration,
+        PasswordIdentityConfigurationEntity passwordIdentityConfiguration,
+        LockoutIdentityConfigurationEntity lockoutIdentityConfiguration)
     {
         TenantConfigurationId = tenantConfigurationId;
         Created = created;
         Updated = updated;
+        UserIdentityConfiguration = userIdentityConfiguration;
+        PasswordIdentityConfiguration = passwordIdentityConfiguration;
+        LockoutIdentityConfiguration = lockoutIdentityConfiguration;
     }
 
     /// <summary>

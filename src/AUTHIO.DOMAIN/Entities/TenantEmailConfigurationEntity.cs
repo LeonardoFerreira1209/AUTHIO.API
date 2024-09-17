@@ -25,7 +25,8 @@ public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
     public TenantEmailConfigurationEntity(
         Guid tenantConfigurationId, DateTime created,
         DateTime? updated, string serdersName, string serdersEmail,
-        bool isEmailConfirmed)
+        bool isEmailConfirmed,
+        SendGridConfigurationEntity sendGridConfiguration)
     {
         TenantConfigurationId = tenantConfigurationId;
         Created = created;
@@ -33,6 +34,7 @@ public class TenantEmailConfigurationEntity : IEntityPrimaryKey<Guid>
         SendersName = serdersName;
         SendersEmail = serdersEmail;
         IsEmailConfirmed = isEmailConfirmed;
+        SendGridConfiguration = sendGridConfiguration;
     }
 
     /// <summary>

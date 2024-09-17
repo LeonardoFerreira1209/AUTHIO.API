@@ -16,6 +16,7 @@ public sealed class CreateEvent
     public static EventEntity CreateEmailEvent(string jsonBody)
         => new EventBuilder()
             .AddCreated(DateTime.Now)
-                .AddJsonBody(jsonBody)
-                    .AddType(EventType.Email).Builder();
+            .AddJsonBody(jsonBody)
+            .AddType(EventType.Email)
+            .Builder();
 }

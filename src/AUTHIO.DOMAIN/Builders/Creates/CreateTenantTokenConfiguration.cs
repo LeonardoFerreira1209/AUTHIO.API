@@ -19,8 +19,9 @@ public static class CreateTenantTokenConfiguration
         string securityKey, string issuer, string audience)
             => new TenantTokenConfigurationBuilder()
                 .AddTenantConfigurationId(tenantIdentityConfigurationId)
-                    .AddCreated(DateTime.Now)
-                        .AddSecurityKey(securityKey)
-                            .AddIssuer(issuer)
-                                .AddAudience(audience).Builder();
+                .AddCreated(DateTime.Now)
+                .AddSecurityKey(securityKey)
+                .AddIssuer(issuer)
+                .AddAudience(audience)
+                .Builder();
 }

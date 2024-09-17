@@ -14,13 +14,19 @@ public static class CreateTenantEmailConfiguration
     /// <param name="sendersName"></param>
     /// <param name="sendersEmail"></param>
     /// <param name="isEmailConfirmed"></param>
+    /// <param name="sendGridConfiguration"></param>
     /// <returns></returns>
-    public static TenantEmailConfigurationEntity CreateDefault(Guid tenantIdentityConfigurationId, 
-        string sendersName, string sendersEmail, bool isEmailConfirmed)
-            => new TenantEmailConfigurationBuilder()
-                .AddTenantConfigurationId(tenantIdentityConfigurationId)
-                    .AddCreated(DateTime.Now)
-                        .AddSendersName(sendersName)
-                            .AddSendersEmail(sendersEmail)
-                                .AddIsEmailConfirmed(isEmailConfirmed).Builder();
+    public static TenantEmailConfigurationEntity CreateDefault(Guid tenantIdentityConfigurationId,
+        string sendersName,
+        string sendersEmail,
+        bool isEmailConfirmed,
+        SendGridConfigurationEntity sendGridConfiguration)
+    => new TenantEmailConfigurationBuilder()
+        .AddTenantConfigurationId(tenantIdentityConfigurationId)
+        .AddCreated(DateTime.Now)
+        .AddSendersName(sendersName)
+        .AddSendersEmail(sendersEmail)
+        .AddIsEmailConfirmed(isEmailConfirmed)
+        .AddSendGridConfiguration(sendGridConfiguration)
+        .Builder();
 }
