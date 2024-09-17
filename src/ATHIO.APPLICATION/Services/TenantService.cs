@@ -100,7 +100,7 @@ public class TenantService(
 
                         if (tenantResult.Result is not null)
                             throw new DuplicatedTenantException(createTenantRequest);
-
+                            
                          TenantEntity tenant 
                             = await tenantRepository
                                 .CreateAsync(
@@ -118,6 +118,60 @@ public class TenantService(
                         );
 
                     }).Unwrap();
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+        }
+    }
+
+    /// <summary>
+    /// Método responsável por atualizar um Tenant.
+    /// </summary>
+    /// <param name="updateTenantRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="NotFoundTenantException"></exception>
+    public async Task<ObjectResult> UpdateAsync(
+       UpdateTenantRequest updateTenantRequest, CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(UpdateAsync)}\n");
+
+        try
+        {
+            await new UpdateTenantRequestValidator()
+                .ValidateAsync(updateTenantRequest, cancellationToken)
+                    .ContinueWith(async (validationTask) =>
+                    {
+                        var validation = validationTask.Result;
+
+                        if (validation.IsValid is false)
+                            await validation.GetValidationErrors();
+
+                    }).Unwrap();
+
+            return await tenantRepository.GetByIdAsync(updateTenantRequest.Id).ContinueWith(
+                async (tenantEntityTask) =>
+                {
+                    var tenant
+                        = tenantEntityTask.Result 
+                        ?? throw new NotFoundTenantException();
+
+                    await tenantRepository.UpdateAsync(
+                        updateTenantRequest
+                            .UpdateEntity(tenant));
+
+                    await unitOfWork.CommitAsync();
+
+                    return new OkObjectResult(
+                        new ApiResponse<TenantResponse>(
+                            true,
+                            HttpStatusCode.OK,
+                            tenant.ToResponse(), [new DadosNotificacao("Tenant atualizado com sucesso!")])
+                        );
+
+                }).Unwrap();
         }
         catch (Exception exception)
         {

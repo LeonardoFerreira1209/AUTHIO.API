@@ -215,6 +215,171 @@ public static class TenantExtensions
     }
 
     /// <summary>
+    /// Atualiza a entidade de Tenant.
+    /// </summary>
+    /// <param name="updateTenantRequest"></param>
+    /// <param name="tenantEntity"></param>
+    /// <returns></returns>
+    public static TenantEntity UpdateEntity(
+        this UpdateTenantRequest updateTenantRequest, TenantEntity tenantEntity)
+    {
+        tenantEntity.Name = updateTenantRequest.Name;
+        tenantEntity.Description = updateTenantRequest.Description;
+        tenantEntity.Updated = DateTime.Now;
+
+        tenantEntity.TenantConfiguration 
+            = updateTenantRequest
+                ?.TenantConfiguration
+                    ?.UpdateEntity(tenantEntity.TenantConfiguration);
+
+        return tenantEntity;
+    }
+    
+    /// <summary>
+    /// Atualiza a entidade de Tenant configuration.
+    /// </summary>
+    /// <param name="updateTenantConfigurationRequest"></param>
+    /// <param name="tenantConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantConfigurationEntity UpdateEntity(
+        this UpdateTenantConfigurationRequest updateTenantConfigurationRequest, TenantConfigurationEntity tenantConfigurationEntity)
+    {
+        tenantConfigurationEntity.Updated = DateTime.Now;
+
+        tenantConfigurationEntity.TenantIdentityConfiguration 
+            = updateTenantConfigurationRequest
+                ?.TenantIdentityConfiguration
+                    ?.UpdateEntity(tenantConfigurationEntity.TenantIdentityConfiguration);
+
+        tenantConfigurationEntity.TenantEmailConfiguration 
+            = updateTenantConfigurationRequest
+                ?.TenantEmailConfiguration
+                    ?.UpdateEntity(tenantConfigurationEntity.TenantEmailConfiguration);
+
+        return tenantConfigurationEntity;
+    }
+
+    /// <summary>
+    /// Atualiza a entidade de Tenant identity configuration.
+    /// </summary>
+    /// <param name="updateTenantIdentityConfigurationRequest"></param>
+    /// <param name="tenantIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantIdentityConfigurationEntity UpdateEntity(
+        this UpdateTenantIdentityConfigurationRequest updateTenantIdentityConfigurationRequest, TenantIdentityConfigurationEntity tenantIdentityConfigurationEntity)
+    { 
+        tenantIdentityConfigurationEntity.Updated = DateTime.Now;
+
+        tenantIdentityConfigurationEntity.UserIdentityConfiguration 
+            = updateTenantIdentityConfigurationRequest
+                ?.UserIdentityConfiguration
+                    ?.UpdateEntity(tenantIdentityConfigurationEntity.UserIdentityConfiguration);
+
+        tenantIdentityConfigurationEntity.PasswordIdentityConfiguration 
+            = updateTenantIdentityConfigurationRequest
+                ?.PasswordIdentityConfiguration
+                    ?.UpdateEntity(tenantIdentityConfigurationEntity.PasswordIdentityConfiguration);
+
+        tenantIdentityConfigurationEntity.LockoutIdentityConfiguration 
+            = updateTenantIdentityConfigurationRequest
+                ?.LockoutIdentityConfiguration
+                    ?.UpdateEntity(tenantIdentityConfigurationEntity.LockoutIdentityConfiguration);
+
+        return tenantIdentityConfigurationEntity;
+    }
+
+    /// <summary>
+    /// Atualiza a entidade de User identity configuration.
+    /// </summary>
+    /// <param name="updateUserIdentityConfigurationRequest"></param>
+    /// <param name="userIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static UserIdentityConfigurationEntity UpdateEntity(
+        this UpdateUserIdentityConfigurationRequest updateUserIdentityConfigurationRequest, UserIdentityConfigurationEntity userIdentityConfigurationEntity)
+    {
+        userIdentityConfigurationEntity.Updated = DateTime.Now;
+        userIdentityConfigurationEntity.AllowedUserNameCharacters = updateUserIdentityConfigurationRequest.AllowedUserNameCharacters;
+        userIdentityConfigurationEntity.RequireUniqueEmail = updateUserIdentityConfigurationRequest.RequireUniqueEmail;
+
+        return userIdentityConfigurationEntity;
+    }
+
+    /// <summary>
+    /// Atualiza a entidade de Password Identity configuration.
+    /// </summary>
+    /// <param name="updatePasswordIdentityConfigurationRequest"></param>
+    /// <param name="passwordIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static PasswordIdentityConfigurationEntity UpdateEntity(
+        this UpdatePasswordIdentityConfigurationRequest updatePasswordIdentityConfigurationRequest, PasswordIdentityConfigurationEntity passwordIdentityConfigurationEntity)
+    {
+        passwordIdentityConfigurationEntity.Updated = DateTime.Now;
+        passwordIdentityConfigurationEntity.RequireDigit = updatePasswordIdentityConfigurationRequest.RequireDigit;
+        passwordIdentityConfigurationEntity.RequiredUniqueChars = updatePasswordIdentityConfigurationRequest.RequiredUniqueChars;
+        passwordIdentityConfigurationEntity.RequiredLength = updatePasswordIdentityConfigurationRequest.RequiredLength;
+        passwordIdentityConfigurationEntity.RequireUppercase = updatePasswordIdentityConfigurationRequest.RequireUppercase;
+        passwordIdentityConfigurationEntity.RequireLowercase = updatePasswordIdentityConfigurationRequest.RequireLowercase;
+        passwordIdentityConfigurationEntity.RequireNonAlphanumeric = updatePasswordIdentityConfigurationRequest.RequireNonAlphanumeric;
+
+        return passwordIdentityConfigurationEntity;
+    }
+
+    /// <summary>
+    /// Atualiza a entidade de Tenant Email Configuration.
+    /// </summary>
+    /// <param name="updateTenantEmailConfigurationRequest"></param>
+    /// <param name="tenantEmailConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantEmailConfigurationEntity UpdateEntity(
+        this UpdateTenantEmailConfigurationRequest updateTenantEmailConfigurationRequest, TenantEmailConfigurationEntity tenantEmailConfigurationEntity)
+    {
+        tenantEmailConfigurationEntity.Updated = DateTime.Now;
+        tenantEmailConfigurationEntity.SendersName = updateTenantEmailConfigurationRequest.SendersName;
+        tenantEmailConfigurationEntity.SendersEmail = updateTenantEmailConfigurationRequest.SendersEmail;
+        tenantEmailConfigurationEntity.IsEmailConfirmed = updateTenantEmailConfigurationRequest.IsEmailConfirmed;
+
+        tenantEmailConfigurationEntity.SendGridConfiguration 
+            = updateTenantEmailConfigurationRequest
+                ?.SendGridConfiguration
+                    ?.UpdateEntity(tenantEmailConfigurationEntity.SendGridConfiguration);
+
+        return tenantEmailConfigurationEntity;
+    }
+
+    /// <summary>
+    /// Atualiza a entidade de Send Grid Configuration
+    /// </summary>
+    /// <param name="updateSendGridConfigurationRequest"></param>
+    /// <param name="sendGridConfigurationEntity"></param>
+    /// <returns></returns>
+    public static SendGridConfigurationEntity UpdateEntity(
+        this UpdateSendGridConfigurationRequest updateSendGridConfigurationRequest, SendGridConfigurationEntity sendGridConfigurationEntity)
+    {
+        sendGridConfigurationEntity.Updated = DateTime.Now;
+        sendGridConfigurationEntity.SendGridApiKey = updateSendGridConfigurationRequest.SendGridApiKey;
+        sendGridConfigurationEntity.WelcomeTemplateId = updateSendGridConfigurationRequest.WelcomeTemplateId;
+
+        return sendGridConfigurationEntity;
+    }
+
+    /// <summary>
+    /// Atualiza a entidade de Lockout Identity configuration.
+    /// </summary>
+    /// <param name="updateLockoutIdentityConfigurationRequest"></param>
+    /// <param name="lockoutIdentityConfigurationEntity"></param>
+    /// <returns></returns>
+    public static LockoutIdentityConfigurationEntity UpdateEntity(
+        this UpdateLockoutIdentityConfigurationRequest updateLockoutIdentityConfigurationRequest, LockoutIdentityConfigurationEntity lockoutIdentityConfigurationEntity)
+    {
+        lockoutIdentityConfigurationEntity.Updated = DateTime.Now;
+        lockoutIdentityConfigurationEntity.AllowedForNewUsers = updateLockoutIdentityConfigurationRequest.AllowedForNewUsers;
+        lockoutIdentityConfigurationEntity.DefaultLockoutTimeSpan = updateLockoutIdentityConfigurationRequest.DefaultLockoutTimeSpan;
+        lockoutIdentityConfigurationEntity.MaxFailedAccessAttempts = updateLockoutIdentityConfigurationRequest.MaxFailedAccessAttempts;
+
+        return lockoutIdentityConfigurationEntity;
+    }
+
+    /// <summary>
     /// Transforma um Tenant Entity em response.
     /// </summary>
     /// <param name="tenantEntity"></param>
