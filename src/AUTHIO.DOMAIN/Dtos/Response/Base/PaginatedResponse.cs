@@ -1,46 +1,39 @@
-﻿namespace AUTHIO.DOMAIN.Dtos.Response;
+﻿namespace AUTHIO.DOMAIN.Dtos.Response.Base;
 
 /// <summary>
-/// 
+/// Classe de Response paginado.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class PaginatedResponse<T>
+/// <param name="items"></param>
+/// <param name="totalCount"></param>
+/// <param name="pageNumber"></param>
+/// <param name="pageSize"></param>
+public class PaginatedResponse<T>(
+    IEnumerable<T> items, 
+    int totalCount, 
+    int pageNumber, 
+    int pageSize
+)
 {
-    /// <summary>
-    /// ctor
-    /// </summary>
-    /// <param name="items"></param>
-    /// <param name="totalCount"></param>
-    /// <param name="pageNumber"></param>
-    /// <param name="pageSize"></param>
-    public PaginatedResponse(
-        IEnumerable<T> items, int totalCount, int pageNumber, int pageSize)
-    {
-        Items = items;
-        TotalCount = totalCount;
-        PageNumber = pageNumber;
-        PageSize = pageSize;
-    }
-
     /// <summary>
     /// Itens
     /// </summary>
-    public IEnumerable<T> Items { get; set; }
+    public IEnumerable<T> Items { get; set; } = items;
 
     /// <summary>
     /// Total de itens na base.
     /// </summary>
-    public int TotalCount { get; set; }
+    public int TotalCount { get; set; } = totalCount;
 
     /// <summary>
     /// Numero da pagina.
     /// </summary>
-    public int PageNumber { get; set; }
+    public int PageNumber { get; set; } = pageNumber;
 
     /// <summary>
     /// Tamanho da pagina.
     /// </summary>
-    public int PageSize { get; set; }
+    public int PageSize { get; set; } = pageSize;
 
     /// <summary>
     /// Converte o dado da Pagination response em outro. Ex.(Entity em Response).

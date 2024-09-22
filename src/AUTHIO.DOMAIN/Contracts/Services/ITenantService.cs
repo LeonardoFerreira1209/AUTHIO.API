@@ -15,7 +15,9 @@ public interface ITenantService
     /// <param name="createTenantRequest"></param>
     /// <returns></returns>
     Task<ObjectResult> CreateAsync(
-        CreateTenantRequest createTenantRequest, CancellationToken cancellationToken);
+        CreateTenantRequest createTenantRequest, 
+        CancellationToken cancellationToken
+    );
 
     /// <summary>
     /// Método responsável por atualizar um tenant. 
@@ -24,7 +26,9 @@ public interface ITenantService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> UpdateAsync(
-       UpdateTenantRequest updateTenantRequest, CancellationToken cancellationToken);
+       UpdateTenantRequest updateTenantRequest, 
+       CancellationToken cancellationToken
+    );
 
     /// <summary>
     /// Recupera todos os tenants com paginação.
@@ -32,7 +36,9 @@ public interface ITenantService
     /// <param name="filterRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ObjectResult> GetAllAsync(FilterRequest filterRequest, CancellationToken cancellationToken);
+    Task<ObjectResult> GetAllAsync(FilterRequest filterRequest, 
+        CancellationToken cancellationToken
+    );
 
     /// <summary>
     /// Recupera um tenant pela chave.
@@ -40,7 +46,9 @@ public interface ITenantService
     /// <param name="key"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ObjectResult> GetTenantByKeyAsync(string key, CancellationToken cancellationToken);
+    Task<ObjectResult> GetTenantByKeyAsync(string key, 
+        CancellationToken cancellationToken
+    );
 
     /// <summary>
     /// Método responsável por criar um usuário no tenant.
@@ -50,5 +58,8 @@ public interface ITenantService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> RegisterTenantUserAsync(
-        RegisterUserRequest registerUserRequest, string tenantKey, CancellationToken cancellationToken);
+        RegisterUserRequest registerUserRequest, 
+        string tenantKey, 
+        CancellationToken cancellationToken
+    );
 }

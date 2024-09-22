@@ -76,7 +76,9 @@ public class TenantService(
     /// <returns></returns>
     /// <exception cref="DuplicatedTenantException"></exception>
     public async Task<ObjectResult> CreateAsync(
-        CreateTenantRequest createTenantRequest, CancellationToken cancellationToken)
+        CreateTenantRequest createTenantRequest, 
+        CancellationToken cancellationToken
+    )
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(CreateAsync)}\n");
@@ -109,11 +111,12 @@ public class TenantService(
 
                         await unitOfWork.CommitAsync();
 
-                        return new OkObjectResult(
+                        return new ObjectResponse(
+                            HttpStatusCode.Created,
                             new ApiResponse<TenantResponse>(
                                 true,
                                 HttpStatusCode.Created,
-                                tenant.ToResponse(), [new DadosNotificacao("Tenant criado com sucesso!")]
+                                tenant.ToResponse(), [new DataNotifications("Tenant criado com sucesso!")]
                             )
                         );
 
@@ -121,7 +124,9 @@ public class TenantService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+            
+            throw;
         }
     }
 
@@ -134,7 +139,9 @@ public class TenantService(
     /// <returns></returns>
     /// <exception cref="NotFoundTenantException"></exception>
     public async Task<ObjectResult> UpdateAsync(
-       UpdateTenantRequest updateTenantRequest, CancellationToken cancellationToken)
+       UpdateTenantRequest updateTenantRequest, 
+       CancellationToken cancellationToken
+    )
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(UpdateAsync)}\n");
@@ -165,18 +172,22 @@ public class TenantService(
 
                     await unitOfWork.CommitAsync();
 
-                    return new OkObjectResult(
+                    return new ObjectResponse(
+                        HttpStatusCode.OK,
                         new ApiResponse<TenantResponse>(
                             true,
                             HttpStatusCode.OK,
-                            tenant.ToResponse(), [new DadosNotificacao("Tenant atualizado com sucesso!")])
-                        );
+                            tenant.ToResponse(), [new DataNotifications("Tenant atualizado com sucesso!")]
+                        )
+                    );
 
-                     }).Unwrap();
+                }).Unwrap();
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
+            
+            throw;
         }
     }
 
@@ -186,7 +197,10 @@ public class TenantService(
     /// <param name="filterRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ObjectResult> GetAllAsync(FilterRequest filterRequest, CancellationToken cancellationToken)
+    public async Task<ObjectResult> GetAllAsync(
+        FilterRequest filterRequest, 
+        CancellationToken cancellationToken
+    )
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetAllAsync)}\n");
@@ -215,14 +229,15 @@ public class TenantService(
                 var pagination
                         = taskResult.Result;
 
-                ObjectResult response = new(
+                ObjectResponse response = new(
+                    HttpStatusCode.OK,
                     new PaginationApiResponse<TenantResponse>(
                         true,
                         HttpStatusCode.OK,
                         pagination.ConvertPaginationData
                             (pagination.Items.Select(
                                 tenant => tenant.ToResponse()).ToList()), [
-                                    new DadosNotificacao("Tenants reuperados com sucesso!")]
+                                    new DataNotifications("Tenants reuperados com sucesso!")]
                                 )
                     );
 
@@ -235,7 +250,9 @@ public class TenantService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
+            
+            throw;
         }
     }
 
@@ -245,7 +262,10 @@ public class TenantService(
     /// <param name="key"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<ObjectResult> GetTenantByKeyAsync(string key, CancellationToken cancellationToken)
+    public async Task<ObjectResult> GetTenantByKeyAsync(
+        string key, 
+        CancellationToken cancellationToken
+    )
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(GetTenantByKeyAsync)}\n");
@@ -268,12 +288,13 @@ public class TenantService(
                         var tenantEntity
                                 = taskResult.Result;
 
-                        ObjectResult response = new(
+                        ObjectResponse response = new(
+                            HttpStatusCode.OK,
                             new ApiResponse<TenantResponse>(
                                 true,
                                 HttpStatusCode.OK,
                                 tenantEntity.ToResponse(), [
-                                new DadosNotificacao("Tenant recuperado com sucesso!")]));
+                                new DataNotifications("Tenant recuperado com sucesso!")]));
 
                         await cachingService
                             .SetAsync(cacheKey, response);
@@ -284,7 +305,9 @@ public class TenantService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+            
+            throw;
         }
     }
 
@@ -299,7 +322,10 @@ public class TenantService(
     /// <exception cref="NotPermissionTenantException"></exception>
     /// <exception cref="CreateUserFailedException"></exception>
     public async Task<ObjectResult> RegisterTenantUserAsync(
-        RegisterUserRequest registerUserRequest, string tenantKey, CancellationToken cancellationToken)
+        RegisterUserRequest registerUserRequest, 
+        string tenantKey, 
+        CancellationToken cancellationToken
+    )
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(RegisterTenantUserAsync)}\n");
@@ -345,7 +371,7 @@ public class TenantService(
                                     if (identityResult.Succeeded is false)
                                         throw new CreateUserFailedException(
                                             registerUserRequest, identityResult.Errors.Select((e)
-                                                => new DadosNotificacao(e.Description)).ToList());
+                                                => new DataNotifications(e.Description)).ToList());
 
                                     var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
                                                .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
@@ -354,26 +380,32 @@ public class TenantService(
                                     await eventRepository.CreateAsync(CreateEvent
                                        .CreateEmailEvent(jsonBody));
 
+                                    await unitOfWork.CommitAsync();
                                     await transaction.CommitAsync();
 
-                                    return new ObjectResult(
+                                    return new ObjectResponse(
+                                        HttpStatusCode.Created,
                                         new ApiResponse<UserResponse>(
                                             identityResult.Succeeded,
                                                 HttpStatusCode.Created,
                                                 userEntity.ToResponse(), [
-                                                     new DadosNotificacao("Usuário criado com sucesso e vinculado ao Tenant!")]));
+                                                     new DataNotifications("Usuário criado com sucesso e vinculado ao Tenant!")]));
                                 }).Unwrap();
 
                     }).Unwrap();
             }
             catch
             {
-                transaction.Rollback(); throw;
+                transaction.Rollback(); 
+                
+                throw;
             }
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
+            
+            throw;
         }
     }
 }

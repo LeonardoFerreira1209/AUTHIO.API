@@ -6,17 +6,14 @@ namespace AUTHIO.DOMAIN.Dtos.Response.Base;
 /// <summary>
 /// Dados a ser retornado em uma notificação do sistema.
 /// </summary>
-/// <remarks>
-/// ctor
-/// </remarks>
-/// <param name="mensagem"></param>
-public class DadosNotificacao(string mensagem)
+/// <param name="message"></param>
+public class DataNotifications(string message)
 {
     /// <summary>
     /// Mensagem da notificação.
     /// </summary>
-    [JsonProperty(nameof(Mensagem))]
-    public string Mensagem { get; } = mensagem;
+    [JsonProperty(nameof(Message))]
+    public string Message { get; } = message;
 }
 
 /// <summary>
@@ -35,17 +32,17 @@ public abstract class BaseApiResponse
     }
 
     /// <summary>
-    /// ctor recebendo status, bool de sucesso, e lista de notificações. 
+    /// recebendo status, bool de sucesso, e lista de notificações. 
     /// </summary>
     /// <param name="statusCode"></param>
-    /// <param name="sucesso"></param>
-    /// <param name="notificacoes"></param>
+    /// <param name="success"></param>
+    /// <param name="notifications"></param>
     public BaseApiResponse(HttpStatusCode statusCode,
-        bool sucesso, List<DadosNotificacao> notificacoes)
+        bool success, List<DataNotifications> notifications)
     {
         StatusCode = statusCode;
-        Sucesso = sucesso;
-        Notificacoes = notificacoes;
+        Success = success;
+        Notifications = notifications;
     }
 
     /// <summary>
@@ -57,12 +54,12 @@ public abstract class BaseApiResponse
     /// <summary>
     /// Retorna true se a requisição para API foi bem sucedida.
     /// </summary>
-    [JsonProperty(nameof(Sucesso))]
-    public bool Sucesso { get; }
+    [JsonProperty(nameof(Success))]
+    public bool Success { get; }
 
     /// <summary>
     /// Notificações que retornam da requisição, sejam elas Sucesso, Erro, Informação.
     /// </summary>
-    [JsonProperty(nameof(Notificacoes))]
-    public List<DadosNotificacao> Notificacoes { get; }
+    [JsonProperty(nameof(Notifications))]
+    public List<DataNotifications> Notifications { get; }
 }

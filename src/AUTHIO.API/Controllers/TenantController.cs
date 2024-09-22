@@ -58,7 +58,7 @@ public class TenantController(
     /// <summary>
     /// Endpoint responsável pela atualização de um tenant.
     /// </summary>
-    /// <param name="createTenantRequest"></param>
+    /// <param name="updateTenantRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPut]
@@ -96,7 +96,7 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync(
-        FilterRequest filterRequest, CancellationToken cancellationToken)
+       [FromQuery] FilterRequest filterRequest, CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))

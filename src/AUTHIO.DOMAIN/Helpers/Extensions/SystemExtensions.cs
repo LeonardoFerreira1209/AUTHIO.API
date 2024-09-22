@@ -73,13 +73,13 @@ public static class SystemExtensions
     /// </summary>
     /// <param name="resultado"></param>
     /// <returns></returns>
-    public static List<DadosNotificacao> GetErros(this ValidationResult resultado)
+    public static List<DataNotifications> GetErros(this ValidationResult resultado)
     {
-        var erros = new List<DadosNotificacao>();
+        var erros = new List<DataNotifications>();
 
         foreach (var erro in resultado.Errors)
         {
-            erros.Add(new DadosNotificacao(erro.ErrorMessage));
+            erros.Add(new DataNotifications(erro.ErrorMessage));
         }
 
         return erros;

@@ -76,7 +76,7 @@ public class ErrorHandlerMiddleware(
                     InnerException = exception.InnerException?.ToString(),
                     exception.Data
                 },
-                Notificacoes = new DadosNotificacao(exception.Message),
+                Notificacoes = new DataNotifications(exception.Message),
             }))
         };
 }
