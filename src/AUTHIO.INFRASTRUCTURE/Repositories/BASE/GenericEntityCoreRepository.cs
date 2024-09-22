@@ -1,5 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Repositories.Base;
-using AUTHIO.DOMAIN.Dtos.Response;
+using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Entities;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;

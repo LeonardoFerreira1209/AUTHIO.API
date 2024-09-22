@@ -17,9 +17,9 @@ public static class CustomValidationExtensions
     /// <returns></returns>
     public static Task GetValidationErrors(this ValidationResult validationResult, object dados = null)
     {
-        var notificacoes = new List<DadosNotificacao>();
+        var notificacoes = new List<DataNotifications>();
 
-        foreach (var error in validationResult.Errors) notificacoes.Add(new DadosNotificacao(error.ErrorMessage));
+        foreach (var error in validationResult.Errors) notificacoes.Add(new DataNotifications(error.ErrorMessage));
 
         throw new CustomException(HttpStatusCode.BadRequest, dados, notificacoes);
     }

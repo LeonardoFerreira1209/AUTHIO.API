@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Dtos.Response;
+﻿using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Entities;
 using System.Linq.Expressions;
 

@@ -16,7 +16,7 @@ public class CustomException : BaseException
     /// <param name="notificacoes"></param>
     public CustomException(
         HttpStatusCode statusCode,
-        object dados, List<DadosNotificacao> notificacoes)
+        object dados, List<DataNotifications> notificacoes)
     {
         Response = new ErrorResponse
             (statusCode, dados, notificacoes);

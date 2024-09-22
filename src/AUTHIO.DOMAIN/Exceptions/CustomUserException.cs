@@ -24,7 +24,7 @@ public class CustomUserException
         }
 
         public UnauthorizedUserException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
@@ -43,7 +43,7 @@ public class CustomUserException
         }
 
         public ForbiddendUserException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.Forbidden, dados, notificacoes);
@@ -65,7 +65,7 @@ public class CustomUserException
         }
 
         public UnauthorizedTokenLifetimeException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
@@ -88,7 +88,7 @@ public class CustomUserException
         }
 
         public AuthenticatedUserNotFoundException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.NotFound, dados, notificacoes);
@@ -110,7 +110,7 @@ public class CustomUserException
         }
 
         public NotFoundUserException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.NotFound, dados, notificacoes);
@@ -132,7 +132,7 @@ public class CustomUserException
         }
 
         public NotFoundRoleException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.NotFound, dados, notificacoes);
@@ -154,7 +154,7 @@ public class CustomUserException
         }
 
         public InvalidUserAuthenticationException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.NotFound, dados, notificacoes);
@@ -176,7 +176,7 @@ public class CustomUserException
         }
 
         public LockedOutAuthenticationException(
-           object dados, List<DadosNotificacao> notificacoes)
+           object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                 (HttpStatusCode.Locked, dados, notificacoes);
@@ -198,7 +198,7 @@ public class CustomUserException
         }
 
         public IsNotAllowedAuthenticationException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
@@ -220,7 +220,7 @@ public class CustomUserException
         }
 
         public RequiresTwoFactorAuthenticationException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
@@ -239,7 +239,7 @@ public class CustomUserException
         }
 
         public IncorrectConfirmationCodeAuthenticationException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.Unauthorized, dados, notificacoes);
@@ -261,7 +261,7 @@ public class CustomUserException
         }
 
         public TokenJwtException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.BadRequest, dados, notificacoes);
@@ -289,7 +289,7 @@ public class CustomUserException
         /// <param name="dados"></param>
         /// <param name="notificacoes"></param>
         public CreateUserFailedException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.BadRequest, dados, notificacoes);
@@ -317,7 +317,7 @@ public class CustomUserException
         /// <param name="dados"></param>
         /// <param name="notificacoes"></param>
         public UserToRoleFailedException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.BadRequest, dados, notificacoes);

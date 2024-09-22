@@ -9,21 +9,21 @@
   <ItemGroup>
 	  <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.1" />
 	  <PackageReference Include="Dapper" Version="2.1.35" />
-	  <PackageReference Include="EFCore.BulkExtensions" Version="8.1.0" />
+	  <PackageReference Include="EFCore.BulkExtensions" Version="8.1.1" />
 	  <PackageReference Include="Hangfire.Core" Version="1.8.14" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7">
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.7" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.8" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>

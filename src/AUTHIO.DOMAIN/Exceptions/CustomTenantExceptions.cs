@@ -33,7 +33,7 @@ public sealed class CustomTenantExceptions
         /// <param name="dados"></param>
         /// <param name="notificacoes"></param>
         public NotFoundTenantException(
-            object dados, List<DadosNotificacao> notificacoes)
+            object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse
                (HttpStatusCode.NotFound, dados, notificacoes);
@@ -65,7 +65,7 @@ public sealed class NotPermissionTenantException : BaseException
     /// <param name="dados"></param>
     /// <param name="notificacoes"></param>
     public NotPermissionTenantException(
-        object dados, List<DadosNotificacao> notificacoes)
+        object dados, List<DataNotifications> notificacoes)
     {
         Response = new ErrorResponse
            (HttpStatusCode.NotFound, dados, notificacoes);
@@ -96,7 +96,7 @@ public sealed class DuplicatedTenantException : BaseException
     /// <param name="dados"></param>
     /// <param name="notificacoes"></param>
     public DuplicatedTenantException(
-        object dados, List<DadosNotificacao> notificacoes)
+        object dados, List<DataNotifications> notificacoes)
     {
         Response = new ErrorResponse
            (HttpStatusCode.Ambiguous, dados, notificacoes);
@@ -127,7 +127,7 @@ public sealed class CreateTenantFailedException : BaseException
     /// <param name="dados"></param>
     /// <param name="notificacoes"></param>
     public CreateTenantFailedException(
-        object dados, List<DadosNotificacao> notificacoes)
+        object dados, List<DataNotifications> notificacoes)
     {
         Response = new ErrorResponse
            (HttpStatusCode.BadRequest, dados, notificacoes);

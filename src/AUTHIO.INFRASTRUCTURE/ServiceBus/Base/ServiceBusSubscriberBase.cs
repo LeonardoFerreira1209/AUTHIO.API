@@ -33,7 +33,7 @@ public abstract class ServiceBusSubscriberBase(
     public void RegisterReceiveMessageHandler()
     {
         Log.Information(
-           $"[LOG INFORMATION] - SET TITLE {nameof(EventServiceBusSubscriber)} - METHOD {nameof(RegisterReceiveMessageHandler)} - Subscriber inicializado\n");
+           $"[LOG INFORMATION] - SET TITLE {nameof(ServiceBusSubscriberBase)} - METHOD {nameof(RegisterReceiveMessageHandler)} - Subscriber inicializado\n");
 
         _busClient =
             new ServiceBusClient(busConnection);

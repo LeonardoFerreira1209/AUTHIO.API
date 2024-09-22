@@ -74,7 +74,7 @@ public sealed class UserService(
                         if (identityResult.Succeeded is false)
                             throw new CreateUserFailedException(
                                 registerUserRequest, identityResult.Errors.Select((e)
-                                    => new DadosNotificacao(e.Description)).ToList());
+                                    => new DataNotifications(e.Description)).ToList());
 
                         return await customUserManager.AddToRoleAsync(
                             userEntity, "System").ContinueWith(async (identityResultTask) =>
@@ -85,7 +85,7 @@ public sealed class UserService(
                                 if (identityResult.Succeeded is false)
                                     throw new UserToRoleFailedException(
                                         registerUserRequest, identityResult.Errors.Select((e)
-                                            => new DadosNotificacao(e.Description)).ToList());
+                                            => new DataNotifications(e.Description)).ToList());
 
                                 var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
                                             .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
@@ -98,12 +98,13 @@ public sealed class UserService(
                                         await transaction.CommitAsync();
                                     }).Unwrap();
 
-                                return new ObjectResult(
+                                return new ObjectResponse(
+                                    HttpStatusCode.Created,
                                     new ApiResponse<UserResponse>(
                                         identityResult.Succeeded,
                                         HttpStatusCode.Created,
                                         userEntity.ToResponse(), [
-                                            new DadosNotificacao("Usuário criado com sucesso!")]));
+                                            new DataNotifications("Usuário criado com sucesso!")]));
                             }).Unwrap();
 
                     }).Unwrap();

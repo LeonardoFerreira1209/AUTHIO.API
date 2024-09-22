@@ -17,33 +17,33 @@ public class PaginationApiResponse<T>
         : base(statusCode) { }
 
     /// <summary>
-    /// Construtor sem recebimento de dados.
+    /// Construtor com recebimento de dados parcial.
     /// </summary>
-    /// <param name="sucesso"></param>
+    /// <param name="success"></param>
     /// <param name="statusCode"></param>
-    /// <param name="notificacoes"></param>
-    public PaginationApiResponse(bool sucesso, HttpStatusCode statusCode,
-        List<DadosNotificacao> notificacoes = null)
-            : base(statusCode, sucesso, notificacoes)
+    /// <param name="notifications"></param>
+    public PaginationApiResponse(bool success, HttpStatusCode statusCode,
+        List<DataNotifications> notifications = null)
+            : base(statusCode, success, notifications)
     {
     }
 
     /// <summary>
     /// Construtor que recebe todos os itens.
     /// </summary>
-    /// <param name="sucesso"></param>
+    /// <param name="success"></param>
     /// <param name="statusCode"></param>
     /// <param name="paginatedResponse"></param>
-    /// <param name="notificacoes"></param>
-    public PaginationApiResponse(bool sucesso, HttpStatusCode statusCode,
-        PaginatedResponse<T> paginatedResponse, List<DadosNotificacao> notificacoes = null)
-            : base(statusCode, sucesso, notificacoes)
+    /// <param name="notifications"></param>
+    public PaginationApiResponse(bool success, HttpStatusCode statusCode,
+        PaginatedResponse<T> paginatedResponse, List<DataNotifications> notifications = null)
+            : base(statusCode, success, notifications)
     {
-        Paginacao = paginatedResponse;
+        Pagination = paginatedResponse;
     }
 
     /// <summary>
     /// Dados da paginação.
     /// </summary>
-    public PaginatedResponse<T> Paginacao { get; set; }
+    public PaginatedResponse<T> Pagination { get; set; }
 }

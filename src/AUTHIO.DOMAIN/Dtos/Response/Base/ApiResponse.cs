@@ -19,12 +19,12 @@ public class ApiResponse<T>
     /// <summary>
     /// Construtor sem recebimento de dados.
     /// </summary>
-    /// <param name="sucesso"></param>
+    /// <param name="success"></param>
     /// <param name="statusCode"></param>
-    /// <param name="notificacoes"></param>
-    public ApiResponse(bool sucesso, HttpStatusCode statusCode,
-        List<DadosNotificacao> notificacoes = null)
-            : base(statusCode, sucesso, notificacoes)
+    /// <param name="notifications"></param>
+    public ApiResponse(bool success, HttpStatusCode statusCode,
+        List<DataNotifications> notifications = null)
+            : base(statusCode, success, notifications)
     {
 
     }
@@ -32,20 +32,20 @@ public class ApiResponse<T>
     /// <summary>
     /// Construtor que recebe todos os itens.
     /// </summary>
-    /// <param name="sucesso"></param>
+    /// <param name="success"></param>
     /// <param name="statusCode"></param>
-    /// <param name="dados"></param>
-    /// <param name="notificacoes"></param>
-    public ApiResponse(bool sucesso, HttpStatusCode statusCode,
-        T dados = null, List<DadosNotificacao> notificacoes = null)
-            : base(statusCode, sucesso, notificacoes)
+    /// <param name="data"></param>
+    /// <param name="notifications"></param>
+    public ApiResponse(bool success, HttpStatusCode statusCode,
+        T data = null, List<DataNotifications> notifications = null)
+            : base(statusCode, success, notifications)
     {
-        Dados = dados;
+        Data = data;
     }
 
     /// <summary>
     /// Dados a serem retornados na requisição.
     /// </summary>
-    [JsonProperty(nameof(Dados))]
-    public T Dados { get; }
+    [JsonProperty(nameof(Data))]
+    public T Data { get; }
 }
