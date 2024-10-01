@@ -180,7 +180,11 @@ public class TokenJwtBuilder
     /// Método que cria e retorna o token.
     /// </summary>
     /// <returns></returns>
-    public TokenJWT Builder(UserEntity userEntity, SigningCredentials key = null)
+    public TokenJWT Builder(
+        UserEntity userEntity,
+        bool encrypted,
+        EncryptingCredentials encryptedToken = null,
+        SigningCredentials key = null)
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TokenJwtBuilder)} - METHOD {nameof(Builder)}\n");
 
@@ -201,29 +205,69 @@ public class TokenJwtBuilder
 
             Log.Information($"[LOG INFORMATION] - Token gerado com sucesso.\n");
 
+            SecurityTokenDescriptor token = new()
+            {
+                Issuer = issuer,
+                Audience = audience,
+                Subject = new ClaimsIdentity(baseClaims),
+                Expires = DateTime.Now.AddMinutes(expiryInMinutes),
+            };
+
+            SecurityTokenDescriptor refreshToken = new()
+            {
+                Issuer = issuer,
+                Audience = audience,
+                Subject = new ClaimsIdentity([new Claim(JwtRegisteredClaimNames.UniqueName, username)]),
+                Expires = DateTime.Now.AddHours(expiryRefreshTokenInHours),
+            };
+
+            (token, refreshToken) = SetCredentials(
+                token,
+                refreshToken,
+                encrypted,
+                encryptedToken,
+                key
+            );
+
             return new TokenJWT(
-                new SecurityTokenDescriptor
-                {
-                    Issuer = issuer,
-                    Audience = audience,
-                    Subject = new ClaimsIdentity(baseClaims),
-                    Expires = DateTime.Now.AddMinutes(expiryInMinutes),
-                    SigningCredentials = key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
-                },
-                new SecurityTokenDescriptor
-                {
-                    Issuer = issuer,
-                    Audience = audience,
-                    Subject = new ClaimsIdentity([new Claim(JwtRegisteredClaimNames.UniqueName, username)]),
-                    Expires = DateTime.Now.AddHours(expiryRefreshTokenInHours),
-                    SigningCredentials = key ?? new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)
-                }
+                token,
+                refreshToken
             );
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}\n"); throw;
         }
+    }
+
+    /// <summary>
+    /// Seta as credencials do token, encriptada ou não.
+    /// </summary>
+    /// <param name="token"></param>
+    /// <param name="refreshToken"></param>
+    /// <param name="encrypted"></param>
+    /// <param name="encryptedToken"></param>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    private (SecurityTokenDescriptor token, SecurityTokenDescriptor refreshToken) SetCredentials(
+        SecurityTokenDescriptor token,
+        SecurityTokenDescriptor refreshToken,
+        bool encrypted,
+        EncryptingCredentials encryptedToken = null,
+        SigningCredentials key = null)
+    {
+        if (encrypted)
+        {
+            token.EncryptingCredentials = encryptedToken;
+            refreshToken.EncryptingCredentials = encryptedToken;
+
+            return (token, refreshToken);
+        }
+
+        token.SigningCredentials = key;
+        refreshToken.SigningCredentials = key;
+
+        return (token, refreshToken);
     }
 }
 

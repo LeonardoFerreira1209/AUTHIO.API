@@ -61,16 +61,18 @@ public class EventService(
                              $"[LOG INFORMATION] - Evento enviado para o service bus: {JsonConvert.SerializeObject(message)}\n");
 
                         even.Sended = DateTime.Now;
+
                         await eventRepository.UpdateAsync(even);
                     });
             }
 
-            await unitOfWork
-                    .CommitAsync();
+            await unitOfWork.CommitAsync();
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
+            
+            throw;
         }
     }
 }

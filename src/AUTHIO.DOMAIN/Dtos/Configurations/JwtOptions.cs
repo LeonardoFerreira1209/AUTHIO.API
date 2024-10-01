@@ -17,7 +17,7 @@ public class JwtOptions
     /// Algoritimo Jwe.
     /// </summary>
     public Algorithm Jwe { get; set; } 
-        = Algorithm.Create(AlgorithmType.AES, JwtType.Jwe);
+        = Algorithm.Create(AlgorithmType.RSA, JwtType.Jwe);
 
     /// <summary>
     /// Dias para expiração.

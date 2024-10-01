@@ -46,7 +46,7 @@ public class TokenService(
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TokenService)} - METHOD {nameof(CreateJsonWebToken)}\n");
 
         return await
-           BuildTokenJWT(username);
+           BuildToken(username);
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ public class TokenService(
             ? (string)tokenValidationResult.Claims.First().Value : throw new TokenJwtException(tokenValidationResult);
 
         return await
-            BuildTokenJWT(username);
+            BuildToken(username);
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public class TokenService(
     /// </summary>
     /// <param name="username"></param>
     /// <returns></returns>
-    private async Task<TokenJWT> BuildTokenJWT(string username)
+    private async Task<TokenJWT> BuildToken(string username)
     {
         var userEntity = await userManager.FindByNameWithExpressionAsync(username, 
             UserFilters<UserEntity>.FilterSystemOrTenantUsers(
@@ -113,8 +113,13 @@ public class TokenService(
                 ?? appsettings.Value.Auth.ValidAudience
         };
 
+        bool encrypted = tenantTokenConfiguration?.Encrypted ?? false;
+
         SigningCredentials key = 
             await jwtService.GetCurrentSigningCredentials();
+
+        EncryptingCredentials encryptitedKey =
+          await jwtService.GetCurrentEncryptingCredentials();
 
         return await Task.FromResult(
             new TokenJwtBuilder()
@@ -127,7 +132,7 @@ public class TokenService(
                                   .AddRoles(roles)
                                       .AddClaims(claims)
                                         .IsEncrypyted(tenantTokenConfiguration?.Encrypted ?? false)
-                                            .Builder(userEntity, key));
+                                            .Builder(userEntity, encrypted, encryptitedKey, key));
     }
 
     /// <summary>

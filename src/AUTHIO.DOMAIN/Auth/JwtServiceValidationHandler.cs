@@ -33,6 +33,8 @@ public class JwtServiceValidationHandler(
         var contextService = scope.ServiceProvider.GetRequiredService<IContextService>();
         var configurations = scope.ServiceProvider.GetRequiredService<IOptions<AppSettings>>();
 
+        JwtSecurityToken incomingToken = new();
+
         var keyMaterialTask = jwtService.GetLastKeys();
         keyMaterialTask.Wait();
 
@@ -40,7 +42,8 @@ public class JwtServiceValidationHandler(
                       "Authorization", out StringValues authHeader))
         {
             var tenantKey =
-                GetTenantKeyByToken(authHeader.ToString());
+                GetTenantKeyByToken(authHeader.ToString()) 
+                    ?? contextService.GetCurrentTenantKey();
 
             if (tenantKey is not null)
             {
@@ -63,12 +66,22 @@ public class JwtServiceValidationHandler(
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ClockSkew = TimeSpan.Zero,
-
                     ValidIssuer = tenantTokenConfiguration.Issuer,
                     ValidAudience = tenantTokenConfiguration.Audience,
-                    IssuerSigningKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey())
-                    //IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tenantTokenConfiguration.SecurityKey))
+                    IssuerSigningKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey()),
+                    TokenDecryptionKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey()),
                 };
+
+                //We can read the token before we've begun validating it.
+                incomingToken = ReadJwtToken(token);
+
+                //And let the framework take it from here.
+                //var handler = new JsonWebTokenHandler();
+                //var result = handler.ValidateToken(token, validationParameters);
+                //validatedToken = result.SecurityToken;
+
+                //return new ClaimsPrincipal(result.ClaimsIdentity);
+                return base.ValidateToken(token, validationParameters, out validatedToken);
             }
         }
        
@@ -80,15 +93,13 @@ public class JwtServiceValidationHandler(
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ClockSkew = TimeSpan.Zero,
-
             ValidIssuer = configurations.Value.Auth.ValidIssuer,
             ValidAudience = configurations.Value.Auth.ValidAudience,
             IssuerSigningKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey())
-            //IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configurations.Value.Auth.SecurityKey))
         };
 
         //We can read the token before we've begun validating it.
-        JwtSecurityToken incomingToken = ReadJwtToken(token);
+        incomingToken = ReadJwtToken(token);
 
         //And let the framework take it from here.
         //var handler = new JsonWebTokenHandler();
