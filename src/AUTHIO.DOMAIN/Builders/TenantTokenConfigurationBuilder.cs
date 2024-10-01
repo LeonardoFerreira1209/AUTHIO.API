@@ -1,4 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Jwa;
 
 namespace AUTHIO.DOMAIN.Builders;
 
@@ -11,6 +12,9 @@ public sealed class TenantTokenConfigurationBuilder
     private string securityKey;
     private string issuer;
     private string audience;
+    private bool encrypted;
+    private AlgorithmType algorithmJwsType;
+    private AlgorithmType algorithmJweType;
     private DateTime created;
     private DateTime? updated = null;
 
@@ -91,11 +95,49 @@ public sealed class TenantTokenConfigurationBuilder
     }
 
     /// <summary>
+    /// Adiciona se o token é encriptado.
+    /// </summary>
+    /// <param name="encrypted"></param>
+    /// <returns></returns>
+    public TenantTokenConfigurationBuilder AddEncrypted(bool encrypted)
+    {
+        this.encrypted = encrypted;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona o type de criptografia do token jws.
+    /// </summary>
+    /// <param name="encrypted"></param>
+    /// <returns></returns>
+    public TenantTokenConfigurationBuilder AddJwsAlgorithmType(AlgorithmType algorithmJwsType)
+    {
+        this.algorithmJwsType = algorithmJwsType;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona o type de criptografia do token jws.
+    /// </summary>
+    /// <param name="encrypted"></param>
+    /// <returns></returns>
+    public TenantTokenConfigurationBuilder AddJweAlgorithmType(AlgorithmType algorithmJweType)
+    {
+        this.algorithmJweType = algorithmJweType;
+
+        return this;
+    }
+
+    /// <summary>
     /// Cria a entidade.
     /// </summary>
     /// <returns>TenantTokenConfigurationEntity</returns>
     public TenantTokenConfigurationEntity Builder()
         => new(tenantConfigurationId, created,
             updated, securityKey,
-            issuer, audience);
+            issuer, audience, encrypted,
+            algorithmJwsType, algorithmJweType
+        );
 }

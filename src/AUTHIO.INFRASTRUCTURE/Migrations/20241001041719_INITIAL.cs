@@ -368,6 +368,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     SecurityKey = table.Column<string>(type: "longtext", nullable: true),
                     Issuer = table.Column<string>(type: "longtext", nullable: true),
                     Audience = table.Column<string>(type: "longtext", nullable: true),
+                    Encrypted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AlgorithmJwsType = table.Column<int>(type: "int", nullable: false),
+                    AlgorithmJweType = table.Column<int>(type: "int", nullable: false),
                     TenantConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
@@ -482,17 +485,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a"), null, new DateTime(2024, 8, 18, 1, 45, 23, 130, DateTimeKind.Local).AddTicks(1994), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5"), null, new DateTime(2024, 10, 1, 1, 17, 16, 190, DateTimeKind.Local).AddTicks(9924), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
-                    { 2, "Tenants", "GET", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
-                    { 3, "Tenants", "PATCH", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
-                    { 4, "Tenants", "PUT", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") }
+                    { 1, "Tenants", "POST", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") },
+                    { 2, "Tenants", "GET", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") },
+                    { 3, "Tenants", "PATCH", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") },
+                    { 4, "Tenants", "PUT", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") }
                 });
 
             migrationBuilder.CreateIndex(

@@ -29,9 +29,15 @@ public class JwtServiceValidationHandler(
         TokenValidationParameters validationParameters, out SecurityToken validatedToken)
     {
         using var scope = serviceProvider.CreateScope();
+
+        IEnumerable<string> dontUseTenantConfigAuthEndpoints = [
+            "RegisterTenantUserAsync",
+        ];
+
         var jwtService = scope.ServiceProvider.GetRequiredService<IJwtService>();
         var contextService = scope.ServiceProvider.GetRequiredService<IContextService>();
         var configurations = scope.ServiceProvider.GetRequiredService<IOptions<AppSettings>>();
+        var enableTenantConfig = !contextService.GetEndpointRoute.Contains(string.Join(", ", dontUseTenantConfigAuthEndpoints));
 
         JwtSecurityToken incomingToken = new();
 
@@ -45,7 +51,7 @@ public class JwtServiceValidationHandler(
                 GetTenantKeyByToken(authHeader.ToString()) 
                     ?? contextService.GetCurrentTenantKey();
 
-            if (tenantKey is not null)
+            if (tenantKey is not null && enableTenantConfig)
             {
                 ITenantConfigurationRepository tenantConfigurationRepository =
                     scope.ServiceProvider
@@ -75,11 +81,6 @@ public class JwtServiceValidationHandler(
                 //We can read the token before we've begun validating it.
                 incomingToken = ReadJwtToken(token);
 
-                //And let the framework take it from here.
-                //var handler = new JsonWebTokenHandler();
-                //var result = handler.ValidateToken(token, validationParameters);
-                //validatedToken = result.SecurityToken;
-
                 //return new ClaimsPrincipal(result.ClaimsIdentity);
                 return base.ValidateToken(token, validationParameters, out validatedToken);
             }
@@ -100,11 +101,6 @@ public class JwtServiceValidationHandler(
 
         //We can read the token before we've begun validating it.
         incomingToken = ReadJwtToken(token);
-
-        //And let the framework take it from here.
-        //var handler = new JsonWebTokenHandler();
-        //var result = handler.ValidateToken(token, validationParameters);
-        //validatedToken = result.SecurityToken;
 
         //return new ClaimsPrincipal(result.ClaimsIdentity);
         return base.ValidateToken(token, validationParameters, out validatedToken);

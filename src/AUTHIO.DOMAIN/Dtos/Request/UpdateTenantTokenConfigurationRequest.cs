@@ -1,4 +1,6 @@
-﻿namespace AUTHIO.DOMAIN.Dtos.Request;
+﻿using AUTHIO.DOMAIN.Helpers.Jwa;
+
+namespace AUTHIO.DOMAIN.Dtos.Request;
 
 /// <summary>
 /// Request de atualização de token configuration.
@@ -29,4 +31,14 @@ public sealed class UpdateTenantTokenConfigurationRequest
     /// Token deve ser encriptado.
     /// </summary>
     public bool Encrypted { get; set; }
+
+    /// <summary>
+    /// Tipo do algoritimo do token jws.
+    /// </summary>
+    public AlgorithmType AlgorithmJwsType { get; set; }
+
+    /// <summary>
+    /// Tipo do algoritimo do token jwe.
+    /// </summary>
+    public AlgorithmType AlgorithmJweType { get; set; }
 }

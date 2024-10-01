@@ -1,4 +1,6 @@
-﻿namespace AUTHIO.DOMAIN.Entities;
+﻿using AUTHIO.DOMAIN.Helpers.Jwa;
+
+namespace AUTHIO.DOMAIN.Entities;
 
 /// <summary>
 /// Classe de Configuração de token do tenant.
@@ -14,7 +16,7 @@ public class TenantTokenConfigurationEntity : IEntityPrimaryKey<Guid>
     }
 
     /// <summary>
-    /// ctor
+    ///  ctor
     /// </summary>
     /// <param name="tenantConfigurationId"></param>
     /// <param name="created"></param>
@@ -22,10 +24,14 @@ public class TenantTokenConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <param name="securityKey"></param>
     /// <param name="issuer"></param>
     /// <param name="audience"></param>
+    /// <param name="encrypted"></param>
+    /// <param name="algorithmJwsType"></param>
+    /// <param name="algorithmJweType"></param>
     public TenantTokenConfigurationEntity(
         Guid tenantConfigurationId, DateTime created,
         DateTime? updated, string securityKey, string issuer,
-        string audience)
+        string audience, bool encrypted,
+        AlgorithmType algorithmJwsType, AlgorithmType algorithmJweType)
     {
         TenantConfigurationId = tenantConfigurationId;
         Created = created;
@@ -33,6 +39,9 @@ public class TenantTokenConfigurationEntity : IEntityPrimaryKey<Guid>
         SecurityKey = securityKey;
         Issuer = issuer;
         Audience = audience;
+        Encrypted = encrypted;
+        AlgorithmJwsType = algorithmJwsType;
+        AlgorithmJweType = algorithmJweType;
     }
 
     /// <summary>
@@ -69,6 +78,16 @@ public class TenantTokenConfigurationEntity : IEntityPrimaryKey<Guid>
     /// Token deve ser encriptado.
     /// </summary>
     public bool Encrypted { get; set; }
+
+    /// <summary>
+    /// Tipo do algoritimo do token jws.
+    /// </summary>
+    public AlgorithmType AlgorithmJwsType { get; set; }
+
+    /// <summary>
+    /// Tipo do algoritimo do token jwe.
+    /// </summary>
+    public AlgorithmType AlgorithmJweType { get; set; }
 
     /// <summary>
     /// Id do tenant configuration Id.
