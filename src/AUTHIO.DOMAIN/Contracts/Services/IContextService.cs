@@ -13,6 +13,8 @@ public interface IContextService
     /// </summary>
     public bool IsAuthenticated { get; }
 
+    public string GetEndpointRoute { get;  }
+
     /// <summary>
     /// Recupera do tenantId do usuário logado.
     /// </summary>

@@ -20,7 +20,7 @@ namespace AUTHIO.API.Controllers;
 /// <param name="featureFlags"></param>
 /// <param name="tenantService"></param>
 [Controller]
-[Route("api/tenant")]
+[Route("api/tenants")]
 public class TenantController(
     IFeatureFlagsService featureFlags, ITenantService tenantService)
         : BaseController(featureFlags)
@@ -96,7 +96,8 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync(
-       [FromQuery] FilterRequest filterRequest, CancellationToken cancellationToken)
+       [FromQuery] FilterRequest filterRequest, 
+       CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))
@@ -114,7 +115,7 @@ public class TenantController(
     /// <param name="tenantKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPatch("user")]
+    [HttpPatch("users/register")]
     [EnableRateLimiting("fixed")]
     [CustomAuthorize(Claims.Tenants, "PATCH")]
     [SwaggerOperation(Summary = "Registrar usuário no tenant", Description = "Método responsável por registrar um usuário no tenant!")]
@@ -122,7 +123,9 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterTenantUserAsync(
-        [FromBody] RegisterUserRequest registerUserRequest, [FromHeader] string tenantKey, CancellationToken cancellationToken)
+        [FromHeader(Name = "X-Tenant-KEY")] string tenantKey, 
+        [FromBody] RegisterUserRequest registerUserRequest, 
+        CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(registerUserRequest)))

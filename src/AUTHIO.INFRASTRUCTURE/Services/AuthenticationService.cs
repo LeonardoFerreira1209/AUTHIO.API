@@ -91,18 +91,23 @@ public sealed class AuthenticationService(
                                ObjectResult response = new(
                                     new ApiResponse<TokenJWT>(
                                         true, HttpStatusCode.Created, tokenJWT, [
-                                            new("Token criado com sucesso!")]
-                                        )
-                                    );
+                                            new("Token criado com sucesso!")
+                                        ]
+                                        
+                                    )
+                                );
 
                                return response;
-                           });
+                           }
+                        );
 
                     }).Unwrap();
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception:{exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception:{exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
+            
+            throw;
         }
     }
 

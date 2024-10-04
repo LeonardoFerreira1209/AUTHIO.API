@@ -2,6 +2,7 @@
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Jwa;
 
 namespace AUTHIO.DOMAIN.Helpers.Extensions;
 
@@ -44,7 +45,10 @@ public static class TenantExtensions
                     Guid.Empty,
                     createTenantRequest?.TokenConfiguration?.SecurityKey,
                     createTenantRequest?.TokenConfiguration?.Issuer,
-                    createTenantRequest?.TokenConfiguration?.Audience
+                    createTenantRequest?.TokenConfiguration?.Audience,
+                    createTenantRequest?.TokenConfiguration.Encrypted ?? false,
+                    createTenantRequest?.TokenConfiguration.AlgorithmJwsType ?? AlgorithmType.RSA,
+                    createTenantRequest?.TokenConfiguration.AlgorithmJweType ?? AlgorithmType.RSA
                 )
             )
         );
@@ -90,6 +94,11 @@ public static class TenantExtensions
             = updateTenantConfigurationRequest
                 ?.TenantEmailConfiguration
                     ?.UpdateEntity(tenantConfigurationEntity.TenantEmailConfiguration);
+
+        tenantConfigurationEntity.TenantTokenConfiguration
+            = updateTenantConfigurationRequest
+                ?.TenantTokenConfiguration
+                    ?.UpdateEntity(tenantConfigurationEntity.TenantTokenConfiguration);
 
         return tenantConfigurationEntity;
     }
@@ -163,6 +172,27 @@ public static class TenantExtensions
                     ?.UpdateEntity(tenantEmailConfigurationEntity.SendGridConfiguration);
 
         return tenantEmailConfigurationEntity;
+    }
+
+
+    /// <summary>
+    /// Atualiza a entidade de Tenant Email Configuration.
+    /// </summary>
+    /// <param name="updateTenantEmailConfigurationRequest"></param>
+    /// <param name="tenantEmailConfigurationEntity"></param>
+    /// <returns></returns>
+    public static TenantTokenConfigurationEntity UpdateEntity(
+        this UpdateTenantTokenConfigurationRequest updateTenantTokenConfigurationRequest, TenantTokenConfigurationEntity tenantTokenConfigurationEntity)
+    {
+        tenantTokenConfigurationEntity.Updated = DateTime.Now;
+        tenantTokenConfigurationEntity.Audience = updateTenantTokenConfigurationRequest.Audience;
+        tenantTokenConfigurationEntity.Issuer = updateTenantTokenConfigurationRequest.Issuer;
+        tenantTokenConfigurationEntity.SecurityKey = updateTenantTokenConfigurationRequest.SecurityKey;
+        tenantTokenConfigurationEntity.Encrypted = updateTenantTokenConfigurationRequest.Encrypted;
+        tenantTokenConfigurationEntity.AlgorithmJwsType = updateTenantTokenConfigurationRequest.AlgorithmJwsType;
+        tenantTokenConfigurationEntity.AlgorithmJweType = updateTenantTokenConfigurationRequest.AlgorithmJweType;
+
+        return tenantTokenConfigurationEntity;
     }
 
     /// <summary>
@@ -430,6 +460,9 @@ public static class TenantExtensions
             SecurityKey = tenantTokenConfigurationEntity.SecurityKey,
             Issuer = tenantTokenConfigurationEntity.Issuer,
             Audience = tenantTokenConfigurationEntity.Audience,
+            Encrypted = tenantTokenConfigurationEntity.Encrypted,
+            AlgorithmJwsType = tenantTokenConfigurationEntity.AlgorithmJwsType,
+            AlgorithmJweType = tenantTokenConfigurationEntity.AlgorithmJweType,
             TenantConfigurationId = tenantTokenConfigurationEntity.TenantConfigurationId,
             TenantConfiguration = includeTenantConfiguration
                 ? tenantTokenConfigurationEntity?.TenantConfiguration?.ToResponse()

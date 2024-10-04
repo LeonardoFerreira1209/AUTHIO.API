@@ -3,6 +3,8 @@ using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Model;
+using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Jwa;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.ObjectModel;
@@ -27,9 +29,9 @@ public class JwtService(
     private readonly IJsonWebKeyStore _store = store;
     private readonly IOptions<JwtOptions> _options = options;
 
-    private readonly Guid? _currentTenantId
+    private readonly TenantEntity? _tenant
       = tenantRepository.GetAsync(
-          x => x.TenantConfiguration.TenantKey == contextService.GetCurrentTenantKey())?.Result?.Id;
+          x => x.TenantConfiguration.TenantKey == contextService.GetCurrentTenantKey())?.Result;
 
     /// <summary>
     /// Gerar chave.
@@ -37,9 +39,27 @@ public class JwtService(
     /// <returns></returns>
     public async Task<SecurityKey> GenerateKey()
     {
-        var key = new CryptographicKey(cryptoService, _options.Value.Jws);
+        var tenantTokenConfiguration = 
+            _tenant?.TenantConfiguration
+                ?.TenantTokenConfiguration;
 
-        var model = new KeyMaterial(key, _currentTenantId);
+        var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
+
+        JwtType jwtType = encrypted 
+            ? JwtType.Jwe 
+            : JwtType.Jws;
+
+        AlgorithmType algorithmType = encrypted 
+            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType 
+            : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
+
+        var key = new CryptographicKey(
+            cryptoService, 
+                Algorithm.Create(algorithmType, jwtType) 
+        );
+
+        var model = new KeyMaterial(key, _tenant?.Id);
+
         await _store.Store(model);
 
         return model.GetSecurityKey();
@@ -74,9 +94,17 @@ public class JwtService(
     /// <returns></returns>
     public async Task<SigningCredentials> GetCurrentSigningCredentials()
     {
+        var tenantTokenConfiguration =
+           _tenant?.TenantConfiguration
+               ?.TenantTokenConfiguration;
+
         var current = await GetCurrentSecurityKey();
 
-        return new SigningCredentials(current, _options.Value.Jws);
+        return new SigningCredentials(current,
+            tenantTokenConfiguration is not null
+                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJwsType, JwtType.Jws)
+                : _options.Value.Jws
+        );
     }
 
     /// <summary>
@@ -85,9 +113,17 @@ public class JwtService(
     /// <returns></returns>
     public async Task<EncryptingCredentials> GetCurrentEncryptingCredentials()
     {
+        var tenantTokenConfiguration =
+            _tenant?.TenantConfiguration
+                ?.TenantTokenConfiguration;
+
         var current = await GetCurrentSecurityKey();
 
-        return new EncryptingCredentials(current, _options.Value.Jwe.Alg, _options.Value.Jwe.EncryptionAlgorithmContent);
+        var jwe = tenantTokenConfiguration is not null
+                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJweType, JwtType.Jwe)
+                : _options.Value.Jwe;
+
+        return new EncryptingCredentials(current, jwe.Alg, jwe.EncryptionAlgorithmContent);
     }
 
     /// <summary>
@@ -107,11 +143,30 @@ public class JwtService(
     /// <returns></returns>
     private async Task<bool> CheckCompatibility(KeyMaterial currentKey)
     {
-        if (currentKey.Type != _options.Value.Jws.Kty())
+        var tenantTokenConfiguration =
+           _tenant?.TenantConfiguration
+               ?.TenantTokenConfiguration;
+
+        var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
+
+        JwtType jwtType = encrypted 
+            ? JwtType.Jwe 
+            : JwtType.Jws;
+
+        AlgorithmType algorithmType = encrypted 
+            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType 
+            : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
+
+        Algorithm jwtAlgorithm = 
+            Algorithm.Create(algorithmType, jwtType);
+
+        if (currentKey.Type != jwtAlgorithm.Kty())
         {
             await GenerateKey();
+
             return false;
         }
+
         return true;
     }
 

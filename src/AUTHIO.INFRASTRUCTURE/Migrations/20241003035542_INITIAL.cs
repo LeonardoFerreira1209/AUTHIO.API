@@ -151,7 +151,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -368,6 +368,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     SecurityKey = table.Column<string>(type: "longtext", nullable: true),
                     Issuer = table.Column<string>(type: "longtext", nullable: true),
                     Audience = table.Column<string>(type: "longtext", nullable: true),
+                    Encrypted = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AlgorithmJwsType = table.Column<int>(type: "int", nullable: false),
+                    AlgorithmJweType = table.Column<int>(type: "int", nullable: false),
                     TenantConfigurationId = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
                 constraints: table =>
@@ -482,17 +485,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a"), null, new DateTime(2024, 8, 18, 1, 45, 23, 130, DateTimeKind.Local).AddTicks(1994), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea"), null, new DateTime(2024, 10, 3, 0, 55, 42, 366, DateTimeKind.Local).AddTicks(3750), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
-                    { 2, "Tenants", "GET", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
-                    { 3, "Tenants", "PATCH", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") },
-                    { 4, "Tenants", "PUT", new Guid("2cf41d70-0d01-48d1-b58f-df463ec0319a") }
+                    { 1, "Tenants", "POST", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") },
+                    { 2, "Tenants", "GET", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") },
+                    { 3, "Tenants", "PATCH", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") },
+                    { 4, "Tenants", "PUT", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") }
                 });
 
             migrationBuilder.CreateIndex(

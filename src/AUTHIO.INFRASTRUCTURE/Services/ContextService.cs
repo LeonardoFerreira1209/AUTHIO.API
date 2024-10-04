@@ -39,8 +39,11 @@ public class ContextService(
     /// </summary>
     /// <returns></returns>
     public string GetCurrentTenantKey() => httpContextAccessor.HttpContext?.Request?.Headers
-                  ?.FirstOrDefault(header => header.Key.Equals("tenantkey")).Value
-                        ?? httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Issuer == "tenantkey").Value;
+                  ?.FirstOrDefault(header => header.Key.Equals("X-Tenant-KEY")).Value
+                        ?? httpContextAccessor.HttpContext?
+                                .User.Claims.FirstOrDefault(x => x.Issuer == "tenantkey").Value;
+
+    public string GetEndpointRoute => httpContextAccessor.HttpContext.GetEndpoint().DisplayName;
 
     /// <summary>
     /// Verifica se o usuário esta logado.

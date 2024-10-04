@@ -1,4 +1,6 @@
-﻿namespace AUTHIO.DOMAIN.Dtos.Request;
+﻿using AUTHIO.DOMAIN.Helpers.Jwa;
+
+namespace AUTHIO.DOMAIN.Dtos.Request;
 
 /// <summary>
 /// Request de criação de Tenant.
@@ -43,8 +45,12 @@ public sealed class CreateTenantRequest
 /// <param name="Issuer"></param>
 /// <param name="Audience"></param>
 /// <param name="Encrypted"></param>
+/// <param name="algorithmJwsType"></param>
+/// <param name="algorithmJweType"></param>
 public record TokenConfigurationRequest(
     string SecurityKey, 
     string Issuer, 
     string Audience, 
-    bool Encrypted);
+    bool Encrypted,
+    AlgorithmType AlgorithmJwsType,
+    AlgorithmType AlgorithmJweType);

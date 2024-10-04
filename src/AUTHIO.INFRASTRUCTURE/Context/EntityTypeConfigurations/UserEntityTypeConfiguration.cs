@@ -40,19 +40,43 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
         // Observe que essas relações são configuradas sem propriedades de navegação
 
         // Cada Usuário pode ter muitos UserClaims
-        builder.HasMany<IdentityUserClaim<Guid>>().WithOne().HasForeignKey(uc => uc.UserId).IsRequired();
+        builder
+            .HasMany<IdentityUserClaim<Guid>>()
+            .WithOne()
+            .HasForeignKey(uc => uc.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Cada Usuário pode ter muitos UserLogins
-        builder.HasMany<IdentityUserLogin<Guid>>().WithOne().HasForeignKey(ul => ul.UserId).IsRequired();
+        builder
+            .HasMany<IdentityUserLogin<Guid>>()
+            .WithOne()
+            .HasForeignKey(ul => ul.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Cada Usuário pode ter muitos UserTokens
-        builder.HasMany<IdentityUserLogin<Guid>>().WithOne().HasForeignKey(ut => ut.UserId).IsRequired();
+        builder
+            .HasMany<IdentityUserLogin<Guid>>()
+            .WithOne()
+            .HasForeignKey(ut => ut.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Cada Usuário pode ter muitas entradas na tabela de junção UserRole
-        builder.HasMany<IdentityUserRole<Guid>>().WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
+        builder
+            .HasMany<IdentityUserRole<Guid>>()
+            .WithOne()
+            .HasForeignKey(ur => ur.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
         // Define a relação entre o Usuário e a entidade Tenant. Cada Usuário pertence a um Tenant,
         // e cada Tenant pode ter vários Usuários. Esta relação é configurada para não permitir a exclusão em cascata.
-        builder.HasOne(u => u.Tenant).WithMany(t => t.Users).HasForeignKey(u => u.TenantId).OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(u => u.Tenant)
+            .WithMany(t => t.Users)
+            .HasForeignKey(u => u.TenantId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

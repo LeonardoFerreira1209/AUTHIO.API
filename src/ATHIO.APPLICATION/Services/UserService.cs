@@ -74,7 +74,8 @@ public sealed class UserService(
                         if (identityResult.Succeeded is false)
                             throw new CreateUserFailedException(
                                 registerUserRequest, identityResult.Errors.Select((e)
-                                    => new DataNotifications(e.Description)).ToList());
+                                    => new DataNotifications(e.Description)).ToList()
+                            );
 
                         return await customUserManager.AddToRoleAsync(
                             userEntity, "System").ContinueWith(async (identityResultTask) =>
@@ -85,18 +86,23 @@ public sealed class UserService(
                                 if (identityResult.Succeeded is false)
                                     throw new UserToRoleFailedException(
                                         registerUserRequest, identityResult.Errors.Select((e)
-                                            => new DataNotifications(e.Description)).ToList());
+                                            => new DataNotifications(e.Description)).ToList()
+                                    );
 
                                 var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
-                                            .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                               EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)));
+                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                            EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
+                                        )
+                                );
 
-                                await eventRepository.CreateAsync(CreateEvent
-                                    .CreateEmailEvent(jsonBody)).ContinueWith(async (task) =>
-                                    {
-                                        await unitOfWork.CommitAsync();
-                                        await transaction.CommitAsync();
-                                    }).Unwrap();
+                                await eventRepository.CreateAsync(
+                                    CreateEvent.CreateEmailEvent(
+                                        jsonBody
+                                    )
+                                );
+
+                                await unitOfWork.CommitAsync();
+                                await transaction.CommitAsync();
 
                                 return new ObjectResponse(
                                     HttpStatusCode.Created,
@@ -104,7 +110,11 @@ public sealed class UserService(
                                         identityResult.Succeeded,
                                         HttpStatusCode.Created,
                                         userEntity.ToResponse(), [
-                                            new DataNotifications("Usuário criado com sucesso!")]));
+                                            new DataNotifications("Usuário criado com sucesso!")
+                                        ]
+                                    )
+                                );
+
                             }).Unwrap();
 
                     }).Unwrap();
@@ -116,7 +126,9 @@ public sealed class UserService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); throw;
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
+            
+            throw;
         }
     }
 }

@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20240916032753_Table-Token-column-encrypted")]
-    partial class TableTokencolumnencrypted
+    [Migration("20241003035542_INITIAL")]
+    partial class INITIAL
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.7")
+                .HasAnnotation("ProductVersion", "8.0.8")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -236,8 +236,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("510095d3-1290-49c7-b219-8d9a51f61ce7"),
-                            Created = new DateTime(2024, 9, 16, 0, 27, 53, 100, DateTimeKind.Local).AddTicks(4083),
+                            Id = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea"),
+                            Created = new DateTime(2024, 10, 3, 0, 55, 42, 366, DateTimeKind.Local).AddTicks(3750),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -406,6 +406,12 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<int>("AlgorithmJweType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AlgorithmJwsType")
+                        .HasColumnType("int");
 
                     b.Property<string>("Audience")
                         .HasColumnType("longtext");
@@ -580,28 +586,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("510095d3-1290-49c7-b219-8d9a51f61ce7")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("510095d3-1290-49c7-b219-8d9a51f61ce7")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("510095d3-1290-49c7-b219-8d9a51f61ce7")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("510095d3-1290-49c7-b219-8d9a51f61ce7")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         });
                 });
 
@@ -797,7 +803,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
                         .WithMany("Users")
                         .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Tenant");
                 });
