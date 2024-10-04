@@ -1,10 +1,10 @@
 using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Store;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Helpers.Consts;
-using AUTHIO.DOMAIN.Store;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
