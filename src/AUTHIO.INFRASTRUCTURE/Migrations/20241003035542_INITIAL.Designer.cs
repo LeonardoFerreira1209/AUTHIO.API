@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20241001041719_INITIAL")]
+    [Migration("20241003035542_INITIAL")]
     partial class INITIAL
     {
         /// <inheritdoc />
@@ -236,8 +236,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5"),
-                            Created = new DateTime(2024, 10, 1, 1, 17, 16, 190, DateTimeKind.Local).AddTicks(9924),
+                            Id = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea"),
+                            Created = new DateTime(2024, 10, 3, 0, 55, 42, 366, DateTimeKind.Local).AddTicks(3750),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -586,28 +586,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5")
+                            RoleId = new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea")
                         });
                 });
 
@@ -803,7 +803,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
                         .WithMany("Users")
                         .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Tenant");
                 });

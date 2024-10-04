@@ -43,14 +43,23 @@ public class JwtService(
             _tenant?.TenantConfiguration
                 ?.TenantTokenConfiguration;
 
+        var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
+
+        JwtType jwtType = encrypted 
+            ? JwtType.Jwe 
+            : JwtType.Jws;
+
+        AlgorithmType algorithmType = encrypted 
+            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType 
+            : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
+
         var key = new CryptographicKey(
             cryptoService, 
-            tenantTokenConfiguration is not null 
-                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJweType, JwtType.Jws) 
-                : _options.Value.Jws
+                Algorithm.Create(algorithmType, jwtType) 
         );
 
         var model = new KeyMaterial(key, _tenant?.Id);
+
         await _store.Store(model);
 
         return model.GetSecurityKey();
@@ -93,7 +102,7 @@ public class JwtService(
 
         return new SigningCredentials(current,
             tenantTokenConfiguration is not null
-                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJweType, JwtType.Jws)
+                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJwsType, JwtType.Jws)
                 : _options.Value.Jws
         );
     }
@@ -104,9 +113,17 @@ public class JwtService(
     /// <returns></returns>
     public async Task<EncryptingCredentials> GetCurrentEncryptingCredentials()
     {
+        var tenantTokenConfiguration =
+            _tenant?.TenantConfiguration
+                ?.TenantTokenConfiguration;
+
         var current = await GetCurrentSecurityKey();
 
-        return new EncryptingCredentials(current, _options.Value.Jwe.Alg, _options.Value.Jwe.EncryptionAlgorithmContent);
+        var jwe = tenantTokenConfiguration is not null
+                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJweType, JwtType.Jwe)
+                : _options.Value.Jwe;
+
+        return new EncryptingCredentials(current, jwe.Alg, jwe.EncryptionAlgorithmContent);
     }
 
     /// <summary>
@@ -130,15 +147,26 @@ public class JwtService(
            _tenant?.TenantConfiguration
                ?.TenantTokenConfiguration;
 
-        Algorithm jws = tenantTokenConfiguration is not null
-                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJweType, JwtType.Jws)
-                : _options.Value.Jws;
+        var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
 
-        if (currentKey.Type != jws.Kty())
+        JwtType jwtType = encrypted 
+            ? JwtType.Jwe 
+            : JwtType.Jws;
+
+        AlgorithmType algorithmType = encrypted 
+            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType 
+            : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
+
+        Algorithm jwtAlgorithm = 
+            Algorithm.Create(algorithmType, jwtType);
+
+        if (currentKey.Type != jwtAlgorithm.Kty())
         {
             await GenerateKey();
+
             return false;
         }
+
         return true;
     }
 

@@ -151,7 +151,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -485,17 +485,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "TenantId", "Updated" },
-                values: new object[] { new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5"), null, new DateTime(2024, 10, 1, 1, 17, 16, 190, DateTimeKind.Local).AddTicks(9924), "System", "SYSTEM", 1, true, null, null });
+                values: new object[] { new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea"), null, new DateTime(2024, 10, 3, 0, 55, 42, 366, DateTimeKind.Local).AddTicks(3750), "System", "SYSTEM", 1, true, null, null });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Tenants", "POST", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") },
-                    { 2, "Tenants", "GET", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") },
-                    { 3, "Tenants", "PATCH", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") },
-                    { 4, "Tenants", "PUT", new Guid("9c87ad19-f828-4f00-bd37-7ff7dfdad7f5") }
+                    { 1, "Tenants", "POST", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") },
+                    { 2, "Tenants", "GET", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") },
+                    { 3, "Tenants", "PATCH", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") },
+                    { 4, "Tenants", "PUT", new Guid("ee800049-5c89-494b-a9ae-5e74ccab38ea") }
                 });
 
             migrationBuilder.CreateIndex(
