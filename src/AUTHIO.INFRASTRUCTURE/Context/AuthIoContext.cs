@@ -1,9 +1,9 @@
 ﻿using AUTHIO.DOMAIN.Contracts;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Store;
 using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Enums;
-using AUTHIO.DOMAIN.Store;
 using AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
