@@ -36,7 +36,7 @@ public class TenantController(
     /// <returns></returns>
     [HttpPost]
     [EnableRateLimiting("fixed")]
-    [CustomAuthorize(Claims.Tenants, "POST")]
+    [Authorize(Claims.Tenants, "POST")]
     [SwaggerOperation(Summary = "Registrar tenant", Description = "Método responsável por registrar um tenant!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
@@ -63,7 +63,7 @@ public class TenantController(
     /// <returns></returns>
     [HttpPut]
     [EnableRateLimiting("fixed")]
-    [CustomAuthorize(Claims.Tenants, "PUT")]
+    [Authorize(Claims.Tenants, "PUT")]
     [SwaggerOperation(Summary = "Atualizar tenant", Description = "Método responsável por atualizar um tenant!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
@@ -90,7 +90,7 @@ public class TenantController(
     /// <returns></returns>
     [HttpGet]
     [EnableRateLimiting("fixed")]
-    [CustomAuthorize(Claims.Tenants, "GET")]
+    [Authorize(Claims.Tenants, "GET")]
     [SwaggerOperation(Summary = "Buscar todos os tenants", Description = "Método responsável por buscar todos os tenants do usuário!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
@@ -117,7 +117,7 @@ public class TenantController(
     /// <returns></returns>
     [HttpPatch("users/register")]
     [EnableRateLimiting("fixed")]
-    [CustomAuthorize(Claims.Tenants, "PATCH")]
+    [Authorize(Claims.Tenants, "PATCH")]
     [SwaggerOperation(Summary = "Registrar usuário no tenant", Description = "Método responsável por registrar um usuário no tenant!")]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]

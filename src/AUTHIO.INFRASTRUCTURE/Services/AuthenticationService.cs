@@ -93,7 +93,6 @@ public sealed class AuthenticationService(
                                         true, HttpStatusCode.Created, tokenJWT, [
                                             new("Token criado com sucesso!")
                                         ]
-                                        
                                     )
                                 );
 

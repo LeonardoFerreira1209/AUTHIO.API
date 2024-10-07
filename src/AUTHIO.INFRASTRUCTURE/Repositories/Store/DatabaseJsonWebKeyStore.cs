@@ -116,9 +116,13 @@ public class DataBaseJsonWebKeyStore<TContext>(
             cacheKey, out ReadOnlyCollection<KeyMaterial> keys))
         {
 
-            keys = context.SecurityKeys.OrderByDescending(
-                d => d.CreationDate).Take(quantity)
-                    .AsNoTrackingWithIdentityResolution().ToList().AsReadOnly();
+            keys = context.SecurityKeys
+                .Where(d => d.TenantId == _currentTenantId)
+                .OrderByDescending(d => d.CreationDate)
+                .Take(quantity)
+                .AsNoTrackingWithIdentityResolution()
+                .ToList()
+                .AsReadOnly();
 
             // Set cache options.
             var cacheEntryOptions = new MemoryCacheEntryOptions()

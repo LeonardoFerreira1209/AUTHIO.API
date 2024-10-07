@@ -8,6 +8,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace AUTHIO.DOMAIN.Auth;
 
@@ -41,7 +42,9 @@ public class JwtServiceValidationHandler(
 
         JwtSecurityToken incomingToken = new();
 
-        var keyMaterialTask = jwtService.GetLastKeys();
+        var keyMaterialTask = 
+            jwtService.GetLastKeys();
+
         keyMaterialTask.Wait();
 
         if (contextService.TryGetValueByHeader(
@@ -64,6 +67,11 @@ public class JwtServiceValidationHandler(
                 var tenantTokenConfiguration =
                     tenantConfigurationEntity.TenantTokenConfiguration;
 
+                keyMaterialTask =
+                    jwtService.GetLastKeys();
+
+                keyMaterialTask.Wait();
+
                 validationParameters = new TokenValidationParameters
                 {
                     LogValidationExceptions = true,
@@ -71,6 +79,7 @@ public class JwtServiceValidationHandler(
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
+                    RequireSignedTokens = !tenantTokenConfiguration.Encrypted,
                     ClockSkew = TimeSpan.Zero,
                     ValidIssuer = tenantTokenConfiguration.Issuer,
                     ValidAudience = tenantTokenConfiguration.Audience,
@@ -93,6 +102,7 @@ public class JwtServiceValidationHandler(
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            RequireSignedTokens= true,
             ClockSkew = TimeSpan.Zero,
             ValidIssuer = configurations.Value.Auth.ValidIssuer,
             ValidAudience = configurations.Value.Auth.ValidAudience,

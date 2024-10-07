@@ -1,4 +1,5 @@
 ﻿using AUTHIO.API.Controllers.Base;
+using AUTHIO.DOMAIN.Auth.CustomAuthorize.Attribute;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
@@ -45,5 +46,25 @@ public class UserController(
                  () => userService.RegisterAsync(
                      registerUserRequest, cancellationToken), "Registrar usuário no sistema.");
         }
+    }
+
+    /// <summary>
+    /// Endpoint responsável pelo registro de usuários no sistema.
+    /// </summary>
+    /// <param name="registerUserRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Authorize]
+    [EnableRateLimiting("fixed")]
+    [SwaggerOperation(Summary = "Registrar usuário", Description = "Método responsável por registrar um usuário no sistema!")]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> Tetsesync(
+        [FromHeader(Name = "X-Tenant-KEY")] string tenantKey,
+        CancellationToken cancellationToken)
+    {
+        return null;
     }
 }

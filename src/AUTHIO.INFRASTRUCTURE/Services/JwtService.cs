@@ -131,9 +131,11 @@ public class JwtService(
     /// </summary>
     /// <param name="i"></param>
     /// <returns></returns>
-    public Task<ReadOnlyCollection<KeyMaterial>> GetLastKeys(int? i = null)
+    public Task<ReadOnlyCollection<KeyMaterial>> GetLastKeys(int? i = 2)
     {
-        return _store.GetLastKeys(_options.Value.AlgorithmsToKeep);
+        return _store.GetLastKeys(
+            i ?? _options.Value.AlgorithmsToKeep
+        );
     }
 
     /// <summary>

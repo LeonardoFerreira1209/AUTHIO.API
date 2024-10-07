@@ -41,7 +41,7 @@ public class CustomAuthorizeFilter(
     private bool HasClaims(ClaimsPrincipal claimsPrincipal)
     {
         var hasClaim = _claims.Any(claim
-            => claimsPrincipal.HasClaim(claim.Type, claim.Value));
+            => claimsPrincipal.HasClaim(claim.Type, claim.Value)) || _claims.Count == 0;
 
         return hasClaim;
     }
