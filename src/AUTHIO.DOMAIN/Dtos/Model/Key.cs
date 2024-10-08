@@ -1,4 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Helpers.Jwa;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 using System.Text.Json;
@@ -31,6 +32,8 @@ public class KeyMaterial : IEntityTenantNullAble
 
         Type = cryptographicKey.Algorithm.Kty();
 
+        AlgorithmType = cryptographicKey.Algorithm.AlgorithmType;
+
         KeyId = cryptographicKey.Key.KeyId;
 
         TenantId = tenantId;
@@ -55,6 +58,11 @@ public class KeyMaterial : IEntityTenantNullAble
     /// Tipo
     /// </summary>
     public string Type { get; set; }
+
+    /// <summary>
+    /// Tipo do algoritimo.
+    /// </summary>
+    public AlgorithmType AlgorithmType { get; set; }
 
     /// <summary>
     /// Parametros.

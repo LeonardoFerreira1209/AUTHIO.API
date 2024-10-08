@@ -21,6 +21,7 @@ public class Algorithm
                 AlgorithmType = AlgorithmType.AES;
                 CryptographyType = CryptographyType.Encryption;
                 break;
+
             case EncryptionAlgorithmKey.RsaPKCS1:
             case EncryptionAlgorithmKey.RsaOAEP:
                 AlgorithmType = AlgorithmType.RSA;
@@ -49,6 +50,7 @@ public class Algorithm
                 AlgorithmType = AlgorithmType.RSA;
                 CryptographyType = CryptographyType.DigitalSignature;
                 break;
+
             default:
                 throw new NotSupportedException($"Not supported algorithm {algorithm}");
         }

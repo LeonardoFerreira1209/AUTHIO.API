@@ -20,8 +20,8 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <param name="options"></param>
 /// <param name="tenantRepository"></param>
 public class JwtService(
-    IJsonWebKeyStore store, 
-    ICryptoService cryptoService, 
+    IJsonWebKeyStore store,
+    ICryptoService cryptoService,
     IContextService contextService,
     IOptions<JwtOptions> options,
     ITenantRepository tenantRepository) : IJwtService
@@ -29,7 +29,7 @@ public class JwtService(
     private readonly IJsonWebKeyStore _store = store;
     private readonly IOptions<JwtOptions> _options = options;
 
-    private readonly TenantEntity? _tenant
+    private readonly TenantEntity _tenant
       = tenantRepository.GetAsync(
           x => x.TenantConfiguration.TenantKey == contextService.GetCurrentTenantKey())?.Result;
 
@@ -39,23 +39,23 @@ public class JwtService(
     /// <returns></returns>
     public async Task<SecurityKey> GenerateKey()
     {
-        var tenantTokenConfiguration = 
+        var tenantTokenConfiguration =
             _tenant?.TenantConfiguration
                 ?.TenantTokenConfiguration;
 
         var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
 
-        JwtType jwtType = encrypted 
-            ? JwtType.Jwe 
+        JwtType jwtType = encrypted
+            ? JwtType.Jwe
             : JwtType.Jws;
 
-        AlgorithmType algorithmType = encrypted 
-            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType 
+        AlgorithmType algorithmType = encrypted
+            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType
             : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
 
         var key = new CryptographicKey(
-            cryptoService, 
-                Algorithm.Create(algorithmType, jwtType) 
+            cryptoService,
+                Algorithm.Create(algorithmType, jwtType)
         );
 
         var model = new KeyMaterial(key, _tenant?.Id);
@@ -151,19 +151,22 @@ public class JwtService(
 
         var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
 
-        JwtType jwtType = encrypted 
-            ? JwtType.Jwe 
+        JwtType jwtType = encrypted
+            ? JwtType.Jwe
             : JwtType.Jws;
 
-        AlgorithmType algorithmType = encrypted 
-            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType 
+        AlgorithmType algorithmType = encrypted
+            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType
             : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
 
-        Algorithm jwtAlgorithm = 
+        Algorithm jwtAlgorithm =
             Algorithm.Create(algorithmType, jwtType);
 
-        if (currentKey.Type != jwtAlgorithm.Kty())
+        if (currentKey.Type != jwtAlgorithm.Kty()
+           || currentKey.AlgorithmType != jwtAlgorithm.AlgorithmType)
         {
+            await _store.Revoke(currentKey, "Changed encrypt alghorithm");
+
             await GenerateKey();
 
             return false;

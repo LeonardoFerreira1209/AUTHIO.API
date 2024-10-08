@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Builders.Creates;
 using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
@@ -46,6 +47,7 @@ public class TenantService(
     IEventRepository eventRepository,
     IContextService contextService,
     IEmailProviderFactory emailProviderFactory,
+    IJwtService jwtService,
     ICachingService cachingService,
     CustomUserManager<UserEntity> customUserManager) : ITenantService
 {
@@ -130,7 +132,6 @@ public class TenantService(
         }
     }
 
-
     /// <summary>
     /// Método responsável por atualizar um Tenant.
     /// </summary>
@@ -168,7 +169,8 @@ public class TenantService(
 
                     await tenantRepository.UpdateAsync(
                         updateTenantRequest
-                            .UpdateEntity(tenant));
+                            .UpdateEntity(tenant)
+                    );
 
                     await unitOfWork.CommitAsync();
 
@@ -180,8 +182,9 @@ public class TenantService(
                             tenant.ToResponse(), [new DataNotifications("Tenant atualizado com sucesso!")]
                         )
                     );
+                }
 
-                     }).Unwrap();
+            ).Unwrap();
         }
         catch (Exception exception)
         {
@@ -294,7 +297,9 @@ public class TenantService(
                                 true,
                                 HttpStatusCode.OK,
                                 tenantEntity.ToResponse(), [
-                                new DataNotifications("Tenant recuperado com sucesso!")]));
+                                new DataNotifications("Tenant recuperado com sucesso!")]
+                            )
+                        );
 
                         await cachingService
                             .SetAsync(cacheKey, response);
