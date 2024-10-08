@@ -88,14 +88,14 @@ public sealed class AuthenticationService(
                                Log.Information(
                                    $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
 
-                               ObjectResult response = new(
+                               ObjectResponse response = new(
+                                   HttpStatusCode.Created,
                                     new ApiResponse<TokenJWT>(
                                         true, HttpStatusCode.Created, tokenJWT, [
                                             new("Token criado com sucesso!")
                                         ]
-                                        
                                     )
-                                );
+                               );
 
                                return response;
                            }

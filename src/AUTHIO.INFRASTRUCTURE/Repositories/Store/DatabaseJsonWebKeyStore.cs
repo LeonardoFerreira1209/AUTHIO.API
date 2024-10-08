@@ -4,7 +4,9 @@ using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Contracts.Store;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Model;
+using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Consts;
+using AUTHIO.DOMAIN.Helpers.Jwa;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -18,8 +20,6 @@ namespace AUTHIO.INFRASTRUCTURE.Repositories.Store;
 /// </summary>
 /// <typeparam name="TContext"></typeparam>
 /// <param name="context"></param>
-/// <param name="options"></param>
-/// <param name="memoryCache"></param>
 public class DataBaseJsonWebKeyStore<TContext>(
     TContext context,
     IOptions<JwtOptions> options,
@@ -28,12 +28,12 @@ public class DataBaseJsonWebKeyStore<TContext>(
     ITenantRepository tenantRepository) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
 {
     /// <summary>
-    /// Id do tenant atual.
+    /// Tenant atual.
     /// </summary>
-    private readonly Guid? _currentTenantId 
+    private readonly TenantEntity _currentTenant
         = tenantRepository.GetAsync(
-            x => x.TenantConfiguration.TenantKey 
-                == contextService.GetCurrentTenantKey())?.Result?.Id;
+            x => x.TenantConfiguration.TenantKey
+                == contextService.GetCurrentTenantKey())?.Result;
 
     /// <summary>
     /// Armazenar.
@@ -58,24 +58,34 @@ public class DataBaseJsonWebKeyStore<TContext>(
     public async Task<KeyMaterial> GetCurrent()
     {
         string cacheKey =
-            JwkContants.CurrentJwkCache;
+             JwkContants.CurrentJwkCache;
 
-        bool hasCurrentTenantId = 
-            _currentTenantId.HasValue;
-
-        if (hasCurrentTenantId)
-            cacheKey += $".{_currentTenantId}";
+        if (_currentTenant is not null)
+            cacheKey += $".{_currentTenant.Id}";
 
         if (!memoryCache.TryGetValue(
-            cacheKey, 
+            cacheKey,
             out KeyMaterial credentials))
         {
-            IQueryable<KeyMaterial> query 
-                = context.SecurityKeys;
+            IQueryable<KeyMaterial> query
+            = context.SecurityKeys;
 
-            if(hasCurrentTenantId)
+            if (_currentTenant is not null)
+            {
+                var tokenConfig = _currentTenant
+                    .TenantConfiguration
+                        .TenantTokenConfiguration;
+
+                var jwt = tokenConfig.Encrypted
+                    ? Algorithm.Create(tokenConfig.AlgorithmJweType, JwtType.Jwe)
+                    : Algorithm.Create(tokenConfig.AlgorithmJwsType, JwtType.Jws);
+
                 query = query.Where(
-                    x => x.TenantId == _currentTenantId);
+                   key => key.TenantId == _currentTenant.Id
+                    && jwt.Kty() == key.Type
+                    && jwt.AlgorithmType == key.AlgorithmType
+                );
+            }
 
             credentials = await query.Where(keyMa => !keyMa.IsRevoked)
                     .OrderByDescending(d => d.CreationDate)
@@ -104,21 +114,35 @@ public class DataBaseJsonWebKeyStore<TContext>(
     public async Task<ReadOnlyCollection<KeyMaterial>> GetLastKeys(int quantity = 5)
     {
         string cacheKey =
-           JwkContants.CurrentJwkCache;
+            JwkContants.CurrentJwkCache;
 
-        bool hasCurrentTenantId =
-            _currentTenantId.HasValue;
-
-        if (hasCurrentTenantId)
-            cacheKey += $".{_currentTenantId}";
+        if (_currentTenant is not null)
+            cacheKey += $".{_currentTenant.Id}";
 
         if (!memoryCache.TryGetValue(
-            cacheKey, out ReadOnlyCollection<KeyMaterial> keys))
+            cacheKey,
+            out ReadOnlyCollection<KeyMaterial> keys))
         {
 
-            keys = context.SecurityKeys.OrderByDescending(
-                d => d.CreationDate).Take(quantity)
-                    .AsNoTrackingWithIdentityResolution().ToList().AsReadOnly();
+            IQueryable<KeyMaterial> query
+           = context.SecurityKeys;
+
+            if (_currentTenant is not null)
+            {
+                var tokenConfig = _currentTenant
+                   .TenantConfiguration
+                       .TenantTokenConfiguration;
+
+                var jwt = tokenConfig.Encrypted
+                   ? Algorithm.Create(tokenConfig.AlgorithmJweType, JwtType.Jwe)
+                   : Algorithm.Create(tokenConfig.AlgorithmJwsType, JwtType.Jws);
+
+                query = query.Where(
+                   key => key.TenantId == _currentTenant.Id
+                    && jwt.Kty() == key.Type
+                    && jwt.AlgorithmType == key.AlgorithmType
+                );
+            }
 
             // Set cache options.
             var cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -148,8 +172,19 @@ public class DataBaseJsonWebKeyStore<TContext>(
     /// <returns></returns>
     public async Task Clear()
     {
-        foreach (var securityKeyWithPrivate in context.SecurityKeys)
-            context.SecurityKeys.Remove(securityKeyWithPrivate);
+        IQueryable<KeyMaterial> query
+           = context.SecurityKeys;
+
+        if (_currentTenant is not null)
+            query.Where(
+                key => key.TenantId == _currentTenant.Id
+            );
+
+        foreach (var securityKeyWithPrivate in query.ToList())
+            context.SecurityKeys
+                .Remove(
+                    securityKeyWithPrivate
+                );
 
         await context.SaveChangesAsync();
 
@@ -190,17 +225,13 @@ public class DataBaseJsonWebKeyStore<TContext>(
         string currentCacheKey =
            JwkContants.CurrentJwkCache;
 
-        bool hasCurrentTenantId =
-            _currentTenantId.HasValue;
-
-        if (hasCurrentTenantId)
+        if (_currentTenant is not null)
         {
-            cacheKey += $".{_currentTenantId}";
-            currentCacheKey += $".{_currentTenantId}";
+            cacheKey += $".{_currentTenant.Id}";
+            currentCacheKey += $".{_currentTenant.Id}";
         }
 
         memoryCache.Remove(cacheKey);
-
         memoryCache.Remove(currentCacheKey);
     }
 }

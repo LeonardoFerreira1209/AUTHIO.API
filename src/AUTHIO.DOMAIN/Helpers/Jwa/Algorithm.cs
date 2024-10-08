@@ -21,23 +21,24 @@ public class Algorithm
                 AlgorithmType = AlgorithmType.AES;
                 CryptographyType = CryptographyType.Encryption;
                 break;
+
             case EncryptionAlgorithmKey.RsaPKCS1:
             case EncryptionAlgorithmKey.RsaOAEP:
-                CryptographyType = CryptographyType.Encryption;
                 AlgorithmType = AlgorithmType.RSA;
+                CryptographyType = CryptographyType.Encryption;
                 break;
             case DigitalSignaturesAlgorithm.EcdsaSha256:
             case DigitalSignaturesAlgorithm.EcdsaSha384:
             case DigitalSignaturesAlgorithm.EcdsaSha512:
-                CryptographyType = CryptographyType.DigitalSignature;
                 AlgorithmType = AlgorithmType.ECDsa;
+                CryptographyType = CryptographyType.DigitalSignature;
                 break;
 
             case DigitalSignaturesAlgorithm.HmacSha256:
             case DigitalSignaturesAlgorithm.HmacSha384:
             case DigitalSignaturesAlgorithm.HmacSha512:
-                CryptographyType = CryptographyType.DigitalSignature;
                 AlgorithmType = AlgorithmType.HMAC;
+                CryptographyType = CryptographyType.DigitalSignature;
                 break;
 
             case DigitalSignaturesAlgorithm.RsaSha256:
@@ -46,9 +47,10 @@ public class Algorithm
             case DigitalSignaturesAlgorithm.RsaSsaPssSha256:
             case DigitalSignaturesAlgorithm.RsaSsaPssSha384:
             case DigitalSignaturesAlgorithm.RsaSsaPssSha512:
-                CryptographyType = CryptographyType.DigitalSignature;
                 AlgorithmType = AlgorithmType.RSA;
+                CryptographyType = CryptographyType.DigitalSignature;
                 break;
+
             default:
                 throw new NotSupportedException($"Not supported algorithm {algorithm}");
         }
@@ -176,7 +178,6 @@ public class Algorithm
             return algorithmType switch
             {
                 AlgorithmType.RSA => new Algorithm(DigitalSignaturesAlgorithm.RsaSsaPssSha256),
-                AlgorithmType.AES => new Algorithm(EncryptionAlgorithmKey.Aes128KW),
                 AlgorithmType.ECDsa => new Algorithm(DigitalSignaturesAlgorithm.EcdsaSha256).WithCurve(JsonWebKeyECTypes.P256),
                 AlgorithmType.HMAC => new Algorithm(DigitalSignaturesAlgorithm.HmacSha256),
                 _ => throw new InvalidOperationException($"Invalid algorithm for Json Web Signature (JWS): {algorithmType}")

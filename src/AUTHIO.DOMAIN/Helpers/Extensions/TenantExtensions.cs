@@ -69,7 +69,7 @@ public static class TenantExtensions
         tenantEntity.TenantConfiguration 
             = updateTenantRequest
                 ?.TenantConfiguration
-                    ?.UpdateEntity(tenantEntity.TenantConfiguration);
+                    ?.UpdateEntity(tenantEntity.TenantConfiguration) ?? tenantEntity.TenantConfiguration;
 
         return tenantEntity;
     }
@@ -88,17 +88,20 @@ public static class TenantExtensions
         tenantConfigurationEntity.TenantIdentityConfiguration 
             = updateTenantConfigurationRequest
                 ?.TenantIdentityConfiguration
-                    ?.UpdateEntity(tenantConfigurationEntity.TenantIdentityConfiguration);
+                    ?.UpdateEntity(tenantConfigurationEntity.TenantIdentityConfiguration) 
+                        ?? tenantConfigurationEntity.TenantIdentityConfiguration;
 
         tenantConfigurationEntity.TenantEmailConfiguration 
             = updateTenantConfigurationRequest
                 ?.TenantEmailConfiguration
-                    ?.UpdateEntity(tenantConfigurationEntity.TenantEmailConfiguration);
+                    ?.UpdateEntity(tenantConfigurationEntity.TenantEmailConfiguration) 
+                        ?? tenantConfigurationEntity.TenantEmailConfiguration;
 
         tenantConfigurationEntity.TenantTokenConfiguration
             = updateTenantConfigurationRequest
                 ?.TenantTokenConfiguration
-                    ?.UpdateEntity(tenantConfigurationEntity.TenantTokenConfiguration);
+                    ?.UpdateEntity(tenantConfigurationEntity.TenantTokenConfiguration) 
+                        ?? tenantConfigurationEntity.TenantTokenConfiguration;
 
         return tenantConfigurationEntity;
     }
@@ -117,17 +120,20 @@ public static class TenantExtensions
         tenantIdentityConfigurationEntity.UserIdentityConfiguration 
             = updateTenantIdentityConfigurationRequest
                 ?.UserIdentityConfiguration
-                    ?.UpdateEntity(tenantIdentityConfigurationEntity.UserIdentityConfiguration);
+                    ?.UpdateEntity(tenantIdentityConfigurationEntity.UserIdentityConfiguration) 
+                        ?? tenantIdentityConfigurationEntity.UserIdentityConfiguration;
 
         tenantIdentityConfigurationEntity.PasswordIdentityConfiguration 
             = updateTenantIdentityConfigurationRequest
                 ?.PasswordIdentityConfiguration
-                    ?.UpdateEntity(tenantIdentityConfigurationEntity.PasswordIdentityConfiguration);
+                    ?.UpdateEntity(tenantIdentityConfigurationEntity.PasswordIdentityConfiguration) 
+                        ?? tenantIdentityConfigurationEntity.PasswordIdentityConfiguration;
 
         tenantIdentityConfigurationEntity.LockoutIdentityConfiguration 
             = updateTenantIdentityConfigurationRequest
                 ?.LockoutIdentityConfiguration
-                    ?.UpdateEntity(tenantIdentityConfigurationEntity.LockoutIdentityConfiguration);
+                    ?.UpdateEntity(tenantIdentityConfigurationEntity.LockoutIdentityConfiguration) 
+                        ?? tenantIdentityConfigurationEntity.LockoutIdentityConfiguration;
 
         return tenantIdentityConfigurationEntity;
     }
@@ -169,7 +175,8 @@ public static class TenantExtensions
         tenantEmailConfigurationEntity.SendGridConfiguration 
             = updateTenantEmailConfigurationRequest
                 ?.SendGridConfiguration
-                    ?.UpdateEntity(tenantEmailConfigurationEntity.SendGridConfiguration);
+                    ?.UpdateEntity(tenantEmailConfigurationEntity.SendGridConfiguration) 
+                        ?? tenantEmailConfigurationEntity.SendGridConfiguration;
 
         return tenantEmailConfigurationEntity;
     }
