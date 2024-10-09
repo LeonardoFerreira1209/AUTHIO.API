@@ -86,6 +86,9 @@ public sealed class AuthIoContext(
     /// </summary>
     public DbSet<EventEntity> Events => Set<EventEntity>();
 
+    /// <summary>
+    /// Tabela de chaves de segurança.
+    /// </summary>
     public DbSet<KeyMaterial> SecurityKeys { get; set; }
 
     /// <summary>
@@ -118,38 +121,36 @@ public sealed class AuthIoContext(
         };
 
         modelBuilder.Entity<RoleEntity>().HasData(
-            [
-                roleEntity
-            ]);
+        [
+            roleEntity
+        ]);
 
-        modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasData(
-            [
-                new IdentityRoleClaim<Guid>{
+        modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasData([
 
-                    Id = 1,
-                    RoleId = roleEntity.Id,
-                    ClaimType = "Tenants",
-                    ClaimValue = "POST"
-                },
-                    new IdentityRoleClaim<Guid>{
-                    Id = 2,
-                    RoleId = roleEntity.Id,
-                    ClaimType = "Tenants",
-                    ClaimValue = "GET"
-                },
-                    new IdentityRoleClaim<Guid>{
-                    Id = 3,
-                    RoleId = roleEntity.Id,
-                    ClaimType = "Tenants",
-                    ClaimValue = "PATCH"
-                },
-                    new IdentityRoleClaim<Guid>{
-                    Id = 4,
-                    RoleId = roleEntity.Id,
-                    ClaimType = "Tenants",
-                    ClaimValue = "PUT"
-                }
-            ]
-        );
+            new IdentityRoleClaim<Guid>{
+                Id = 1,
+                RoleId = roleEntity.Id,
+                ClaimType = "Tenants",
+                ClaimValue = "POST"
+            },
+            new IdentityRoleClaim<Guid>{
+                Id = 2,
+                RoleId = roleEntity.Id,
+                ClaimType = "Tenants",
+                ClaimValue = "GET"
+            },
+            new IdentityRoleClaim<Guid>{
+                Id = 3,
+                RoleId = roleEntity.Id,
+                ClaimType = "Tenants",
+                ClaimValue = "PATCH"
+            },
+            new IdentityRoleClaim<Guid>{
+                Id = 4,
+                RoleId = roleEntity.Id,
+                ClaimType = "Tenants",
+                ClaimValue = "PUT"
+            }
+        ]);
     }
 }
