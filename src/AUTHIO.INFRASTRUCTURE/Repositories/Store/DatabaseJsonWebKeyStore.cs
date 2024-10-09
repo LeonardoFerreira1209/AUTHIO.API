@@ -125,7 +125,7 @@ public class DataBaseJsonWebKeyStore<TContext>(
         {
 
             IQueryable<KeyMaterial> query
-           = context.SecurityKeys;
+                = context.SecurityKeys;
 
             if (_currentTenant is not null)
             {
@@ -144,12 +144,17 @@ public class DataBaseJsonWebKeyStore<TContext>(
                 );
             }
 
+            keys = query.OrderByDescending(
+                d => d.CreationDate).Take(quantity)
+                    .AsNoTrackingWithIdentityResolution()
+                        .ToList().AsReadOnly();
+
             // Set cache options.
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 // Keep in cache for this time, reset time if accessed.
                 .SetSlidingExpiration(options.Value.CacheTime);
 
-            if (keys.Count != 0)
+            if (keys?.Count != 0)
                 memoryCache.Set(cacheKey, keys, cacheEntryOptions);
 
             return await Task.FromResult(keys);
