@@ -47,7 +47,7 @@ public class JwtServiceValidationHandler(
         keyMaterialTask.Wait();
 
         if (contextService.TryGetValueByHeader(
-                      "Authorization", out StringValues authHeader))
+                "Authorization", out StringValues authHeader))
         {
             var tenantKey =
                 GetTenantKeyByToken(authHeader.ToString()) 
