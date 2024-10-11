@@ -376,14 +376,18 @@ public class TenantService(
                                     if (identityResult.Succeeded is false)
                                         throw new CreateUserFailedException(
                                             registerUserRequest, identityResult.Errors.Select((e)
-                                                => new DataNotifications(e.Description)).ToList());
+                                                => new DataNotifications(e.Description)).ToList()
+                                        );
 
                                     var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
-                                               .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                                  EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)));
+                                            .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                                EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
+                                            )
+                                    );
 
                                     await eventRepository.CreateAsync(CreateEvent
-                                       .CreateEmailEvent(jsonBody));
+                                       .CreateEmailEvent(jsonBody)
+                                    );
 
                                     await unitOfWork.CommitAsync();
                                     await transaction.CommitAsync();
@@ -394,7 +398,11 @@ public class TenantService(
                                             identityResult.Succeeded,
                                                 HttpStatusCode.Created,
                                                 userEntity.ToResponse(), [
-                                                     new DataNotifications("Usuário criado com sucesso e vinculado ao Tenant!")]));
+                                                     new DataNotifications("Usuário criado com sucesso e vinculado ao Tenant!")
+                                                ]
+                                        )
+                                    );
+
                                 }).Unwrap();
 
                     }).Unwrap();

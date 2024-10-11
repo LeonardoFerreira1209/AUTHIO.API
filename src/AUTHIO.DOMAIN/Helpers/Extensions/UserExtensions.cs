@@ -39,6 +39,8 @@ public static class UserExtensions
             Id = userEntity.Id,
             Name = userEntity.FirstName,
             LastName = userEntity.LastName,
+            PlanId = userEntity.PlanId,
+            Plan = userEntity.Plan?.ToResponse(false),
             Email = userEntity.Email,
             Created = userEntity.Created,
             Updated = userEntity.Updated,

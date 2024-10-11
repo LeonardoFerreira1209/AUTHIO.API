@@ -16,6 +16,11 @@ public class RegisterUserRequest
     public string LastName { get; set; }
 
     /// <summary>
+    /// Id do plano.
+    /// </summary>
+    public Guid PlanId { get; set; }
+
+    /// <summary>
     /// Nome de usuário (Login).
     /// </summary>
     public string UserName { get; set; }

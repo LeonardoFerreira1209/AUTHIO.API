@@ -190,6 +190,58 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("PasswordIdentityConfigurations", (string)null);
                 });
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PlanEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("MonthlyPayment")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("QuantTenants")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuantUsers")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Plans");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("67a13762-6fc1-43e8-a8e9-5a857dd9be1f"),
+                            Created = new DateTime(2024, 10, 11, 1, 13, 7, 628, DateTimeKind.Local).AddTicks(5633),
+                            Description = "Plano para estudos.",
+                            MonthlyPayment = true,
+                            Name = "Básico",
+                            QuantTenants = 0,
+                            QuantUsers = 10,
+                            Status = 1,
+                            Value = 10m
+                        });
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -236,8 +288,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c6d87d2e-dee3-4184-9dcf-e1099aabc7df"),
-                            Created = new DateTime(2024, 10, 8, 1, 19, 32, 423, DateTimeKind.Local).AddTicks(9031),
+                            Id = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23"),
+                            Created = new DateTime(2024, 10, 11, 1, 13, 7, 628, DateTimeKind.Local).AddTicks(5410),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -494,6 +546,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
@@ -523,6 +578,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("PlanId");
 
                     b.HasIndex("TenantId");
 
@@ -586,28 +643,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("c6d87d2e-dee3-4184-9dcf-e1099aabc7df")
+                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("c6d87d2e-dee3-4184-9dcf-e1099aabc7df")
+                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("c6d87d2e-dee3-4184-9dcf-e1099aabc7df")
+                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("c6d87d2e-dee3-4184-9dcf-e1099aabc7df")
+                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
                         });
                 });
 
@@ -800,10 +857,18 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.PlanEntity", "Plan")
+                        .WithMany("Users")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
                         .WithMany("Users")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Plan");
 
                     b.Navigation("Tenant");
                 });
@@ -868,6 +933,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PlanEntity", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>

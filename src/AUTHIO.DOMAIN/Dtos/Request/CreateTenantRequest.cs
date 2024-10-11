@@ -45,8 +45,8 @@ public sealed class CreateTenantRequest
 /// <param name="Issuer"></param>
 /// <param name="Audience"></param>
 /// <param name="Encrypted"></param>
-/// <param name="algorithmJwsType"></param>
-/// <param name="algorithmJweType"></param>
+/// <param name="AlgorithmJwsType"></param>
+/// <param name="AlgorithmJweType"></param>
 public record TokenConfigurationRequest(
     string SecurityKey, 
     string Issuer, 

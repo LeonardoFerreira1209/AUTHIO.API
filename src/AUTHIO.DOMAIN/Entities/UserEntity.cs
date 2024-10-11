@@ -23,7 +23,8 @@ public class UserEntity
     public UserEntity(string firstName, string lastName,
         string userName, string email, string phoneNumber, Status status,
         DateTime created, bool emailConfirmed,
-        DateTime? updated = null, Guid? tenantId = null, bool system = false)
+        Guid planId, DateTime? updated = null,
+        Guid? tenantId = null, bool system = false)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -34,6 +35,7 @@ public class UserEntity
         Status = status;
         Created = created;
         Updated = updated;
+        PlanId = planId;
         TenantId = tenantId;
         System = system;
     }
@@ -47,6 +49,16 @@ public class UserEntity
     /// Ultimo nome do usuário.
     /// </summary>
     public string LastName { get; private set; }
+
+    /// <summary>
+    /// Id do plano vinculado ao usuário.
+    /// </summary>
+    public Guid PlanId { get; set; }
+
+    /// <summary>
+    /// Dados do plano.
+    /// </summary>
+    public virtual PlanEntity Plan { get; private set; }
 
     /// <summary>
     /// Id do tenant responsavel.

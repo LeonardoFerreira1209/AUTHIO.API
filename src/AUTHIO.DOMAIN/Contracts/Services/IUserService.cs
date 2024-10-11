@@ -9,6 +9,15 @@ namespace AUTHIO.DOMAIN.Contracts.Services;
 public interface IUserService
 {
     /// <summary>
+    /// Método de registro 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<ObjectResult> GetUserByIdAsync(
+        Guid id, 
+        CancellationToken cancellationToken);
+
+    /// <summary>
     /// Método de registro de usuário.
     /// </summary>
     /// <param name="registerUserRequest"></param>

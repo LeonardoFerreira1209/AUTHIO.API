@@ -13,11 +13,6 @@ public class UserResponse
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Id do tenant responsavel.
-    /// </summary>
-    public Guid? TenantId { get; set; }
-
-    /// <summary>
     /// Username
     /// </summary>
     public string UserName { get; set; }
@@ -28,9 +23,24 @@ public class UserResponse
     public string Email { get; set; }
 
     /// <summary>
+    /// Id do tenant responsavel.
+    /// </summary>
+    public Guid? TenantId { get; set; }
+
+    /// <summary>
     /// Tenant.
     /// </summary>
     public TenantResponse Tenant { get; set; }
+
+    /// <summary>
+    /// Id do plano.
+    /// </summary>
+    public Guid PlanId { get; set; }
+
+    /// <summary>
+    /// Dados do plano.
+    /// </summary>
+    public PlanResponse Plan { get; set; } 
 
     /// <summary>
     /// Nome do usuário.

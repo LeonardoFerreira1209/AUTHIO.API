@@ -67,5 +67,5 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     /// <summary>
     /// Entidade do tenant identity configuration.
     /// </summary>
-    public virtual TenantIdentityConfigurationEntity TenantIdentityConfiguration { get; set; }
+    public virtual TenantIdentityConfigurationEntity TenantIdentityConfiguration { get; private set; }
 }

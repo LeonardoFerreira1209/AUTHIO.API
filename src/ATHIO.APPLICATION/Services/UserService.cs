@@ -32,6 +32,42 @@ public sealed class UserService(
     IEventRepository eventRepository) : IUserService
 {
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<ObjectResult> GetUserByIdAsync(
+        Guid id, 
+        CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(UserService)} - METHOD {nameof(GetUserByIdAsync)}\n");
+
+        try
+        {
+            var user = await customUserManager
+                .GetUserByIdAsync(id);
+
+            return new ObjectResponse(
+                HttpStatusCode.OK,
+                new ApiResponse<UserResponse>(
+                    true,
+                    HttpStatusCode.OK,
+                    user.ToResponse(), [
+                        new DataNotifications("Usuário recuperado com sucesso!")
+                    ]
+                )
+            );
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
+            throw;
+        }
+    }
+
+    /// <summary>
     /// Método de registro de usuário.
     /// </summary>
     /// <param name="registerUserRequest"></param>

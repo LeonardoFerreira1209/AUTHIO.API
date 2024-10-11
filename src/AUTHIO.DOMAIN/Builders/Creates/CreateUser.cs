@@ -25,6 +25,7 @@ public static class CreateUser
             .AddEmailConfirmed(true)
             .AddStatus(Status.Ativo)
             .AddSystem(true)
+            .AddPlanId(registerUserRequest.PlanId)
             .Builder();
 
     /// <summary>
@@ -44,5 +45,6 @@ public static class CreateUser
             .AddEmailConfirmed(true)
             .AddStatus(Status.Ativo)
             .AddTenantId(tenantId)
+            .AddPlanId(registerUserRequest.PlanId)
             .Builder();
 }

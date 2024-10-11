@@ -92,6 +92,11 @@ public sealed class AuthIoContext(
     public DbSet<KeyMaterial> SecurityKeys { get; set; }
 
     /// <summary>
+    /// Tabela de planos.
+    /// </summary>
+    public DbSet<PlanEntity> Plans { get; set; }
+
+    /// <summary>
     /// On model creating.
     /// </summary>
     /// <param name="modelBuilder"></param>
@@ -123,6 +128,20 @@ public sealed class AuthIoContext(
         modelBuilder.Entity<RoleEntity>().HasData(
         [
             roleEntity
+        ]);
+
+        modelBuilder.Entity<PlanEntity>().HasData(
+        [
+            new() {
+                Id = Guid.NewGuid(),
+                Created = DateTime.Now,
+                Name = "Básico",
+                Description = "Plano para estudos.",
+                QuantUsers = 10,
+                Status = Status.Ativo,
+                Value = 10,
+                MonthlyPayment = true
+            }           
         ]);
 
         modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasData([

@@ -36,8 +36,10 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(u => u.Email).HasMaxLength(256);
         builder.Property(u => u.NormalizedEmail).HasMaxLength(256);
 
-        // As relações entre o Usuário e outros tipos de entidade
-        // Observe que essas relações são configuradas sem propriedades de navegação
+        // Define o vinculo entre plano e usuários.
+        builder
+            .HasOne(t => t.Plan)
+            .WithMany(p => p.Users);
 
         // Cada Usuário pode ter muitos UserClaims
         builder

@@ -49,22 +49,23 @@ public class UserController(
     }
 
     /// <summary>
-    /// Endpoint responsável pelo registro de usuários no sistema.
+    /// Endpoint responsável pelo retorno de usuário por Id.
     /// </summary>
-    /// <param name="registerUserRequest"></param>
+    /// <param name="id"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet]
+    [HttpGet("{id}")]
     [Authorize]
     [EnableRateLimiting("fixed")]
-    [SwaggerOperation(Summary = "Registrar usuário", Description = "Método responsável por registrar um usuário no sistema!")]
-    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(Summary = "Recuperar usuário", Description = "Método responsável por buscar um usuário por id!")]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Tetsesync(
-        [FromHeader(Name = "X-Tenant-KEY")] string tenantKey,
-        CancellationToken cancellationToken)
+       Guid id, 
+       CancellationToken cancellationToken)
     {
-        return null;
+        return await ExecuteAsync(nameof(RegisterAsync),
+                () => userService.GetUserByIdAsync(
+                    id, cancellationToken), "Recuperar usuário por id.");
     }
 }

@@ -59,7 +59,7 @@ public class TenantConfigurationEntity : IEntityPrimaryKey<Guid>, IEntityTenant
     /// <summary>
     /// Entidade do tenant.
     /// </summary>
-    public virtual TenantEntity Tenant { get; set; }
+    public virtual TenantEntity Tenant { get; private set; }
 
     /// <summary>
     /// Entidade do tenant identity configuration.

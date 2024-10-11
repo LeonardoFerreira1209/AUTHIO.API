@@ -97,6 +97,6 @@ public class TenantTokenConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// Entidade do tenant configuration.
     /// </summary>
-    public virtual TenantConfigurationEntity TenantConfiguration { get; set; }
+    public virtual TenantConfigurationEntity TenantConfiguration { get; private set; }
 
 }

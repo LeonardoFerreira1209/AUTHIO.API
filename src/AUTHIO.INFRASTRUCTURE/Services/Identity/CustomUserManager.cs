@@ -154,6 +154,17 @@ public class CustomUserManager<TUser>(
     }
 
     /// <summary>
+    /// Busca o usuário pelo Id.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<TUser> GetUserByIdAsync(Guid id) 
+        => await Store.FindByIdAsync(
+            id.ToString(),
+            CancellationToken.None
+        );
+
+    /// <summary>
     /// Valida os dados do usuário.
     /// </summary>
     /// <param name="user"></param>

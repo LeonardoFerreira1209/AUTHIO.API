@@ -65,5 +65,5 @@ public class SendGridConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// Entidade do tenant email configuration.
     /// </summary>
-    public virtual TenantEmailConfigurationEntity TenantEmailConfiguration { get; set; }
+    public virtual TenantEmailConfigurationEntity TenantEmailConfiguration { get; private set; }
 }

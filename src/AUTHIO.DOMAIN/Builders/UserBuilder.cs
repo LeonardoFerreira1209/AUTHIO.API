@@ -17,6 +17,7 @@ public sealed class UserBuilder
     private Status status;
     private bool emailConfirmed;
     private Guid? tenantId;
+    private Guid planId;
     private bool system;
 
     /// <summary>
@@ -39,6 +40,18 @@ public sealed class UserBuilder
     public UserBuilder AddLastName(string lastName)
     {
         this.lastName = lastName;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adiciona o plano.
+    /// </summary>
+    /// <param name="planId"></param>
+    /// <returns></returns>
+    public UserBuilder AddPlanId(Guid planId)
+    {
+        this.planId = planId;
 
         return this;
     }
@@ -163,7 +176,7 @@ public sealed class UserBuilder
         firstName, lastName, userName,
         email, phoneNumber, 
         status, created, 
-        emailConfirmed, updated, 
+        emailConfirmed, planId, updated,
         tenantId, system
     );
 }

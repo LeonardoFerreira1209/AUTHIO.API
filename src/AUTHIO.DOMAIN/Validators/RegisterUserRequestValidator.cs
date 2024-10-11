@@ -27,6 +27,12 @@ public sealed class RegisterUserRequestValidator : AbstractValidator<RegisterUse
            .WithErrorCode(ErrorCode.CamposObrigatorios.ToCode())
            .WithMessage("Preencha o campo sobrenome do usuário.");
 
+        RuleFor(t => t.PlanId)
+          .NotEmpty()
+          .NotNull()
+          .WithErrorCode(ErrorCode.CamposObrigatorios.ToCode())
+          .WithMessage("Preencha o campo id do plano do usuário.");
+
         RuleFor(t => t.PhoneNumber)
            .NotEmpty()
            .NotNull()
