@@ -15,7 +15,9 @@ public static class UserExtensions
     /// </summary>
     /// <param name="registerUserRequest"></param>
     /// <returns></returns>
-    public static UserEntity ToUserSystemEntity(this RegisterUserRequest registerUserRequest)
+    public static UserEntity ToUserSystemEntity(
+            this RegisterUserRequest registerUserRequest
+        )
         => registerUserRequest.CreateUserSystem(
 );
 
@@ -25,7 +27,10 @@ public static class UserExtensions
     /// <param name="registerUserRequest"></param>
     /// <param name="tenantId"></param>
     /// <returns></returns>
-    public static UserEntity ToUserTenantEntity(this RegisterUserRequest registerUserRequest, Guid tenantId)
+    public static UserEntity ToUserTenantEntity(
+            this RegisterUserRequest registerUserRequest, 
+            Guid tenantId
+        )
         => registerUserRequest.CreateUserTenant(tenantId);
 
     /// <summary>
@@ -33,20 +38,25 @@ public static class UserExtensions
     /// </summary>
     /// <param name="userEntity"></param>
     /// <returns></returns>
-    public static UserResponse ToResponse(this UserEntity userEntity)
+    public static UserResponse ToResponse(
+            this UserEntity userEntity, 
+            bool includeSignature = true
+        )
         => new()
         {
             Id = userEntity.Id,
             Name = userEntity.FirstName,
             LastName = userEntity.LastName,
-            PlanId = userEntity.PlanId,
-            Plan = userEntity.Plan?.ToResponse(false),
+            SignatureId = userEntity.SignatureId,
             Email = userEntity.Email,
             Created = userEntity.Created,
             Updated = userEntity.Updated,
             Status = userEntity.Status,
             TenantId = userEntity.TenantId,
             UserName = userEntity.UserName,
-            System = userEntity.System
+            System = userEntity.System,
+            Signature = includeSignature 
+                ? userEntity.Signature?.ToResponse(true, false) 
+                : null
         };
 }

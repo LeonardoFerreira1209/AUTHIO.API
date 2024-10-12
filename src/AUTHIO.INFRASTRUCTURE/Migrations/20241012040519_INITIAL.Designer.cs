@@ -3,6 +3,7 @@ using System;
 using AUTHIO.INFRASTRUCTURE.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    partial class AuthIoContextModelSnapshot : ModelSnapshot
+    [Migration("20241012040519_INITIAL")]
+    partial class INITIAL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,8 +233,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e913f65d-d22d-4c21-b400-b3486d7a1e30"),
-                            Created = new DateTime(2024, 10, 12, 1, 12, 47, 88, DateTimeKind.Local).AddTicks(2903),
+                            Id = new Guid("6199a087-d409-407a-853e-dba64b535de8"),
+                            Created = new DateTime(2024, 10, 12, 1, 5, 18, 840, DateTimeKind.Local).AddTicks(9817),
                             Description = "Plano para estudos.",
                             MonthlyPayment = true,
                             Name = "Básico",
@@ -288,8 +291,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c"),
-                            Created = new DateTime(2024, 10, 12, 1, 12, 47, 88, DateTimeKind.Local).AddTicks(2740),
+                            Id = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067"),
+                            Created = new DateTime(2024, 10, 12, 1, 5, 18, 840, DateTimeKind.Local).AddTicks(9646),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -586,7 +589,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("SignatureId")
+                    b.Property<Guid>("SignatureId")
                         .HasColumnType("char(36)");
 
                     b.Property<int>("Status")
@@ -678,28 +681,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         });
                 });
 

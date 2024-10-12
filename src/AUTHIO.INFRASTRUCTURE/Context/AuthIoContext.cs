@@ -92,6 +92,11 @@ public sealed class AuthIoContext(
     public DbSet<KeyMaterial> SecurityKeys { get; set; }
 
     /// <summary>
+    /// Tabela de assinaturas.
+    /// </summary>
+    public DbSet<SignatureEntity> Signatures { get; set; }
+
+    /// <summary>
     /// Tabela de planos.
     /// </summary>
     public DbSet<PlanEntity> Plans { get; set; }

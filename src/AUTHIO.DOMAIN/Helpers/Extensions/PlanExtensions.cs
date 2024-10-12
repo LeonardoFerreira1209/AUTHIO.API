@@ -15,7 +15,7 @@ public static class PlanExtensions
     /// <returns></returns>
     public static PlanResponse ToResponse(
         this PlanEntity plan, 
-        bool includeUsers = true) => new()
+        bool includeSignatures = true) => new()
         {
             Created = plan.Created,
             Description = plan.Description,
@@ -27,8 +27,8 @@ public static class PlanExtensions
             Status = plan.Status,
             Updated = plan.Updated,
             Value = plan.Value,
-            Users = includeUsers 
-                ? plan.Users.Select(u => u.ToResponse()).ToList() 
+            Signatures = includeSignatures
+                ? plan.Signatures.Select(s => s.ToResponse(false, false)).ToList() 
                 : null  
         };
 }
