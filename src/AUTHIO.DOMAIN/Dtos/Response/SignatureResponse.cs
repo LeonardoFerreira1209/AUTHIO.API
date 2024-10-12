@@ -3,9 +3,9 @@
 namespace AUTHIO.DOMAIN.Dtos.Response;
 
 /// <summary>
-/// Classe de response de plano.
+/// Classe de response de assinatura.
 /// </summary>
-public class PlanResponse
+public class SignatureResponse
 {
     /// <summary>
     /// Id.
@@ -28,37 +28,32 @@ public class PlanResponse
     public Status Status { get; set; }
 
     /// <summary>
-    /// Nome do plano.
+    /// Id do plano.
     /// </summary>
-    public string Name { get; set; }
+    public Guid PlanId { get; set; }
 
     /// <summary>
-    /// Descrição do plano.
+    /// Dados do plano.
     /// </summary>
-    public string Description { get; set; }
+    public PlanResponse Plan { get; set; }
 
     /// <summary>
-    /// Valor do plano.
+    /// Id do usuário.
     /// </summary>
-    public decimal Value { get; set; }
+    public Guid UserId { get; set; }
 
     /// <summary>
-    /// Pagamento mensal.
+    /// Dados do usuário.
     /// </summary>
-    public bool MonthlyPayment { get; set; }
+    public UserResponse User { get; set; }
 
     /// <summary>
-    /// Quantidade de tenants liberado para cadastro.
+    /// Data de inicio da vigência.
     /// </summary>
-    public int QuantTenants { get; set; }
+    public DateTime StartDateTime { get; set; }
 
     /// <summary>
-    /// Quantidade de usuários liberado para cadastro em cada tenant.
+    /// Data de fim da vigência.
     /// </summary>
-    public int QuantUsers { get; set; }
-
-    /// <summary>
-    /// Coleção de assinaturas vinculados ao plano.
-    /// </summary>
-    public virtual ICollection<SignatureResponse> Signatures { get; set; }
+    public DateTime EndDateTime { get; set; }
 }

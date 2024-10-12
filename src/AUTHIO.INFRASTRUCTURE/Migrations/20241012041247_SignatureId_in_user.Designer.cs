@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20241011041307_INITIAL")]
-    partial class INITIAL
+    [Migration("20241012041247_SignatureId_in_user")]
+    partial class SignatureId_in_user
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,8 +233,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("67a13762-6fc1-43e8-a8e9-5a857dd9be1f"),
-                            Created = new DateTime(2024, 10, 11, 1, 13, 7, 628, DateTimeKind.Local).AddTicks(5633),
+                            Id = new Guid("e913f65d-d22d-4c21-b400-b3486d7a1e30"),
+                            Created = new DateTime(2024, 10, 12, 1, 12, 47, 88, DateTimeKind.Local).AddTicks(2903),
                             Description = "Plano para estudos.",
                             MonthlyPayment = true,
                             Name = "Básico",
@@ -291,8 +291,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23"),
-                            Created = new DateTime(2024, 10, 11, 1, 13, 7, 628, DateTimeKind.Local).AddTicks(5410),
+                            Id = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c"),
+                            Created = new DateTime(2024, 10, 12, 1, 12, 47, 88, DateTimeKind.Local).AddTicks(2740),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -327,6 +327,43 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .IsUnique();
 
                     b.ToTable("SendGridConfigurations");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SignatureEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Signatures");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
@@ -549,11 +586,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<Guid>("PlanId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
+
+                    b.Property<Guid?>("SignatureId")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -581,8 +618,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("PlanId");
 
                     b.HasIndex("TenantId");
 
@@ -646,28 +681,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
+                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
+                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
+                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("0afbcd88-2d97-402a-9794-4b78613ccc23")
+                            RoleId = new Guid("b65ac5dc-3cca-449b-892c-6f371508e74c")
                         });
                 });
 
@@ -795,6 +830,25 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("TenantEmailConfiguration");
                 });
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SignatureEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.PlanEntity", "Plan")
+                        .WithMany("Signatures")
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", "User")
+                        .WithOne("Signature")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.SignatureEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
@@ -860,18 +914,10 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.PlanEntity", "Plan")
-                        .WithMany("Users")
-                        .HasForeignKey("PlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
                         .WithMany("Users")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Plan");
 
                     b.Navigation("Tenant");
                 });
@@ -940,7 +986,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PlanEntity", b =>
                 {
-                    b.Navigation("Users");
+                    b.Navigation("Signatures");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
@@ -975,6 +1021,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("PasswordIdentityConfiguration");
 
                     b.Navigation("UserIdentityConfiguration");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
+                {
+                    b.Navigation("Signature");
                 });
 #pragma warning restore 612, 618
         }

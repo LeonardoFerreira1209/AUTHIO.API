@@ -20,10 +20,22 @@ public class UserEntity
     /// <summary>
     /// ctor
     /// </summary>
+    /// <param name="firstName"></param>
+    /// <param name="lastName"></param>
+    /// <param name="userName"></param>
+    /// <param name="email"></param>
+    /// <param name="phoneNumber"></param>
+    /// <param name="status"></param>
+    /// <param name="created"></param>
+    /// <param name="emailConfirmed"></param>
+    /// <param name="signatureId"></param>
+    /// <param name="updated"></param>
+    /// <param name="tenantId"></param>
+    /// <param name="system"></param>
     public UserEntity(string firstName, string lastName,
         string userName, string email, string phoneNumber, Status status,
         DateTime created, bool emailConfirmed,
-        Guid planId, DateTime? updated = null,
+        Guid? signatureId, DateTime? updated = null,
         Guid? tenantId = null, bool system = false)
     {
         FirstName = firstName;
@@ -35,7 +47,7 @@ public class UserEntity
         Status = status;
         Created = created;
         Updated = updated;
-        PlanId = planId;
+        SignatureId = signatureId;
         TenantId = tenantId;
         System = system;
     }
@@ -51,14 +63,14 @@ public class UserEntity
     public string LastName { get; private set; }
 
     /// <summary>
-    /// Id do plano vinculado ao usuário.
+    /// Id da assinatura vinculado ao usuário.
     /// </summary>
-    public Guid PlanId { get; set; }
+    public Guid? SignatureId { get; set; }
 
     /// <summary>
-    /// Dados do plano.
+    /// Dados da assinatura.
     /// </summary>
-    public virtual PlanEntity Plan { get; private set; }
+    public virtual SignatureEntity Signature { get; private set; }
 
     /// <summary>
     /// Id do tenant responsavel.

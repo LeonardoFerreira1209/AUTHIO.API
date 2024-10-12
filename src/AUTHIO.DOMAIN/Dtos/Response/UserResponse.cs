@@ -33,14 +33,14 @@ public class UserResponse
     public TenantResponse Tenant { get; set; }
 
     /// <summary>
-    /// Id do plano.
+    /// Id da assinatura.
     /// </summary>
-    public Guid PlanId { get; set; }
+    public Guid? SignatureId { get; set; }
 
     /// <summary>
-    /// Dados do plano.
+    /// Dados da assinatura.
     /// </summary>
-    public PlanResponse Plan { get; set; } 
+    public SignatureResponse Signature { get; set; } 
 
     /// <summary>
     /// Nome do usuário.
