@@ -6,6 +6,7 @@ using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.External;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.INFRASTRUCTURE.Factories;
 using AUTHIO.INFRASTRUCTURE.Providers;
@@ -44,6 +45,7 @@ public static class DependenciesExtensions
             .AddTransient<ITokenService, TokenService>()
             .AddTransient<ITenantService, TenantService>()
             .AddTransient<IEventService, EventService>()
+            .AddTransient<IStripeService, StripeService>()
         // Repository
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
             .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
