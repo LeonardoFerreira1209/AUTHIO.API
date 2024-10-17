@@ -1,6 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Contracts.Services;
-using AUTHIO.DOMAIN.Contracts.Store;
+using AUTHIO.DOMAIN.Contracts.Repositories.Store;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Enums;
@@ -94,7 +94,7 @@ public sealed class AuthIoContext(
     /// <summary>
     /// Tabela de assinaturas.
     /// </summary>
-    public DbSet<SignatureEntity> Signatures { get; set; }
+    public DbSet<SubscriptionEntity> Subscriptions { get; set; }
 
     /// <summary>
     /// Tabela de planos.

@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Services;
+﻿using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 namespace AUTHIO.DOMAIN.Contracts.Factories;
 

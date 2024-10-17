@@ -14,7 +14,7 @@ public interface IUserService
     /// <param name="id"></param>
     /// <returns></returns>
     Task<ObjectResult> GetUserByIdAsync(
-        Guid id, 
+        Guid id,
         CancellationToken cancellationToken);
 
     /// <summary>
@@ -24,6 +24,6 @@ public interface IUserService
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> RegisterAsync(
-        RegisterUserRequest registerUserRequest, 
+        RegisterUserRequest registerUserRequest,
         CancellationToken cancellationToken);
 }

@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Services;
+﻿using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Exceptions.Base;
 using Microsoft.AspNetCore.Mvc;
 

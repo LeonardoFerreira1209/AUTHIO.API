@@ -1,6 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Auth.Token;
 
-namespace AUTHIO.DOMAIN.Contracts.Services;
+namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// Token service

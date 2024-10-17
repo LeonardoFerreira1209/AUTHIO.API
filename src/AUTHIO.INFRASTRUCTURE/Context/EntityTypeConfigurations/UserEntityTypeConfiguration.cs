@@ -38,9 +38,9 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
 
         // Relacionamento de usuário com assinatura.
         builder
-           .HasOne(u => u.Signature)  
+           .HasOne(u => u.Subscription)  
            .WithOne(s => s.User)      
-           .HasForeignKey<SignatureEntity>(s => s.UserId);
+           .HasForeignKey<SubscriptionEntity>(s => s.UserId);
 
         // Cada Usuário pode ter muitos UserClaims
         builder

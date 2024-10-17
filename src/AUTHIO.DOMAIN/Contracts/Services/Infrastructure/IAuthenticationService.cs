@@ -1,7 +1,7 @@
 ﻿using AUTHIO.DOMAIN.Dtos.Request;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AUTHIO.DOMAIN.Contracts.Services;
+namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// Interface de serviço de autenticação de usuários.

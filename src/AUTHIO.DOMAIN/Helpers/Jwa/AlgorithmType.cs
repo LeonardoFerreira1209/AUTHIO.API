@@ -13,12 +13,12 @@ public enum AlgorithmType
     RSA = 1,
 
     /// <summary>
-    /// The Elliptic Curve Digital Signature Algorithm (ECDSA) [DSS] provides
+    /// The Elliptic Curve Digital Subscription Algorithm (ECDSA) [DSS] provides
     /// for the use of Elliptic Curve Cryptography, which is able to provide
     /// equivalent security to RSA cryptography but using shorter key sizes
     /// and with greater processing speed for many operations.  This means
-    /// that ECDSA digital signatures will be substantially smaller in terms
-    /// of length than equivalently strong RSA digital signatures.
+    /// that ECDSA digital Subscriptions will be substantially smaller in terms
+    /// of length than equivalently strong RSA digital Subscriptions.
     /// </summary>
     ECDsa = 2,
 

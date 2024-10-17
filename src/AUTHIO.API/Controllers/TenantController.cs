@@ -1,6 +1,7 @@
 ﻿using AUTHIO.API.Controllers.Base;
 using AUTHIO.DOMAIN.Auth.CustomAuthorize.Attribute;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Request.Base;
 using AUTHIO.DOMAIN.Dtos.Response;

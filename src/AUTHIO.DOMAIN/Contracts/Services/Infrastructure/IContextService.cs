@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Primitives;
 using System.Diagnostics.CodeAnalysis;
 
-namespace AUTHIO.DOMAIN.Contracts.Services;
+namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// Interface de contexto de http.
@@ -13,7 +13,7 @@ public interface IContextService
     /// </summary>
     public bool IsAuthenticated { get; }
 
-    public string GetEndpointRoute { get;  }
+    public string GetEndpointRoute { get; }
 
     /// <summary>
     /// Recupera do tenantId do usuário logado.

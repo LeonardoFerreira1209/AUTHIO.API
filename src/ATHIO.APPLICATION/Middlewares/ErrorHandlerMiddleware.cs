@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Text.Json;
 
-namespace AUTHIO.INFRASTRUCTURE.Middlewares;
+namespace AUTHIO.APPLICATION.Middlewares;
 
 /// <summary>
 /// Middleware de erros.

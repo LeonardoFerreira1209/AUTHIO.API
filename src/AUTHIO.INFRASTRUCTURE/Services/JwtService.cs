@@ -1,6 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Repositories;
-using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Entities;

@@ -1,6 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Auth;
 using AUTHIO.DOMAIN.Contracts.Jwt;
-using AUTHIO.DOMAIN.Contracts.Store;
+using AUTHIO.DOMAIN.Contracts.Repositories.Store;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.INFRASTRUCTURE.Context;
 using AUTHIO.INFRASTRUCTURE.Repositories.Store;

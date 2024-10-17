@@ -5,7 +5,7 @@ namespace AUTHIO.DOMAIN.Dtos.Response;
 /// <summary>
 /// Classe de response de assinatura.
 /// </summary>
-public class SignatureResponse
+public class SubscriptionResponse
 {
     /// <summary>
     /// Id.

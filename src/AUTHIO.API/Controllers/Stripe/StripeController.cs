@@ -1,6 +1,6 @@
 ﻿using AUTHIO.API.Controllers.Base;
-using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Contracts.Services.External;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog.Context;
@@ -16,25 +16,24 @@ namespace AUTHIO.API.Controllers.Stripe;
 [ApiController]
 [Route("api/stripe")]
 public class StripeController(
- IFeatureFlagsService featureFlags, IStripeService stripeService)
+    IFeatureFlagsService featureFlags, IStripeService stripeService)
      : BaseController(featureFlags)
 {
     /// <summary>
-    /// Endpoint responsável por fazer a autenticação do usuário, é retornado um token JWT (Json Web Token).
+    /// Endpoint responsavel por trazer os produtos do Stripe.
     /// </summary>
-    /// <param name="authenticationRequest"></param>
     /// <returns></returns>
-    [HttpPost("create-checkout-session")]
+    [HttpGet("get-all-plans")]
     [EnableRateLimiting("fixed")]
-    [SwaggerOperation(Summary = "Criação de sessão de checkout", Description = "Endpoint responsável por a criação da sessão de checkout do stripe.")]
-    public async Task<IActionResult> CreateCheckoutSessionAsync(
+    [SwaggerOperation(Summary = "Recupera os produtos no stripe", Description = "Endpoint responsável por recupera os produtos no stripe.")]
+    public async Task<Object> GetProductsAsync(
         )
     {
         using (LogContext.PushProperty("Controller", nameof(StripeController)))
-        using (LogContext.PushProperty("Metodo", nameof(CreateCheckoutSessionAsync)))
+        using (LogContext.PushProperty("Metodo", nameof(GetProductsAsync)))
         {
-            return await ExecuteAsync(nameof(CreateCheckoutSessionAsync),
-                () => stripeService.CreateCheckoutSessionAsync(), "Criação de sessão de checkout");
+            return await ExecuteAsync(nameof(GetProductsAsync),
+                () => stripeService.GetProductsAsync(), "Recupera os produtos no stripe");
         }
     }
 }

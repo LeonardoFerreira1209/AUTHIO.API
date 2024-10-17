@@ -35,12 +35,12 @@ public class UserResponse
     /// <summary>
     /// Id da assinatura.
     /// </summary>
-    public Guid? SignatureId { get; set; }
+    public Guid? SubscriptionId { get; set; }
 
     /// <summary>
     /// Dados da assinatura.
     /// </summary>
-    public SignatureResponse Signature { get; set; } 
+    public SubscriptionResponse Subscription { get; set; } 
 
     /// <summary>
     /// Nome do usuário.

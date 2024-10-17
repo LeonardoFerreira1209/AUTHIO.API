@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Linq.Expressions;
 
-namespace AUTHIO.DOMAIN.Contracts.Services;
+namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// 
 /// </summary>
 /// <typeparam name="TUser"></typeparam>
-public interface ICustomUserStore<TUser> 
+public interface ICustomUserStore<TUser>
     : IUserStore<TUser> where TUser : class
 {
     /// <summary>

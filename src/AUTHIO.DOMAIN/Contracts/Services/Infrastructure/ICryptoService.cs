@@ -2,7 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 
-namespace AUTHIO.DOMAIN.Contracts.Services;
+namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// Interface de CryptoService.

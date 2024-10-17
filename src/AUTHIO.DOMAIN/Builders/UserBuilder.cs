@@ -17,7 +17,7 @@ public sealed class UserBuilder
     private Status status;
     private bool emailConfirmed;
     private Guid? tenantId;
-    private Guid? signatureId;
+    private Guid? SubscriptionId;
     private bool system;
 
     /// <summary>
@@ -47,11 +47,11 @@ public sealed class UserBuilder
     /// <summary>
     /// Adiciona a assinatura.
     /// </summary>
-    /// <param name="signatureId"></param>
+    /// <param name="SubscriptionId"></param>
     /// <returns></returns>
-    public UserBuilder AddSignatureId(Guid? signatureId)
+    public UserBuilder AddSubscriptionId(Guid? SubscriptionId)
     {
-        this.signatureId = signatureId;
+        this.SubscriptionId = SubscriptionId;
 
         return this;
     }
@@ -176,7 +176,7 @@ public sealed class UserBuilder
         firstName, lastName, userName,
         email, phoneNumber, 
         status, created, 
-        emailConfirmed, signatureId, updated,
+        emailConfirmed, SubscriptionId, updated,
         tenantId, system
     );
 }

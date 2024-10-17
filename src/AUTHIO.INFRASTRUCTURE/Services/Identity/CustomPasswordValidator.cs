@@ -1,5 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Repositories;
-using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using Microsoft.AspNetCore.Identity;

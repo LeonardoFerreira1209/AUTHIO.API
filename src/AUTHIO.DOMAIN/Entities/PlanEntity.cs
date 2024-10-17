@@ -13,6 +13,11 @@ public class PlanEntity : IEntityBase
     public Guid Id { get; set; }
 
     /// <summary>
+    /// Id do produto vinculado ao plano no Stripe.
+    /// </summary>
+    public string ProductId { get; set; }
+
+    /// <summary>
     /// Data de criação.
     /// </summary>
     public DateTime Created { get; set; }
@@ -60,5 +65,5 @@ public class PlanEntity : IEntityBase
     /// <summary>
     /// Coleção de assinaturas vinculados ao plano.
     /// </summary>
-    public virtual ICollection<SignatureEntity> Signatures { get; private set; }
+    public virtual ICollection<SubscriptionEntity> Subscriptions { get; private set; }
 }

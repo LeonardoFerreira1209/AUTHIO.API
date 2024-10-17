@@ -60,5 +60,5 @@ public class PlanResponse
     /// <summary>
     /// Coleção de assinaturas vinculados ao plano.
     /// </summary>
-    public virtual ICollection<SignatureResponse> Signatures { get; set; }
+    public virtual ICollection<SubscriptionResponse> Subscriptions { get; set; }
 }

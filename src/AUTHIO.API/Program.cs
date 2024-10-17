@@ -26,7 +26,9 @@ try
            .AddJsonFile("identitysettings.json", true, true)
                    .AddEnvironmentVariables();
 
-    StripeConfiguration.ApiKey = "sk_test_51Q9CCzIKe1Xu9b8l8S9hqwxd8MkeTe5KgKIZcln74xmZ8YwNrLABz6ullRwRLMaoH2KotfKNQmbdp91gmEJqwwWU00vzM71vXr";
+    StripeConfiguration.ApiKey
+               = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY")
+                   ?? configurations.GetSection("Stripe")["PublishableKey"];
 
     /// <sumary>
     /// Configura as configurações de inicialização da aplicação.

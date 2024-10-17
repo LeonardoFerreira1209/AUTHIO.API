@@ -5,12 +5,17 @@ namespace AUTHIO.DOMAIN.Entities;
 /// <summary>
 /// Entidade de assinatura.
 /// </summary>
-public class SignatureEntity : IEntityBase
+public class SubscriptionEntity : IEntityBase
 {
     /// <summary>
     /// Id.
     /// </summary>
     public Guid Id { get; set; }
+
+    /// <summary>
+    /// Id do assinatura vinculado ao Stripe.
+    /// </summary>
+    public string SubscriptionId { get; set; }
 
     /// <summary>
     /// Data de criação.
