@@ -63,4 +63,29 @@ public class StripeService() : IStripeService
             throw;
         }
     }
+
+    /// <summary>
+    /// Busca um preço por id.
+    /// </summary>
+    /// <param name="priceId"></param>
+    /// <returns></returns>
+    public async Task<Price> GetPriceByIdAsync(
+        string priceId
+        )
+    {
+        Log.Information(
+          $"[LOG INFORMATION] - SET TITLE {nameof(StripeService)} - METHOD {nameof(GetPriceByIdAsync)}\n");
+
+        try
+        {
+            return await _priceService
+                .GetAsync(priceId);
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
+            throw;
+        }
+    }
 }

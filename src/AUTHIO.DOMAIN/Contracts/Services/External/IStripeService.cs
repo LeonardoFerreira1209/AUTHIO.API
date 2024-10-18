@@ -12,4 +12,13 @@ public interface IStripeService
     /// </summary>
     /// <returns></returns>
     Task<IEnumerable<Product>> GetProductsAsync();
+
+    /// <summary>
+    /// Busca um preço por Id.
+    /// </summary>
+    /// <param name="priceId"></param>
+    /// <returns></returns>
+    Task<Price> GetPriceByIdAsync(
+       string priceId
+       );
 }

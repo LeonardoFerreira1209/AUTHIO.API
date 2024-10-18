@@ -1,4 +1,5 @@
-﻿using AUTHIO.DOMAIN.Dtos.Response;
+﻿using AUTHIO.DOMAIN.Dtos.Request;
+using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Enums;
 using Stripe;
@@ -44,6 +45,29 @@ public static class PlanExtensions
         planEntity.Description = product.Description;
         planEntity.Updated = DateTime.Now;
         planEntity.Value = ((product.DefaultPrice?.UnitAmountDecimal ?? 0) / 100);
+        planEntity.QuantTenants = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantTenants").Value);
+        planEntity.QuantUsers = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantUsers").Value);
+
+        return planEntity;
+    }
+
+    /// <summary>
+    /// Atualiza a entidade de planos com os dados do request de update.
+    /// </summary>
+    /// <param name="planEntity"></param>
+    /// <param name="updatePlanRequest"></param>
+    /// <returns></returns>
+    public static PlanEntity ToEntityUpdate(
+        this PlanEntity planEntity,
+        UpdatePlanRequest updatePlanRequest)
+    {
+        planEntity.Name = updatePlanRequest.Name;
+        planEntity.Status = updatePlanRequest.Status;
+        planEntity.Description = updatePlanRequest.Description;
+        planEntity.Updated = DateTime.Now;
+        planEntity.Value = updatePlanRequest.Value;
+        planEntity.QuantTenants = updatePlanRequest.QuantTenants;
+        planEntity.QuantUsers = updatePlanRequest.QuantUsers;
 
         return planEntity;
     }

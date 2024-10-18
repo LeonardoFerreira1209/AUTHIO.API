@@ -2,10 +2,15 @@
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
 using AUTHIO.DOMAIN.Contracts.Services.External;
+using AUTHIO.DOMAIN.Dtos.Response;
+using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.INFRASTRUCTURE.Context;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog;
+using Stripe;
+using System.Net;
 
 namespace AUTHIO.APPLICATION.Services;
 
@@ -21,51 +26,56 @@ public sealed class PlanService(
         IStripeService stripeService) : IPlanService
 {
     /// <summary>
-    /// Executa uma task.
+    /// Método responsável por atualizar um plano atraves de um produto Id.
     /// </summary>
+    /// <param name="product"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task ExecuteAsync()
-        => await SyncPlanStripesAsync();
-
-    /// <summary>
-    /// Sincroniza a tabela de planos com os produtos do stripe.
-    /// </summary>
-    /// <returns></returns>
-    public async Task SyncPlanStripesAsync()
+    public async Task<ObjectResult> UpdateByProductAsync(
+       Product product,
+       CancellationToken cancellationToken
+    )
     {
         Log.Information(
-            $"[LOG INFORMATION] - SET TITLE {nameof(PlanService)} - METHOD {nameof(SyncPlanStripesAsync)}\n");
+            $"[LOG INFORMATION] - SET TITLE {nameof(PlanService)} - METHOD {nameof(UpdateByProductAsync)}\n");
 
         try
         {
-            await stripeService.GetProductsAsync()
-                .ContinueWith(async (productsTask) =>
-                {
-                    var products 
-                        = productsTask.Result;
+            return await planRepository
+                .GetAsync(
+                        p => p.ProductId.Equals(product.Id
+                    )
+                ).ContinueWith(async (planEntityTask) => {
 
-                    foreach (var product in products)
-                    {
-                        await planRepository.GetAsync(
-                            x => x.ProductId.Equals(product.Id)
+                    var plan
+                        = planEntityTask.Result
+                        ?? throw new Exception("Plano não encontrado!");
 
-                        ).ContinueWith(async (planTask) =>
-                        {
-                            var plan = planTask.Result;
+                    var price = await stripeService.GetPriceByIdAsync(
+                        product.DefaultPriceId
+                    );
 
-                            if (plan is null)
-                                await planRepository.CreateAsync(
-                                    product.ToEntity()
-                                );
-                            else
-                                await planRepository.UpdateAsync(
-                                    plan.ToEntityUpdate(product)
-                                );
+                    product.DefaultPrice = price;
 
-                            await unitOfWork.CommitAsync();
+                    await planRepository.UpdateAsync(
+                        plan.ToEntityUpdate(
+                            product
+                        )
+                    );
 
-                        }).Unwrap();
-                    }
+                    await unitOfWork.CommitAsync();
+
+                    return new ObjectResponse(
+                        HttpStatusCode.OK,
+                        new ApiResponse<PlanResponse>(
+                            true,
+                            HttpStatusCode.OK,
+                            plan.ToResponse(), [ 
+                                new DataNotifications("plano atualizado com sucesso!")
+                            ]
+                        )
+                    );
+
                 }).Unwrap();
         }
         catch (Exception exception)
