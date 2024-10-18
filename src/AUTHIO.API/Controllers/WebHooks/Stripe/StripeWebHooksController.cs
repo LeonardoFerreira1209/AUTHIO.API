@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
+using Serilog;
 using Serilog.Context;
 using Stripe;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,7 +27,7 @@ public class StripeWebHooksController(
     [HttpPost("products")]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Recebe dados de manipulação de produtos e sincronizar.", Description = "Metodo responsavel por receber dados do produto e sincronizar com a base!")]
-    public async Task Sinc(
+    public async Task SyncProductsAsync(
         [FromBody] Product product,
         CancellationToken cancellationToken)
     {
@@ -34,7 +35,7 @@ public class StripeWebHooksController(
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(product)))
         using (LogContext.PushProperty("Metodo", "RegisterAsync"))
         {
-            
+            Log.Information("Entrou no hoook");
         }
     }
 }
