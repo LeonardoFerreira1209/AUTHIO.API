@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
+﻿using AUTHIO.DOMAIN.Contracts.Jobs;
 
 namespace AUTHIO.DOMAIN.Contracts.Factories;
 
@@ -12,5 +12,5 @@ public interface ITaskJobFactory
     /// </summary>
     /// <param name="jobName"></param>
     /// <returns></returns>
-    IExecuteJobTask GetJobTask(string jobName);
+    IJob GetJobTask(string jobName);
 }

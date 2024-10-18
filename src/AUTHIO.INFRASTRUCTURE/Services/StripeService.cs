@@ -8,7 +8,6 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <summary>
 /// Serviço de integração com o stripe.
 /// </summary>
-/// <param name="httpContextAccessor"></param>
 public class StripeService() : IStripeService
 {
     /// <summary>

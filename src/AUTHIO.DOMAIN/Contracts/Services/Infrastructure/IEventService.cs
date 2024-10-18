@@ -1,9 +1,10 @@
-﻿namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
+﻿using AUTHIO.DOMAIN.Contracts.Jobs;
+
+namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// Interface de serviço de Evento.
 /// </summary>
-public interface IEventService : IExecuteJobTask
-{
+public interface IEventService : IJob {
 
 }
