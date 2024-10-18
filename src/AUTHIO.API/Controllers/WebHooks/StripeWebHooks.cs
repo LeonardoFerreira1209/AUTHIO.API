@@ -49,7 +49,7 @@ public class StripeWebHooks(
 
             var stripeEvent = EventUtility.ConstructEvent(
                 json, Request.Headers["Stripe-Signature"],
-                "whsec_4fbcdc5ac81bad044e740d917e7104d3b69f4d0973585136e3659646033f696f"
+                "whsec_rdc4B3vE4phl3Ghq0qRwrxZOD80ZLVaF"
             );
 
             switch (stripeEvent.Type)
