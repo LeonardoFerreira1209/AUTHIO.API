@@ -3,6 +3,7 @@ using System;
 using AUTHIO.INFRASTRUCTURE.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    partial class AuthIoContextModelSnapshot : ModelSnapshot
+    [Migration("20241012040519_INITIAL")]
+    partial class INITIAL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,9 +211,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("longtext");
-
                     b.Property<int>("QuantTenants")
                         .HasColumnType("int");
 
@@ -233,8 +233,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("78cb957b-dba2-401a-b123-66019da6bca5"),
-                            Created = new DateTime(2024, 10, 18, 0, 10, 5, 245, DateTimeKind.Local).AddTicks(5902),
+                            Id = new Guid("6199a087-d409-407a-853e-dba64b535de8"),
+                            Created = new DateTime(2024, 10, 12, 1, 5, 18, 840, DateTimeKind.Local).AddTicks(9817),
                             Description = "Plano para estudos.",
                             MonthlyPayment = true,
                             Name = "Básico",
@@ -291,8 +291,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("99b6f456-b50e-4e56-a712-9de2d88606d1"),
-                            Created = new DateTime(2024, 10, 18, 0, 10, 5, 245, DateTimeKind.Local).AddTicks(5706),
+                            Id = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067"),
+                            Created = new DateTime(2024, 10, 12, 1, 5, 18, 840, DateTimeKind.Local).AddTicks(9646),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -329,7 +329,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("SendGridConfigurations");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SubscriptionEntity", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SignatureEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -350,9 +350,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<string>("SubscriptionId")
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
@@ -366,7 +363,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Signatures");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
@@ -592,14 +589,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("SignatureId")
+                    b.Property<Guid>("SignatureId")
                         .HasColumnType("char(36)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("SubscriptionId")
-                        .HasColumnType("char(36)");
 
                     b.Property<bool>("System")
                         .HasColumnType("tinyint(1)");
@@ -687,28 +681,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("99b6f456-b50e-4e56-a712-9de2d88606d1")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("99b6f456-b50e-4e56-a712-9de2d88606d1")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("99b6f456-b50e-4e56-a712-9de2d88606d1")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("99b6f456-b50e-4e56-a712-9de2d88606d1")
+                            RoleId = new Guid("c0b7e0b7-c54e-4e66-91eb-9300b27b6067")
                         });
                 });
 
@@ -836,17 +830,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("TenantEmailConfiguration");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SubscriptionEntity", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SignatureEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.PlanEntity", "Plan")
-                        .WithMany("Subscriptions")
+                        .WithMany("Signatures")
                         .HasForeignKey("PlanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", "User")
-                        .WithOne("Subscription")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.SubscriptionEntity", "UserId")
+                        .WithOne("Signature")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.SignatureEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -992,7 +986,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PlanEntity", b =>
                 {
-                    b.Navigation("Subscriptions");
+                    b.Navigation("Signatures");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
@@ -1031,7 +1025,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
-                    b.Navigation("Subscription");
+                    b.Navigation("Signature");
                 });
 #pragma warning restore 612, 618
         }
