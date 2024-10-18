@@ -6,29 +6,29 @@ namespace AUTHIO.DOMAIN.Helpers.Extensions;
 /// <summary>
 /// Classe de extensão de assinatura.
 /// </summary>
-public static class SignatureExtensions
+public static class SubscriptionExtensions
 {
     /// <summary>
     /// Entity to response.
     /// </summary>
-    /// <param name="signature"></param>
+    /// <param name="Subscription"></param>
     /// <returns></returns>
-    public static SignatureResponse ToResponse(this SignatureEntity signature, 
+    public static SubscriptionResponse ToResponse(this SubscriptionEntity Subscription, 
         bool includePlan = true, bool includeUser = true) => new()
         {
-            Id = signature.Id,
-            Created = signature.Created,
-            Updated = signature.Updated,
-            UserId = signature.UserId,
-            PlanId = signature.PlanId,
-            StartDateTime = signature.StartDateTime,
-            EndDateTime = signature.EndDateTime,
-            Status = signature.Status,
+            Id = Subscription.Id,
+            Created = Subscription.Created,
+            Updated = Subscription.Updated,
+            UserId = Subscription.UserId,
+            PlanId = Subscription.PlanId,
+            StartDateTime = Subscription.StartDateTime,
+            EndDateTime = Subscription.EndDateTime,
+            Status = Subscription.Status,
             User = includeUser 
-                ? signature.User.ToResponse(false) 
+                ? Subscription.User.ToResponse(false) 
                 : null,
             Plan = includePlan
-                ? signature.Plan.ToResponse(false)
+                ? Subscription.Plan.ToResponse(false)
                 : null,
         };
 }

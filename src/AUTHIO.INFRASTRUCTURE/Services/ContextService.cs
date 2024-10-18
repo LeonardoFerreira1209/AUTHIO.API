@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Services;
+﻿using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Diagnostics.CodeAnalysis;

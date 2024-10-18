@@ -8,7 +8,7 @@ public enum CryptographyType
     /// <summary>
     /// Assinatura digital.
     /// </summary>
-    DigitalSignature = 1,
+    DigitalSubscription = 1,
 
     /// <summary>
     /// Criptografia.

@@ -1,4 +1,4 @@
-﻿namespace AUTHIO.DOMAIN.Contracts.Services;
+﻿namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// Interface de contexto de http.

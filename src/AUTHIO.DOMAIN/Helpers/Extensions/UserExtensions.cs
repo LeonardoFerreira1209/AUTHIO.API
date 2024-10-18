@@ -40,14 +40,14 @@ public static class UserExtensions
     /// <returns></returns>
     public static UserResponse ToResponse(
             this UserEntity userEntity, 
-            bool includeSignature = true
+            bool includeSubscription = true
         )
         => new()
         {
             Id = userEntity.Id,
             Name = userEntity.FirstName,
             LastName = userEntity.LastName,
-            SignatureId = userEntity.SignatureId,
+            SubscriptionId = userEntity.SubscriptionId,
             Email = userEntity.Email,
             Created = userEntity.Created,
             Updated = userEntity.Updated,
@@ -55,8 +55,8 @@ public static class UserExtensions
             TenantId = userEntity.TenantId,
             UserName = userEntity.UserName,
             System = userEntity.System,
-            Signature = includeSignature 
-                ? userEntity.Signature?.ToResponse(true, false) 
+            Subscription = includeSubscription 
+                ? userEntity.Subscription?.ToResponse(true, false) 
                 : null
         };
 }

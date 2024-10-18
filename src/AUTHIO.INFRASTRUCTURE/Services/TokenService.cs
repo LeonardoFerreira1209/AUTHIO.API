@@ -2,7 +2,7 @@
 using AUTHIO.DOMAIN.Builders.Token;
 using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Repositories;
-using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Configurations;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Expressions.Filters;

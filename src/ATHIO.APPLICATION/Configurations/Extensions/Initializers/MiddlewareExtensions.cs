@@ -1,4 +1,4 @@
-﻿using AUTHIO.INFRASTRUCTURE.Middlewares;
+﻿using AUTHIO.APPLICATION.Middlewares;
 using Microsoft.AspNetCore.Builder;
 
 namespace AUTHIO.APPLICATION.Configurations.Extensions.Initializers;

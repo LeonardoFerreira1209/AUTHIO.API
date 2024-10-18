@@ -49,8 +49,13 @@
 	  <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 	  <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="7.0.0" />
 	  <PackageReference Include="Serilog.Sinks.MySQL" Version="5.0.0" />
+	  <PackageReference Include="Stripe.net" Version="46.2.0" />
 	  <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.3" />
 	  <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.7.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Contracts\External\Refit\" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@
 /// Assinatura digital.
 /// </summary>
 /// <param name="alg"></param>
-public class DigitalSignaturesAlgorithm(string alg)
+public class DigitalSubscriptionsAlgorithm(string alg)
 {
 
     public const string EcdsaSha256 = "ES256";
@@ -23,6 +23,6 @@ public class DigitalSignaturesAlgorithm(string alg)
 
     public string Alg { get; set; } = alg;
 
-    public static implicit operator string(DigitalSignaturesAlgorithm value) => value.Alg;
-    public static implicit operator DigitalSignaturesAlgorithm(string value) => new(value);
+    public static implicit operator string(DigitalSubscriptionsAlgorithm value) => value.Alg;
+    public static implicit operator DigitalSubscriptionsAlgorithm(string value) => new(value);
 }

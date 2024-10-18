@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Factories;
-using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Jobs;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AUTHIO.INFRASTRUCTURE.Factories;
@@ -17,9 +18,11 @@ public class TaskJobFactory(
     /// <param name="jobName"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public IExecuteJobTask GetJobTask(string jobName) => jobName switch {
+    public IJob GetJobTask(string jobName) => jobName switch {
         "SendEventsToBus" 
             => serviceProvider.GetService<IEventService>(),
+        "SyncStripeProducts"
+            => serviceProvider.GetService<IStripeSyncProductsJob>(),
         _ => 
             throw new ArgumentException("Job não existe", nameof(jobName))
     };

@@ -1,4 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts.Services;
+﻿using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace AUTHIO.INFRASTRUCTURE.Services;

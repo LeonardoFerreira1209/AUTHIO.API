@@ -3,6 +3,7 @@ using AUTHIO.DOMAIN.Dtos.Configurations;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Stripe;
 using System.Text.Json.Serialization;
 
 try
@@ -24,6 +25,10 @@ try
         .SetBasePath(builder.Environment.ContentRootPath)
            .AddJsonFile("identitysettings.json", true, true)
                    .AddEnvironmentVariables();
+
+    StripeConfiguration.ApiKey
+               = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY")
+                   ?? configurations.GetSection("Stripe")["PublishableKey"];
 
     /// <sumary>
     /// Configura as configurações de inicialização da aplicação.

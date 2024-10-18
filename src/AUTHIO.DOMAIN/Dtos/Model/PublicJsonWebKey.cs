@@ -54,9 +54,9 @@ public class PublicJsonWebKey
 
     /// <summary>
     /// The "use" (public key use) parameter identifies the intended use of the public key.
-    /// The "use" parameter is employed to indicate whether a public key is used for encrypting data or verifying the signature on data.
+    /// The "use" parameter is employed to indicate whether a public key is used for encrypting data or verifying the Subscription on data.
     /// Values defined by this specification are:
-    /// * "sig" (signature)
+    /// * "sig" (Subscription)
     /// * "enc" (encryption)
     /// Use of this member is OPTIONAL.
     /// </summary>
@@ -67,8 +67,8 @@ public class PublicJsonWebKey
     /// The "key_ops" (key operations) parameter identifies the operation(s) for which the key is intended to be used.
     /// The "key_ops" parameter is intended for use cases in which public, private, or symmetric keys may be present.
     /// Its value is an array of key operation values.  Values defined by this specification are:
-    /// o  "sign" (compute digital signature or MAC)
-    /// o  "verify" (verify digital signature or MAC)
+    /// o  "sign" (compute digital Subscription or MAC)
+    /// o  "verify" (verify digital Subscription or MAC)
     /// o  "encrypt" (encrypt content)
     /// o  "decrypt" (decrypt content and validate decryption, if applicable)
     /// o  "wrapKey" (encrypt key)
@@ -82,7 +82,7 @@ public class PublicJsonWebKey
 
     /// <summary>
     /// The "alg" (algorithm) parameter identifies the algorithm intended for use with the key.
-    /// The values used should either be registered in the IANA "JSON Web Signature and Encryption Algorithms"
+    /// The values used should either be registered in the IANA "JSON Web Subscription and Encryption Algorithms"
     /// registry established by [JWA] or be a value that contains a Collision-Resistant Name.
     /// The "alg" value is a case-sensitive ASCII string.
     /// Use of this member is OPTIONAL.

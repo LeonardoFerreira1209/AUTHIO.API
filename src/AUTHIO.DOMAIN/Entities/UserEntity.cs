@@ -28,14 +28,14 @@ public class UserEntity
     /// <param name="status"></param>
     /// <param name="created"></param>
     /// <param name="emailConfirmed"></param>
-    /// <param name="signatureId"></param>
+    /// <param name="subscriptionId"></param>
     /// <param name="updated"></param>
     /// <param name="tenantId"></param>
     /// <param name="system"></param>
     public UserEntity(string firstName, string lastName,
         string userName, string email, string phoneNumber, Status status,
         DateTime created, bool emailConfirmed,
-        Guid? signatureId, DateTime? updated = null,
+        Guid? subscriptionId, DateTime? updated = null,
         Guid? tenantId = null, bool system = false)
     {
         FirstName = firstName;
@@ -47,7 +47,7 @@ public class UserEntity
         Status = status;
         Created = created;
         Updated = updated;
-        SignatureId = signatureId;
+        SubscriptionId = subscriptionId;
         TenantId = tenantId;
         System = system;
     }
@@ -65,12 +65,12 @@ public class UserEntity
     /// <summary>
     /// Id da assinatura vinculado ao usuário.
     /// </summary>
-    public Guid? SignatureId { get; set; }
+    public Guid? SubscriptionId { get; set; }
 
     /// <summary>
     /// Dados da assinatura.
     /// </summary>
-    public virtual SignatureEntity Signature { get; private set; }
+    public virtual SubscriptionEntity Subscription { get; private set; }
 
     /// <summary>
     /// Id do tenant responsavel.

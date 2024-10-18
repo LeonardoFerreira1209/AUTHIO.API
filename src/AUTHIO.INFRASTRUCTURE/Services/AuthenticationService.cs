@@ -1,5 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Auth.Token;
-using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Entities;

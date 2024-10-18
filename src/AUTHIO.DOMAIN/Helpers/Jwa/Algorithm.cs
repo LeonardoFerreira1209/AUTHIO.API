@@ -27,28 +27,28 @@ public class Algorithm
                 AlgorithmType = AlgorithmType.RSA;
                 CryptographyType = CryptographyType.Encryption;
                 break;
-            case DigitalSignaturesAlgorithm.EcdsaSha256:
-            case DigitalSignaturesAlgorithm.EcdsaSha384:
-            case DigitalSignaturesAlgorithm.EcdsaSha512:
+            case DigitalSubscriptionsAlgorithm.EcdsaSha256:
+            case DigitalSubscriptionsAlgorithm.EcdsaSha384:
+            case DigitalSubscriptionsAlgorithm.EcdsaSha512:
                 AlgorithmType = AlgorithmType.ECDsa;
-                CryptographyType = CryptographyType.DigitalSignature;
+                CryptographyType = CryptographyType.DigitalSubscription;
                 break;
 
-            case DigitalSignaturesAlgorithm.HmacSha256:
-            case DigitalSignaturesAlgorithm.HmacSha384:
-            case DigitalSignaturesAlgorithm.HmacSha512:
+            case DigitalSubscriptionsAlgorithm.HmacSha256:
+            case DigitalSubscriptionsAlgorithm.HmacSha384:
+            case DigitalSubscriptionsAlgorithm.HmacSha512:
                 AlgorithmType = AlgorithmType.HMAC;
-                CryptographyType = CryptographyType.DigitalSignature;
+                CryptographyType = CryptographyType.DigitalSubscription;
                 break;
 
-            case DigitalSignaturesAlgorithm.RsaSha256:
-            case DigitalSignaturesAlgorithm.RsaSha384:
-            case DigitalSignaturesAlgorithm.RsaSha512:
-            case DigitalSignaturesAlgorithm.RsaSsaPssSha256:
-            case DigitalSignaturesAlgorithm.RsaSsaPssSha384:
-            case DigitalSignaturesAlgorithm.RsaSsaPssSha512:
+            case DigitalSubscriptionsAlgorithm.RsaSha256:
+            case DigitalSubscriptionsAlgorithm.RsaSha384:
+            case DigitalSubscriptionsAlgorithm.RsaSha512:
+            case DigitalSubscriptionsAlgorithm.RsaSsaPssSha256:
+            case DigitalSubscriptionsAlgorithm.RsaSsaPssSha384:
+            case DigitalSubscriptionsAlgorithm.RsaSsaPssSha512:
                 AlgorithmType = AlgorithmType.RSA;
-                CryptographyType = CryptographyType.DigitalSignature;
+                CryptographyType = CryptographyType.DigitalSubscription;
                 break;
 
             default:
@@ -121,7 +121,7 @@ public class Algorithm
     /// <exception cref="NotSupportedException"></exception>
     public Algorithm WithContentEncryption(EncryptionAlgorithmContent enc)
     {
-        if (CryptographyType == CryptographyType.DigitalSignature)
+        if (CryptographyType == CryptographyType.DigitalSubscription)
             throw new InvalidOperationException("Only Json Web Encryption has enc param");
 
         EncryptionAlgorithmContent = (string)enc switch
@@ -177,10 +177,10 @@ public class Algorithm
         if (jwtType == JwtType.Jws)
             return algorithmType switch
             {
-                AlgorithmType.RSA => new Algorithm(DigitalSignaturesAlgorithm.RsaSsaPssSha256),
-                AlgorithmType.ECDsa => new Algorithm(DigitalSignaturesAlgorithm.EcdsaSha256).WithCurve(JsonWebKeyECTypes.P256),
-                AlgorithmType.HMAC => new Algorithm(DigitalSignaturesAlgorithm.HmacSha256),
-                _ => throw new InvalidOperationException($"Invalid algorithm for Json Web Signature (JWS): {algorithmType}")
+                AlgorithmType.RSA => new Algorithm(DigitalSubscriptionsAlgorithm.RsaSsaPssSha256),
+                AlgorithmType.ECDsa => new Algorithm(DigitalSubscriptionsAlgorithm.EcdsaSha256).WithCurve(JsonWebKeyECTypes.P256),
+                AlgorithmType.HMAC => new Algorithm(DigitalSubscriptionsAlgorithm.HmacSha256),
+                _ => throw new InvalidOperationException($"Invalid algorithm for Json Web Subscription (JWS): {algorithmType}")
             };
 
         return algorithmType switch

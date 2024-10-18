@@ -6,6 +6,8 @@ using AUTHIO.DOMAIN.Contracts.Providers.ServiceBus;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.External;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.INFRASTRUCTURE.Factories;
 using AUTHIO.INFRASTRUCTURE.Providers;
@@ -44,6 +46,8 @@ public static class DependenciesExtensions
             .AddTransient<ITokenService, TokenService>()
             .AddTransient<ITenantService, TenantService>()
             .AddTransient<IEventService, EventService>()
+            .AddTransient<IStripeService, StripeService>()
+            .AddTransient<IPlanService, PlanService>()
         // Repository
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
             .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
@@ -58,15 +62,16 @@ public static class DependenciesExtensions
             .AddScoped<ITenantTokenConfigurationRepository, TenantTokenConfigurationRepository>()
             .AddScoped<ISendGridConfigurationRepository, SendGridConfigurationRepository>()
             .AddScoped<IEventRepository, EventRepository>()
+            .AddScoped<IPlanRepository, PlanRepository>()
             .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
             .AddScoped<ICustomUserStore<UserEntity>, CustomUserStore<UserEntity>>()
-            .AddScoped<ICryptoService, CryptoService>()
         // Infra
             .AddTransient<IEmailProvider, EmailProvider>()
             .AddTransient<IEmailProviderFactory, EmailProviderFactory>()
             .AddTransient<IEventFactory, EventFactory>()
             .AddTransient<IEventServiceBusProvider, EventServiceBusProvider>()
             .AddSingleton<ICachingService, CachingService>()
+            .AddScoped<ICryptoService, CryptoService>()
             .AddSingleton<EventServiceBusSubscriber>();
 
         return services;

@@ -15,6 +15,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
 	  <PackageReference Include="Serilog" Version="4.0.1" />
+	  <PackageReference Include="Stripe.net" Version="46.2.0" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
   </ItemGroup>
 
