@@ -11,16 +11,25 @@ namespace AUTHIO.API.Controllers.WebHooks;
 /// <summary>
 /// Controller que cuida do fluxo de webHooks do stripe.
 /// </summary>
-/// <param name="userService"></param>
+/// <param name="planService"></param>
+/// <param name="httpContextAccessor"></param>
 [ApiController]
 [Route("api/stripe/webhook")]
 public class StripeWebHooks(
     IPlanService planService,
-    IHttpContextAccessor httpContextAccessor) : ControllerBase()
+    IHttpContextAccessor httpContextAccessor,
+    IConfiguration configurations) : ControllerBase()
 {
+    /// <summary>
+    /// assinatura do webHook stripe.
+    /// </summary>
+    private readonly string _signature = Environment.GetEnvironmentVariable("STRIPE_SIGNATURE")
+                ?? configurations.GetSection("Stripe")["Signature"];
+
     /// <summary>
     /// WebHook responsavel por atualizar dados de um produto com a base de dados.
     /// </summary>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("products")]
     [SwaggerOperation(Summary = "Eventos de produto do stripe.", Description = "Metodo responsavel por receber eventos de produtos do stripe!")]
@@ -37,6 +46,12 @@ public class StripeWebHooks(
         }
     }
 
+    /// <summary>
+    /// Verifica qual tipo de evento de produto foi executado.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException"></exception>
     private async Task CheckEventAsync(
         CancellationToken cancellationToken
         )
@@ -49,18 +64,26 @@ public class StripeWebHooks(
 
             var stripeEvent = EventUtility.ConstructEvent(
                 json, Request.Headers["Stripe-Signature"],
-                "whsec_rdc4B3vE4phl3Ghq0qRwrxZOD80ZLVaF"
+                _signature
             );
 
             switch (stripeEvent.Type)
             {
+                case EventTypes.ProductCreated:
+                    await planService.CreateByProductAsync(
+                       stripeEvent.Data.Object as Product,
+                       cancellationToken
+                    );
+                    break;
                 case EventTypes.ProductUpdated:
                     await planService.UpdateByProductAsync(
                         stripeEvent.Data.Object as Product,
                         cancellationToken
                     );
                     break;
-                default: throw new NullReferenceException();
+                default: throw new NotSupportedException(
+                    "Tipo de evento não encontrado!"
+                );
             }
         }
         catch (Exception exception)
