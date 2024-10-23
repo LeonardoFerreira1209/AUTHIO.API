@@ -73,7 +73,7 @@ try
         .UseDefaultFiles()
         .UseStaticFiles()
         .UseCookiePolicy()
-        .UseCors()
+        .UseCors("AllowAllOrigins")
         .UseResponseCaching()
         .UseAuthorization()
         .UseAuthentication()

@@ -30,14 +30,9 @@ public class JwtServiceValidationHandler(
     {
         using var scope = serviceProvider.CreateScope();
 
-        IEnumerable<string> dontUseTenantConfigAuthEndpoints = [
-            "RegisterTenantUserAsync",
-        ];
-
         var jwtService = scope.ServiceProvider.GetRequiredService<IJwtService>();
         var contextService = scope.ServiceProvider.GetRequiredService<IContextService>();
         var configurations = scope.ServiceProvider.GetRequiredService<IOptions<AppSettings>>();
-        var enableTenantConfig = !contextService.GetEndpointRoute.Contains(string.Join(", ", dontUseTenantConfigAuthEndpoints));
 
         JwtSecurityToken incomingToken = new();
 
@@ -53,7 +48,7 @@ public class JwtServiceValidationHandler(
                 GetTenantKeyByToken(authHeader.ToString()) 
                     ?? contextService.GetCurrentTenantKey();
 
-            if (tenantKey is not null && enableTenantConfig)
+            if (tenantKey is not null && contextService.IsAuthByTenantKey)
             {
                 ITenantConfigurationRepository tenantConfigurationRepository =
                     scope.ServiceProvider
@@ -86,10 +81,8 @@ public class JwtServiceValidationHandler(
                     TokenDecryptionKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey()),
                 };
 
-                //We can read the token before we've begun validating it.
                 incomingToken = ReadJwtToken(token);
 
-                //return new ClaimsPrincipal(result.ClaimsIdentity);
                 return base.ValidateToken(token, validationParameters, out validatedToken);
             }
         }
@@ -108,10 +101,8 @@ public class JwtServiceValidationHandler(
             IssuerSigningKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey())
         };
 
-        //We can read the token before we've begun validating it.
         incomingToken = ReadJwtToken(token);
 
-        //return new ClaimsPrincipal(result.ClaimsIdentity);
         return base.ValidateToken(token, validationParameters, out validatedToken);
     }
 

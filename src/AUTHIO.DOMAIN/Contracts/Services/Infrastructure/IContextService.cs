@@ -13,7 +13,10 @@ public interface IContextService
     /// </summary>
     public bool IsAuthenticated { get; }
 
-    public string GetEndpointRoute { get; }
+    /// <summary>
+    /// Permite autenticar por tenantKey.
+    /// </summary>
+    public bool IsAuthByTenantKey { get; }
 
     /// <summary>
     /// Recupera do tenantId do usuário logado.
@@ -26,6 +29,17 @@ public interface IContextService
     /// </summary>
     /// <returns></returns>
     public string GetCurrentTenantKey();
+
+    /// <summary>
+    /// Recupera a tenantKey passada no token.
+    /// </summary>
+    /// <returns></returns>
+    public string GetCurrentTenantKeyByToken();
+
+    /// <summary>
+    /// Recupera a tenantKey no header.
+    /// </summary>
+    public string GetCurrentTenantKeyByHeader();
 
     /// <summary>
     /// Recupera o id do usuário logado.

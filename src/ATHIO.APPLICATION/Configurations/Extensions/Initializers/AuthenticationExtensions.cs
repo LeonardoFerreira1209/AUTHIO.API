@@ -90,10 +90,10 @@ public static class AuthenticationExtensions
     }
 
     /// <summary>
-    /// Persiste no banco de dados.
+    ///  Persiste no banco de dados.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="credential">The credential.</param>
+    /// <typeparam name="TContext"></typeparam>
+    /// <param name="builder"></param>
     /// <returns></returns>
     public static IJwksBuilder PersistKeysToDataBaseStore<TContext>(this IJwksBuilder builder) where TContext : DbContext, ISecurityKeyContext
     {
@@ -101,14 +101,4 @@ public static class AuthenticationExtensions
 
         return builder;
     }
-
-    //public static IApplicationBuilder UseJwksDiscovery(this IApplicationBuilder app, string jwtDiscoveryEndpoint = "/jwks")
-    //{
-    //    if (!jwtDiscoveryEndpoint.StartsWith('/')) throw new ArgumentException("The Jwks URI must starts with '/'");
-
-    //    app.Map(new PathString(jwtDiscoveryEndpoint), x =>
-    //        x.UseMiddleware<JwtServiceDiscoveryMiddleware>());
-
-    //    return app;
-    //}
 }

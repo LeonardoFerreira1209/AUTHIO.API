@@ -15,9 +15,11 @@ public static class CorsExtensions
     public static IServiceCollection ConfigureCors(this IServiceCollection services)
         => services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy", policy =>
-            {
-                policy.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed((host) => true).AllowCredentials();
-            });
+            options.AddPolicy("AllowAllOrigins",
+                builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+            );
         });
 }

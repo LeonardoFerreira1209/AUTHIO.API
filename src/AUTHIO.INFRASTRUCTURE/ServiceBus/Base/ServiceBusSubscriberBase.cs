@@ -67,7 +67,9 @@ public abstract class ServiceBusSubscriberBase(
     /// </summary>
     /// <param name="messageEvent"></param>
     /// <returns></returns>
-    public abstract Task ProcessMensageAsync(ProcessMessageEventArgs messageEvent);
+    public abstract Task ProcessMensageAsync(
+        ProcessMessageEventArgs messageEvent
+        );
 
     /// <summary>
     /// Processa erros durante a recepção de mensagens.

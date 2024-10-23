@@ -13,6 +13,7 @@ namespace AUTHIO.API.Controllers.WebHooks;
 /// </summary>
 /// <param name="planService"></param>
 /// <param name="httpContextAccessor"></param>
+/// <param name="configurations"></param>
 [ApiController]
 [Route("api/stripe/webhook")]
 public class StripeWebHooks(
@@ -32,7 +33,10 @@ public class StripeWebHooks(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("products")]
-    [SwaggerOperation(Summary = "Eventos de produto do stripe.", Description = "Metodo responsavel por receber eventos de produtos do stripe!")]
+    [SwaggerOperation(
+        Summary = "Eventos de produto do stripe.", 
+        Description = "Metodo responsavel por receber eventos de produtos do stripe!"
+    )]
     public async Task ProductEventsAsync(
         CancellationToken cancellationToken
         )

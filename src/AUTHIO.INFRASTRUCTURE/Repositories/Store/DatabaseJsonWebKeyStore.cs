@@ -36,6 +36,12 @@ public class DataBaseJsonWebKeyStore<TContext>(
                 == contextService.GetCurrentTenantKey())?.Result;
 
     /// <summary>
+    /// Permite autenticar por tenantKey.
+    /// </summary>
+    private readonly bool _isAuthByTenantKey 
+        = contextService.IsAuthByTenantKey;
+
+    /// <summary>
     /// Armazenar.
     /// </summary>
     /// <param name="securityParamteres"></param>
@@ -60,7 +66,7 @@ public class DataBaseJsonWebKeyStore<TContext>(
         string cacheKey =
              JwkContants.CurrentJwkCache;
 
-        if (_currentTenant is not null)
+        if (_currentTenant is not null && _isAuthByTenantKey)
             cacheKey += $".{_currentTenant.Id}";
 
         if (!memoryCache.TryGetValue(
@@ -70,7 +76,7 @@ public class DataBaseJsonWebKeyStore<TContext>(
             IQueryable<KeyMaterial> query
             = context.SecurityKeys;
 
-            if (_currentTenant is not null)
+            if (_currentTenant is not null && _isAuthByTenantKey)
             {
                 var tokenConfig = _currentTenant
                     .TenantConfiguration
@@ -116,7 +122,7 @@ public class DataBaseJsonWebKeyStore<TContext>(
         string cacheKey =
             JwkContants.CurrentJwkCache;
 
-        if (_currentTenant is not null)
+        if (_currentTenant is not null && _isAuthByTenantKey)
             cacheKey += $".{_currentTenant.Id}";
 
         if (!memoryCache.TryGetValue(
@@ -127,7 +133,7 @@ public class DataBaseJsonWebKeyStore<TContext>(
             IQueryable<KeyMaterial> query
                 = context.SecurityKeys;
 
-            if (_currentTenant is not null)
+            if (_currentTenant is not null && _isAuthByTenantKey)
             {
                 var tokenConfig = _currentTenant
                    .TenantConfiguration
@@ -230,7 +236,7 @@ public class DataBaseJsonWebKeyStore<TContext>(
         string currentCacheKey =
            JwkContants.CurrentJwkCache;
 
-        if (_currentTenant is not null)
+        if (_currentTenant is not null && _isAuthByTenantKey)
         {
             cacheKey += $".{_currentTenant.Id}";
             currentCacheKey += $".{_currentTenant.Id}";

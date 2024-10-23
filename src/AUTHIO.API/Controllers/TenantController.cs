@@ -23,8 +23,8 @@ namespace AUTHIO.API.Controllers;
 [Controller]
 [Route("api/tenants")]
 public class TenantController(
-    IFeatureFlagsService featureFlags, ITenantService tenantService)
-        : BaseController(featureFlags)
+    IFeatureFlagsService featureFlags, 
+    ITenantService tenantService) : BaseController(featureFlags)
 {
     private readonly ITenantService
         _tenantService = tenantService;
@@ -65,7 +65,10 @@ public class TenantController(
     [HttpPut]
     [EnableRateLimiting("fixed")]
     [Authorize(Claims.Tenants, "PUT")]
-    [SwaggerOperation(Summary = "Atualizar tenant", Description = "Método responsável por atualizar um tenant!")]
+    [SwaggerOperation(
+        Summary = "Atualizar tenant", 
+        Description = "Método responsável por atualizar um tenant!"
+    )]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
@@ -92,7 +95,10 @@ public class TenantController(
     [HttpGet]
     [EnableRateLimiting("fixed")]
     [Authorize(Claims.Tenants, "GET")]
-    [SwaggerOperation(Summary = "Buscar todos os tenants", Description = "Método responsável por buscar todos os tenants do usuário!")]
+    [SwaggerOperation(
+        Summary = "Buscar todos os tenants", 
+        Description = "Método responsável por buscar todos os tenants do usuário!"
+    )]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
@@ -119,7 +125,10 @@ public class TenantController(
     [HttpPatch("users/register")]
     [EnableRateLimiting("fixed")]
     [Authorize(Claims.Tenants, "PATCH")]
-    [SwaggerOperation(Summary = "Registrar usuário no tenant", Description = "Método responsável por registrar um usuário no tenant!")]
+    [SwaggerOperation(
+        Summary = "Registrar usuário no tenant", 
+        Description = "Método responsável por registrar um usuário no tenant!"
+    )]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]

@@ -37,7 +37,7 @@ public sealed class UserService(
     /// <param name="id"></param>
     /// <returns></returns>
     public async Task<ObjectResult> GetUserByIdAsync(
-        Guid id, 
+        Guid id,
         CancellationToken cancellationToken)
     {
         Log.Information(
@@ -80,90 +80,89 @@ public sealed class UserService(
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(UserService)} - METHOD {nameof(RegisterAsync)}\n");
 
+        var transaction =
+            await unitOfWork.BeginTransactAsync();
+
         try
         {
             await new RegisterUserRequestValidator()
-                .ValidateAsync(registerUserRequest, cancellationToken)
-                    .ContinueWith(async (validationTask) =>
-                    {
-                        var validation = validationTask.Result;
+               .ValidateAsync(registerUserRequest, cancellationToken)
+                   .ContinueWith(async (validationTask) =>
+                   {
+                       var validation = validationTask.Result;
 
-                        if (validation.IsValid is false) 
-                            await validation.GetValidationErrors();
+                       if (validation.IsValid is false)
+                           await validation.GetValidationErrors();
 
-                    }).Unwrap();
+                   }).Unwrap();
 
-            var transaction =
-                await unitOfWork.BeginTransactAsync();
+            var userEntity
+                = registerUserRequest.ToUserSystemEntity();
 
-            try
-            {
-                var userEntity
-                    = registerUserRequest.ToUserSystemEntity();
+            return await customUserManager
+                .CreateAsync(
+                    userEntity,
+                    registerUserRequest.Password
 
-                return await customUserManager
-                    .CreateAsync(userEntity, registerUserRequest.Password).ContinueWith(async (identityResultTask) =>
-                    {
-                        var identityResult
-                                = identityResultTask.Result;
+                ).ContinueWith(async (identityResultTask) =>
+                {
+                    var identityResult
+                            = identityResultTask.Result;
 
-                        if (identityResult.Succeeded is false)
-                            throw new CreateUserFailedException(
-                                registerUserRequest, identityResult.Errors.Select((e)
-                                    => new DataNotifications(e.Description)).ToList()
+                    if (identityResult.Succeeded is false)
+                        throw new CreateUserFailedException(
+                            registerUserRequest, identityResult.Errors.Select((e)
+                                => new DataNotifications(e.Description)).ToList()
+                        );
+
+                    return await customUserManager.AddToRoleAsync(
+                        userEntity, "System").ContinueWith(async (identityResultTask) =>
+                        {
+                            var identityResult
+                                    = identityResultTask.Result;
+
+                            if (identityResult.Succeeded is false)
+                                throw new UserToRoleFailedException(
+                                    registerUserRequest, identityResult.Errors.Select((e)
+                                        => new DataNotifications(e.Description)).ToList()
+                                );
+
+                            var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
+                                    .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                        EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
+                                    )
                             );
 
-                        return await customUserManager.AddToRoleAsync(
-                            userEntity, "System").ContinueWith(async (identityResultTask) =>
-                            {
-                                var identityResult
-                                        = identityResultTask.Result;
+                            await eventRepository.CreateAsync(
+                                CreateEvent.CreateEmailEvent(
+                                    jsonBody
+                                )
+                            );
 
-                                if (identityResult.Succeeded is false)
-                                    throw new UserToRoleFailedException(
-                                        registerUserRequest, identityResult.Errors.Select((e)
-                                            => new DataNotifications(e.Description)).ToList()
-                                    );
+                            await unitOfWork.CommitAsync();
+                            await transaction.CommitAsync();
 
-                                var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
-                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                            EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
-                                        )
-                                );
-
-                                await eventRepository.CreateAsync(
-                                    CreateEvent.CreateEmailEvent(
-                                        jsonBody
-                                    )
-                                );
-
-                                await unitOfWork.CommitAsync();
-                                await transaction.CommitAsync();
-
-                                return new ObjectResponse(
+                            return new ObjectResponse(
+                                HttpStatusCode.Created,
+                                new ApiResponse<UserResponse>(
+                                    identityResult.Succeeded,
                                     HttpStatusCode.Created,
-                                    new ApiResponse<UserResponse>(
-                                        identityResult.Succeeded,
-                                        HttpStatusCode.Created,
-                                        userEntity.ToResponse(), [
-                                            new DataNotifications("Usuário criado com sucesso!")
-                                        ]
-                                    )
-                                );
+                                    userEntity.ToResponse(), [
+                                        new DataNotifications("Usuário criado com sucesso!")
+                                    ]
+                                )
+                            );
 
-                            }).Unwrap();
+                        }).Unwrap();
 
-                    }).Unwrap();
-            }
-            catch
-            {
-                transaction.Rollback(); throw;
-            }
+                }).Unwrap();
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
-            
+            transaction.Rollback();
+
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
             throw;
         }
     }

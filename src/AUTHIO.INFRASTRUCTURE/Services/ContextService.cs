@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace AUTHIO.INFRASTRUCTURE.Services;
@@ -15,6 +16,18 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 public class ContextService(
     IHttpContextAccessor httpContextAccessor) : IContextService
 {
+    /// <summary>
+    /// Lista de endpoints que devem ignorar a validação do token por tenantKey.
+    /// </summary>
+    private readonly IEnumerable<string> _dontUseTenantConfigAuthEndpoints = [
+         "RegisterTenantUserAsync",
+    ];
+
+    /// <summary>
+    /// Rota de acesso do endpoint.
+    /// </summary>
+    private string GetEndpointRoute => httpContextAccessor.HttpContext.GetEndpoint().DisplayName;
+
     /// <summary>
     /// Recupera o tenantId do usuário logado.
     /// </summary>
@@ -41,9 +54,14 @@ public class ContextService(
     public string GetCurrentTenantKey() => httpContextAccessor.HttpContext?.Request?.Headers
                   ?.FirstOrDefault(header => header.Key.Equals("X-Tenant-KEY", StringComparison.OrdinalIgnoreCase)).Value
                         ?? httpContextAccessor.HttpContext?
-                                .User.Claims.FirstOrDefault(x => x.Issuer == "X-Tenant-KEY").Value;
+                                .User?.Claims?.FirstOrDefault(x => x.Issuer == "X-Tenant-KEY")?.Value;
 
-    public string GetEndpointRoute => httpContextAccessor.HttpContext.GetEndpoint().DisplayName;
+    /// <summary>
+    /// Recupera a tenantKey no Header.
+    /// </summary>
+    public string GetCurrentTenantKeyByHeader() => httpContextAccessor.HttpContext?.Request?.Headers
+                  ?.FirstOrDefault(header => header.Key.Equals(
+                      "X-Tenant-KEY", StringComparison.OrdinalIgnoreCase)).Value;
 
     /// <summary>
     /// Verifica se o usuário esta logado.
@@ -70,4 +88,40 @@ public class ContextService(
         => httpContextAccessor
                .HttpContext.Request
                    .Headers.TryGetValue(key, out value);
+
+    /// <summary>
+    /// Recupera o X-Tenant-KEY do token de usuário atual.
+    /// </summary>
+    /// <returns></returns>
+    public string GetCurrentTenantKeyByToken()
+    {
+        if (TryGetValueByHeader(
+                "Authorization", out StringValues authHeader))
+        {
+            var handler =
+            new JwtSecurityTokenHandler();
+
+            string tokenWithoutBearer
+                = authHeader.ToString()
+                    .Replace("Bearer ", "");
+
+            var tokenJson
+                = handler.ReadToken(
+                    tokenWithoutBearer) as JwtSecurityToken;
+
+            return tokenJson.Claims
+                .FirstOrDefault(x =>
+                    x.Type == "X-Tenant-KEY")?.Value;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Permite autenticar por tenantKey. 
+    /// </summary>
+    public bool IsAuthByTenantKey => 
+        !GetEndpointRoute.Contains(
+            string.Join(", ", _dontUseTenantConfigAuthEndpoints)
+        );
 }

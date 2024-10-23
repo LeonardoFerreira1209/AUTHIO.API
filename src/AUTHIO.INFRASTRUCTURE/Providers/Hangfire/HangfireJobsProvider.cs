@@ -8,14 +8,14 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using static AUTHIO.DOMAIN.Dtos.Configurations.Hangfire;
 
-namespace AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
+namespace AUTHIO.INFRASTRUCTURE.Providers.Hangfire;
 
 /// <summary>
 /// Provider de Hangfire jobs.
 /// </summary>
 /// <param name="recurringJobManager"></param>
 public class HangfireJobsProvider(
-    IRecurringJobManager recurringJobManager, 
+    IRecurringJobManager recurringJobManager,
     IOptions<AppSettings> configurations,
     ITaskJobFactory taskJobFactory) : IHangFireJobsProvider
 {

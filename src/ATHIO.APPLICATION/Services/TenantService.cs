@@ -1,6 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Builders.Creates;
 using AUTHIO.DOMAIN.Contracts.Factories;
-using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Providers.Email;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
@@ -48,7 +47,6 @@ public class TenantService(
     IEventRepository eventRepository,
     IContextService contextService,
     IEmailProviderFactory emailProviderFactory,
-    IJwtService jwtService,
     ICachingService cachingService,
     CustomUserManager<UserEntity> customUserManager) : ITenantService
 {
@@ -79,7 +77,7 @@ public class TenantService(
     /// <returns></returns>
     /// <exception cref="DuplicatedTenantException"></exception>
     public async Task<ObjectResult> CreateAsync(
-        CreateTenantRequest createTenantRequest, 
+        CreateTenantRequest createTenantRequest,
         CancellationToken cancellationToken
     )
     {
@@ -100,35 +98,38 @@ public class TenantService(
                     }).Unwrap();
 
             return await tenantRepository.GetAsync(
-                tenant => tenant.Name.Equals(createTenantRequest.Name))
-                    .ContinueWith(async (tenantResult) => {
+                tenant => tenant.Name.Equals(
+                    createTenantRequest.Name
+                )
+            )
+            .ContinueWith(async (tenantResult) =>
+            {
+                if (tenantResult.Result is not null)
+                    throw new DuplicatedTenantException(createTenantRequest);
 
-                        if (tenantResult.Result is not null)
-                            throw new DuplicatedTenantException(createTenantRequest);
-                            
-                         TenantEntity tenant 
-                            = await tenantRepository
-                                .CreateAsync(
-                                    createTenantRequest.ToEntity(CurrentUserId)
-                                );
-
-                        await unitOfWork.CommitAsync();
-
-                        return new ObjectResponse(
-                            HttpStatusCode.Created,
-                            new ApiResponse<TenantResponse>(
-                                true,
-                                HttpStatusCode.Created,
-                                tenant.ToResponse(), [new DataNotifications("Tenant criado com sucesso!")]
-                            )
+                TenantEntity tenant
+                    = await tenantRepository
+                        .CreateAsync(
+                            createTenantRequest.ToEntity(CurrentUserId)
                         );
 
-                    }).Unwrap();
+                await unitOfWork.CommitAsync();
+
+                return new ObjectResponse(
+                    HttpStatusCode.Created,
+                    new ApiResponse<TenantResponse>(
+                        true,
+                        HttpStatusCode.Created,
+                        tenant.ToResponse(), [new DataNotifications("Tenant criado com sucesso!")]
+                    )
+                );
+
+            }).Unwrap();
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
-            
+
             throw;
         }
     }
@@ -141,7 +142,7 @@ public class TenantService(
     /// <returns></returns>
     /// <exception cref="NotFoundTenantException"></exception>
     public async Task<ObjectResult> UpdateAsync(
-       UpdateTenantRequest updateTenantRequest, 
+       UpdateTenantRequest updateTenantRequest,
        CancellationToken cancellationToken
     )
     {
@@ -161,36 +162,37 @@ public class TenantService(
 
                     }).Unwrap();
 
-            return await tenantRepository.GetByIdAsync(updateTenantRequest.Id).ContinueWith(
-                async (tenantEntityTask) =>
-                {
-                    var tenant
-                        = tenantEntityTask.Result 
-                        ?? throw new NotFoundTenantException();
+            return await tenantRepository.GetByIdAsync(
+                updateTenantRequest.Id
 
-                    await tenantRepository.UpdateAsync(
-                        updateTenantRequest
-                            .UpdateEntity(tenant)
-                    );
+            ).ContinueWith(async (tenantEntityTask) =>
+            {
+                var tenant
+                    = tenantEntityTask.Result
+                    ?? throw new NotFoundTenantException();
 
-                    await unitOfWork.CommitAsync();
+                await tenantRepository.UpdateAsync(
+                    updateTenantRequest
+                        .UpdateEntity(tenant)
+                );
 
-                    return new ObjectResponse(
+                await unitOfWork.CommitAsync();
+
+                return new ObjectResponse(
+                    HttpStatusCode.OK,
+                    new ApiResponse<TenantResponse>(
+                        true,
                         HttpStatusCode.OK,
-                        new ApiResponse<TenantResponse>(
-                            true,
-                            HttpStatusCode.OK,
-                            tenant.ToResponse(), [new DataNotifications("Tenant atualizado com sucesso!")]
-                        )
-                    );
-                }
+                        tenant.ToResponse(), [new DataNotifications("Tenant atualizado com sucesso!")]
+                    )
+                );
 
-            ).Unwrap();
+            }).Unwrap();
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
-            
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
             throw;
         }
     }
@@ -202,7 +204,7 @@ public class TenantService(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<ObjectResult> GetAllAsync(
-        FilterRequest filterRequest, 
+        FilterRequest filterRequest,
         CancellationToken cancellationToken
     )
     {
@@ -254,8 +256,8 @@ public class TenantService(
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
-            
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
             throw;
         }
     }
@@ -267,7 +269,7 @@ public class TenantService(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<ObjectResult> GetTenantByKeyAsync(
-        string key, 
+        string key,
         CancellationToken cancellationToken
     )
     {
@@ -286,33 +288,34 @@ public class TenantService(
         try
         {
             return await tenantRepository.GetAsync(
-                x => x.TenantConfiguration.TenantKey == key)
-                    .ContinueWith(async (taskResult) =>
-                    {
-                        var tenantEntity
-                                = taskResult.Result;
+                x => x.TenantConfiguration.TenantKey == key
+            )
+            .ContinueWith(async (taskResult) =>
+            {
+                var tenantEntity
+                        = taskResult.Result;
 
-                        ObjectResponse response = new(
-                            HttpStatusCode.OK,
-                            new ApiResponse<TenantResponse>(
-                                true,
-                                HttpStatusCode.OK,
-                                tenantEntity.ToResponse(), [
-                                new DataNotifications("Tenant recuperado com sucesso!")]
-                            )
-                        );
+                ObjectResponse response = new(
+                    HttpStatusCode.OK,
+                    new ApiResponse<TenantResponse>(
+                        true,
+                        HttpStatusCode.OK,
+                        tenantEntity.ToResponse(), [
+                        new DataNotifications("Tenant recuperado com sucesso!")]
+                    )
+                );
 
-                        await cachingService
-                            .SetAsync(cacheKey, response);
+                await cachingService
+                    .SetAsync(cacheKey, response);
 
-                        return response;
+                return response;
 
-                    }).Unwrap();
+            }).Unwrap();
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
-            
+
             throw;
         }
     }
@@ -328,97 +331,98 @@ public class TenantService(
     /// <exception cref="NotPermissionTenantException"></exception>
     /// <exception cref="CreateUserFailedException"></exception>
     public async Task<ObjectResult> RegisterTenantUserAsync(
-        RegisterUserRequest registerUserRequest, 
-        string tenantKey, 
+        RegisterUserRequest registerUserRequest,
+        string tenantKey,
         CancellationToken cancellationToken
     )
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(TenantService)} - METHOD {nameof(RegisterTenantUserAsync)}\n");
 
+        var transaction =
+            await unitOfWork.BeginTransactAsync();
+
         try
         {
             await new RegisterUserRequestValidator()
-                .ValidateAsync(registerUserRequest, cancellationToken)
-                    .ContinueWith(async (validationTask) =>
-                    {
-                        var validation = validationTask.Result;
+               .ValidateAsync(registerUserRequest, cancellationToken)
+                   .ContinueWith(async (validationTask) =>
+                   {
+                       var validation = validationTask.Result;
 
-                        if (validation.IsValid is false)
-                            await validation.GetValidationErrors();
+                       if (validation.IsValid is false)
+                           await validation.GetValidationErrors();
 
-                    }).Unwrap();
+                   }).Unwrap();
 
-            var transaction =
-                await unitOfWork.BeginTransactAsync();
-
-            try
+            return await tenantRepository.GetAsync(
+                tenant => tenant.TenantConfiguration.TenantKey.Equals(
+                    tenantKey
+                )
+            )
+            .ContinueWith(async (taskResut) =>
             {
-                return await tenantRepository.GetAsync(tenant => tenant.TenantConfiguration.TenantKey.Equals(tenantKey))
-                    .ContinueWith(async (taskResut) =>
+                var tenantEntity
+                    = taskResut.Result
+                        ?? throw new NotFoundTenantException(tenantKey);
+
+                if (!tenantEntity.UserId.Equals(contextService.GetCurrentUserId()))
+                    throw new NotPermissionTenantException();
+
+                var userEntity
+                    = registerUserRequest.ToUserTenantEntity(tenantEntity.Id);
+
+                return await customUserManager.CreateAsync(
+                    userEntity, registerUserRequest.Password)
+                    .ContinueWith(async identityResultTask =>
                     {
-                        var tenantEntity
-                          = taskResut.Result
-                             ?? throw new NotFoundTenantException(tenantKey);
+                        var identityResult
+                                = identityResultTask.Result;
 
-                        if (!tenantEntity.UserId.Equals(contextService.GetCurrentUserId()))
-                            throw new NotPermissionTenantException();
+                        if (identityResult.Succeeded is false)
+                            throw new CreateUserFailedException(
+                                registerUserRequest, identityResult.Errors.Select((e)
+                                    => new DataNotifications(e.Description)).ToList()
+                            );
 
-                        var userEntity
-                           = registerUserRequest.ToUserTenantEntity(tenantEntity.Id);
+                        var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
+                                .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                    EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
+                                )
+                        );
 
-                        return await customUserManager.CreateAsync(
-                             userEntity, registerUserRequest.Password)
-                                .ContinueWith(async identityResultTask =>
-                                {
-                                    var identityResult
-                                            = identityResultTask.Result;
+                        await eventRepository.CreateAsync(CreateEvent
+                            .CreateEmailEvent(jsonBody)
+                        );
 
-                                    if (identityResult.Succeeded is false)
-                                        throw new CreateUserFailedException(
-                                            registerUserRequest, identityResult.Errors.Select((e)
-                                                => new DataNotifications(e.Description)).ToList()
-                                        );
+                        await unitOfWork.CommitAsync();
+                        await transaction.CommitAsync();
 
-                                    var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
-                                            .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                                EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
+                        return new ObjectResponse(
+                            HttpStatusCode.Created,
+                            new ApiResponse<UserResponse>(
+                                identityResult.Succeeded,
+                                    HttpStatusCode.Created,
+                                    userEntity.ToResponse(), [
+                                            new DataNotifications(
+                                                "Usuário criado com sucesso e vinculado ao Tenant!"
                                             )
-                                    );
-
-                                    await eventRepository.CreateAsync(CreateEvent
-                                       .CreateEmailEvent(jsonBody)
-                                    );
-
-                                    await unitOfWork.CommitAsync();
-                                    await transaction.CommitAsync();
-
-                                    return new ObjectResponse(
-                                        HttpStatusCode.Created,
-                                        new ApiResponse<UserResponse>(
-                                            identityResult.Succeeded,
-                                                HttpStatusCode.Created,
-                                                userEntity.ToResponse(), [
-                                                     new DataNotifications("Usuário criado com sucesso e vinculado ao Tenant!")
-                                                ]
-                                        )
-                                    );
-
-                                }).Unwrap();
+                                    ]
+                            )
+                        );
 
                     }).Unwrap();
-            }
-            catch
-            {
-                transaction.Rollback(); 
-                
-                throw;
-            }
+
+            }).Unwrap();
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
-            
+            await transaction.RollbackAsync(
+                cancellationToken
+            );
+
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
             throw;
         }
     }
