@@ -25,7 +25,7 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.HasIndex(u => u.NormalizedEmail).HasDatabaseName("EmailIndex");
 
         // Mapeia para a tabela AspNetUsers
-        builder.ToTable("AspNetUsers");
+        builder.ToTable("Users");
 
         // Um token de concorrência para uso com a verificação de concorrência otimista
         builder.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();

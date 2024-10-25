@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AuthIoContext))]
-    [Migration("20241018040346_INITIAL")]
+    [Migration("20241025053716_INITIAL")]
     partial class INITIAL
     {
         /// <inheritdoc />
@@ -232,20 +232,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Plans");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("eac640e7-e224-4278-b667-5f79ef14156d"),
-                            Created = new DateTime(2024, 10, 18, 1, 3, 46, 474, DateTimeKind.Local).AddTicks(5713),
-                            Description = "Plano para estudos.",
-                            MonthlyPayment = true,
-                            Name = "Básico",
-                            QuantTenants = 0,
-                            QuantUsers = 10,
-                            Status = 1,
-                            Value = 10m
-                        });
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleEntity", b =>
@@ -289,13 +275,13 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("073e2ce8-6e29-41d8-8f4c-1e18681352b2"),
-                            Created = new DateTime(2024, 10, 18, 1, 3, 46, 474, DateTimeKind.Local).AddTicks(5527),
+                            Id = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d"),
+                            Created = new DateTime(2024, 10, 25, 2, 37, 15, 989, DateTimeKind.Local).AddTicks(8655),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -627,7 +613,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserIdentityConfigurationEntity", b =>
@@ -679,7 +665,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("RoleClaims", (string)null);
 
                     b.HasData(
                         new
@@ -687,28 +673,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Tenants",
                             ClaimValue = "POST",
-                            RoleId = new Guid("073e2ce8-6e29-41d8-8f4c-1e18681352b2")
+                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Tenants",
                             ClaimValue = "GET",
-                            RoleId = new Guid("073e2ce8-6e29-41d8-8f4c-1e18681352b2")
+                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Tenants",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("073e2ce8-6e29-41d8-8f4c-1e18681352b2")
+                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Tenants",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("073e2ce8-6e29-41d8-8f4c-1e18681352b2")
+                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
                         });
                 });
 
@@ -719,10 +705,12 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -731,18 +719,18 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("longtext");
@@ -754,7 +742,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("UserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -769,7 +757,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -778,19 +766,19 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .HasColumnType("char(36)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
+                        .HasMaxLength(128)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("longtext");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("UserTokens", (string)null);
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.LockoutIdentityConfigurationEntity", b =>
