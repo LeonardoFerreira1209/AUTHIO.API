@@ -87,11 +87,15 @@ public class DataBaseJsonWebKeyStore<TContext>(
                     : Algorithm.Create(tokenConfig.AlgorithmJwsType, JwtType.Jws);
 
                 query = query.Where(
-                   key => key.TenantId == _currentTenant.Id
+                    key => key.TenantId == _currentTenant.Id
                     && jwt.Kty() == key.Type
                     && jwt.AlgorithmType == key.AlgorithmType
                 );
             }
+            else
+                query = query.Where(
+                    key => key.TenantId == null
+                );
 
             credentials = await query.Where(keyMa => !keyMa.IsRevoked)
                     .OrderByDescending(d => d.CreationDate)
@@ -149,6 +153,10 @@ public class DataBaseJsonWebKeyStore<TContext>(
                     && jwt.AlgorithmType == key.AlgorithmType
                 );
             }
+            else
+                query = query.Where(
+                    key => key.TenantId == null
+                );
 
             keys = query.OrderByDescending(
                 d => d.CreationDate).Take(quantity)
@@ -189,6 +197,10 @@ public class DataBaseJsonWebKeyStore<TContext>(
         if (_currentTenant is not null)
             query.Where(
                 key => key.TenantId == _currentTenant.Id
+            );
+        else
+            query = query.Where(
+                key => key.TenantId == null
             );
 
         foreach (var securityKeyWithPrivate in query.ToList())

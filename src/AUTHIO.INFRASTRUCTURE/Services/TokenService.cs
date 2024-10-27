@@ -125,7 +125,7 @@ public class TokenService(
             new TokenJwtBuilder()
               .AddUsername(username)
                 .AddSecurityKey(JwtSecurityKey.Create(tokenConfigs.SecurityKey))
-                   .AddSubject("HYPER.IO PROJECTS L.T.D.A")
+                   .AddSubject(userEntity.Id.ToString())
                       .AddIssuer(tokenConfigs.ValidIssuer)
                           .AddAudience(tokenConfigs.ValidAudience)
                               .AddExpiry(appsettings.Value.Auth.ExpiresIn)

@@ -192,14 +192,15 @@ public class TokenJwtBuilder
         {
             var baseClaims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userEntity.Id.ToString()),
-                new Claim(ClaimTypes.Name, username),
+                new Claim(JwtRegisteredClaimNames.Sub, subject),
+                new Claim(JwtRegisteredClaimNames.Name, userEntity.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, userEntity.LastName),
+                new Claim(JwtRegisteredClaimNames.UniqueName, username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.Now).ToString(CultureInfo.CurrentCulture), ClaimValueTypes.Integer64),
                 new Claim(JwtRegisteredClaimNames.Typ, "Bearer"),
                 new Claim(JwtRegisteredClaimNames.Email, userEntity.Email),
-                new Claim(ClaimTypes.MobilePhone, userEntity.PhoneNumber ?? string.Empty),
-                new Claim(ClaimTypes.Webpage, "https://www.linkedin.com/in/leonardoferreiraalmeida/"),
+                new Claim(JwtRegisteredClaimNames.Website, "authioapi-production.up.railway.app"),
 
             }.Union(roles).Union(claims);
 
@@ -217,7 +218,6 @@ public class TokenJwtBuilder
             {
                 Issuer = issuer,
                 Audience = audience,
-                Subject = new ClaimsIdentity([new Claim(JwtRegisteredClaimNames.UniqueName, username)]),
                 Expires = DateTime.Now.AddHours(expiryRefreshTokenInHours),
             };
 
