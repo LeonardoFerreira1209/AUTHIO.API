@@ -20,7 +20,8 @@ public class ContextService(
     /// Lista de endpoints que devem ignorar a validação do token por tenantKey.
     /// </summary>
     private readonly IEnumerable<string> _dontUseTenantConfigAuthEndpoints = [
-         "RegisterTenantUserAsync",
+         "TenantController.RegisterTenantUserAsync",
+         "UserController.GetAsync"
     ];
 
     /// <summary>
@@ -120,8 +121,7 @@ public class ContextService(
     /// <summary>
     /// Permite autenticar por tenantKey. 
     /// </summary>
-    public bool IsAuthByTenantKey => 
-        !GetEndpointRoute.Contains(
-            string.Join(", ", _dontUseTenantConfigAuthEndpoints)
-        );
+    public bool IsAuthByTenantKey =>
+        !_dontUseTenantConfigAuthEndpoints
+            .Any(x => GetEndpointRoute.Contains(x));
 }

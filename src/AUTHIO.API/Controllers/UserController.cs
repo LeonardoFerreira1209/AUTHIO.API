@@ -59,8 +59,8 @@ public class UserController(
     /// <param name="id"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet("{id}")]
     [Authorize]
+    [HttpGet("{id}")]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Recuperar usuário", Description = "Método responsável por buscar um usuário por id!")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]

@@ -35,7 +35,7 @@ public class HangfireJobsProvider(
             {
                 AddOrRemoveJob(
                     job.Name,
-                    job.Cronn.IsNullOrEmpty() ? Cron.Monthly() : job.Cronn,
+                    job.Cronn ?? Cron.Monthly(),
                     job.Execute
                 );
             });
