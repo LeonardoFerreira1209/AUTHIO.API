@@ -50,8 +50,13 @@ public class AuthenticationController(
         {
             return await ExecuteAsync(nameof(SigninAsync),
                 () => _authenticationService.AuthenticationAsync(
-                    new LoginRequest(authenticationRequest.Username,
-                        authenticationRequest.Password)), "Autenticar usuário");
+                    new LoginRequest(
+                        authenticationRequest.Username,
+                        authenticationRequest.Password
+                    ),
+                    authenticationRequest.TenantKey
+                ), "Autenticar usuário"
+            );
         }
     }
 }

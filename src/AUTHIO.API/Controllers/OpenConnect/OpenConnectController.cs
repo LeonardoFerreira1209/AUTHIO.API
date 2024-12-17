@@ -9,7 +9,9 @@ namespace AUTHIO.API.Controllers.OpenConnect;
 /// Controller que cuida do fluxo de open id connect.
 /// </summary>
 [ApiController]
-public class OpenConnectController : ControllerBase
+public class OpenConnectController(
+        
+    ) : ControllerBase
 {
     /// <summary>
     ///  Endpoint responsável por buscar dados do open Id connect.
@@ -22,6 +24,7 @@ public class OpenConnectController : ControllerBase
         Description = "Método responsável por retornar os dados do open id connect."
     )]
     public async Task<IActionResult> OpenConnectIdConfigurations(
+
         )
     {
         using (LogContext.PushProperty("Controller", "UserController"))

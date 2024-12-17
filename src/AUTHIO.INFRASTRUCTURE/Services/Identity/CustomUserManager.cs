@@ -72,7 +72,8 @@ public class CustomUserManager<TUser>(
 
                     return await CreateAsync(user);
 
-                }).Unwrap();
+                }
+            ).Unwrap();
     }
 
     /// <summary>
@@ -158,11 +159,16 @@ public class CustomUserManager<TUser>(
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    public async Task<TUser> GetUserByIdAsync(Guid id) 
-        => await Store.FindByIdAsync(
-            id.ToString(),
-            CancellationToken.None
-        );
+    public async Task<TUser> GetUserByIdAsync(
+        Guid id, 
+        Expression<Func<TUser, bool>> expression,
+        CancellationToken cancellationToken
+    ) 
+    => await Store.FindByIdWithExpressionAsync(
+        id,
+        expression,
+        cancellationToken
+    );
 
     /// <summary>
     /// Valida os dados do usuário.

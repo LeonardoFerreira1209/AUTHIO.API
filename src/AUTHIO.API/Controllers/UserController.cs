@@ -56,22 +56,24 @@ public class UserController(
     /// <summary>
     /// Endpoint responsável pelo retorno de usuário por Id.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="idWithXTenantKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("{id}")]
+    [HttpGet]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Recuperar usuário", Description = "Método responsável por buscar um usuário por id!")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAsync(
-       [FromHeader(Name = "X-Tenant-KEY")] string tenantKey,
-       Guid id,
+       IdWithXTenantKey idWithXTenantKey,
        CancellationToken cancellationToken)
     {
         return await ExecuteAsync(nameof(GetAsync),
-                () => userService.GetUserByIdAsync(
-                    id, cancellationToken), "Recuperar usuário por id.");
+            () => userService.GetUserByIdAsync(
+                idWithXTenantKey, 
+                cancellationToken
+            ), "Recuperar usuário por id."
+        );
     }
 }

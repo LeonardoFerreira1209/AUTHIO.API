@@ -11,11 +11,13 @@ public interface IUserService
     /// <summary>
     /// Método de registro 
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="idWithXTenantKey"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> GetUserByIdAsync(
-        Guid id,
-        CancellationToken cancellationToken);
+        IdWithXTenantKey idWithXTenantKey,
+        CancellationToken cancellationToken
+    );
 
     /// <summary>
     /// Método de registro de usuário.
@@ -25,5 +27,6 @@ public interface IUserService
     /// <returns></returns>
     Task<ObjectResult> RegisterAsync(
         RegisterUserRequest registerUserRequest,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken
+    );
 }

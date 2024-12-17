@@ -2,12 +2,15 @@
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Consts;
+using AUTHIO.DOMAIN.Helpers.Expressions;
+using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
 using AUTHIO.INFRASTRUCTURE.Context;
@@ -28,16 +31,24 @@ namespace AUTHIO.APPLICATION.Services;
 /// </remarks>
 public sealed class UserService(
     CustomUserManager<UserEntity> customUserManager,
+    IContextService contextService,
     IUnitOfWork<AuthIoContext> unitOfWork,
     IEventRepository eventRepository) : IUserService
 {
     /// <summary>
-    /// 
+    /// Recupera o id do usuário atual.
     /// </summary>
-    /// <param name="id"></param>
+    private readonly Guid CurrentUserId
+        = contextService.GetCurrentUserId();
+
+    /// <summary>
+    /// Busca um usuário por Id.
+    /// </summary>
+    /// <param name="idWithXTenantKey"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<ObjectResult> GetUserByIdAsync(
-        Guid id,
+        IdWithXTenantKey idWithXTenantKey,
         CancellationToken cancellationToken)
     {
         Log.Information(
@@ -46,14 +57,23 @@ public sealed class UserService(
         try
         {
             var user = await customUserManager
-                .GetUserByIdAsync(id);
+                .GetUserByIdAsync(
+                    idWithXTenantKey.Id,
+                    CustomLambdaExpressions.Or(
+                        x => x.Id == CurrentUserId,
+                        UserFilters<UserEntity>.FilterTenantUsers(
+                            idWithXTenantKey.TenantKey
+                        )
+                    ),
+                    cancellationToken
+                );
 
             return new ObjectResponse(
                 HttpStatusCode.OK,
                 new ApiResponse<UserResponse>(
                     true,
                     HttpStatusCode.OK,
-                    user.ToResponse(), [
+                    user?.ToResponse(), [
                         new DataNotifications("Usuário recuperado com sucesso!")
                     ]
                 )
