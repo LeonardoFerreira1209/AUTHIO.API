@@ -1,5 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Contracts.Repositories.Store;
+﻿using AUTHIO.DOMAIN.Contracts.Repositories.Store;
 using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Entities;

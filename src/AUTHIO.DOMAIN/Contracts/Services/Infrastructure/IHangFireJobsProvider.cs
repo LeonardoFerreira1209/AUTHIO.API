@@ -1,4 +1,4 @@
-﻿namespace AUTHIO.DOMAIN.Contracts;
+﻿namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 
 /// <summary>
 /// Interface de HangFire Jobs provider.

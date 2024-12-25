@@ -27,7 +27,7 @@ public class ContextService(
     /// <summary>
     /// Rota de acesso do endpoint.
     /// </summary>
-    private string GetEndpointRoute => httpContextAccessor.HttpContext.GetEndpoint().DisplayName;
+    private string GetEndpointRoute => httpContextAccessor.HttpContext?.GetEndpoint()?.DisplayName;
 
     /// <summary>
     /// Recupera o tenantId do usuário logado.
@@ -52,17 +52,31 @@ public class ContextService(
     /// Recupera a tenantKey passada no Header.
     /// </summary>
     /// <returns></returns>
-    public string GetCurrentTenantKey() => httpContextAccessor.HttpContext?.Request?.Headers
-                  ?.FirstOrDefault(header => header.Key.Equals("X-Tenant-KEY", StringComparison.OrdinalIgnoreCase)).Value
-                        ?? httpContextAccessor.HttpContext?
-                                .User?.Claims?.FirstOrDefault(x => x.Issuer == "X-Tenant-KEY")?.Value;
+    public string GetCurrentTenantKey() => 
+        GetCurrentTenantKeyByHeader() 
+        ?? GetCurrentTenantKeyByClaims()
+        ?? GetCurrentTenantKeyByPath();
 
     /// <summary>
     /// Recupera a tenantKey no Header.
     /// </summary>
     public string GetCurrentTenantKeyByHeader() => httpContextAccessor.HttpContext?.Request?.Headers
-                  ?.FirstOrDefault(header => header.Key.Equals(
-                      "X-Tenant-KEY", StringComparison.OrdinalIgnoreCase)).Value;
+        ?.FirstOrDefault(header => header.Key.Equals(
+            "x-tenant-key", StringComparison.OrdinalIgnoreCase)).Value;
+
+    /// <summary>
+    /// Recupera a tenantKey nas claims.
+    /// </summary>
+    public string GetCurrentTenantKeyByClaims() => httpContextAccessor.HttpContext?.User?.Claims
+        ?.FirstOrDefault(claim => claim.Issuer.Equals(
+            "x-tenant-key", StringComparison.OrdinalIgnoreCase))?.Value;
+
+    /// <summary>
+    /// Recupera a tenantKey nas claims.
+    /// </summary>
+    public string GetCurrentTenantKeyByPath() => httpContextAccessor.HttpContext?.Request?.RouteValues
+        ?.FirstOrDefault(route => route.Key.Equals(
+            "x-tenant-key", StringComparison.OrdinalIgnoreCase)).Value?.ToString();
 
     /// <summary>
     /// Verifica se o usuário esta logado.
@@ -91,7 +105,7 @@ public class ContextService(
                    .Headers.TryGetValue(key, out value);
 
     /// <summary>
-    /// Recupera o X-Tenant-KEY do token de usuário atual.
+    /// Recupera o x-tenant-key do token de usuário atual.
     /// </summary>
     /// <returns></returns>
     public string GetCurrentTenantKeyByToken()
@@ -112,7 +126,7 @@ public class ContextService(
 
             return tokenJson.Claims
                 .FirstOrDefault(x =>
-                    x.Type == "X-Tenant-KEY")?.Value;
+                    x.Type == "x-tenant-key")?.Value;
         }
 
         return null;
@@ -122,6 +136,18 @@ public class ContextService(
     /// Permite autenticar por tenantKey. 
     /// </summary>
     public bool IsAuthByTenantKey =>
-        !_dontUseTenantConfigAuthEndpoints
+        GetEndpointRoute is not null && !_dontUseTenantConfigAuthEndpoints
             .Any(x => GetEndpointRoute.Contains(x));
+
+    /// <summary>
+    /// Retorna a url base.
+    /// </summary>
+    /// <returns></returns>
+    public string GetUrlBase()
+    {
+        var request = httpContextAccessor
+            .HttpContext.Request;
+
+        return $"{request.Scheme}://{request.Host.Value}";
+    }
 }

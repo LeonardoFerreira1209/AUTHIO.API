@@ -69,6 +69,7 @@ public static class DependenciesExtensions
             .AddTransient<IEmailProviderFactory, EmailProviderFactory>()
             .AddTransient<IEventFactory, EventFactory>()
             .AddTransient<IEventServiceBusProvider, EventServiceBusProvider>()
+            .AddTransient<IOpenConnectService, OpenConnectService>()
             .AddSingleton<ICachingService, CachingService>()
             .AddScoped<ICryptoService, CryptoService>()
             .AddSingleton<IContextService, ContextService>()

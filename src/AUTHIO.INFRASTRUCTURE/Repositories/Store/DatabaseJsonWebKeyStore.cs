@@ -33,7 +33,9 @@ public class DataBaseJsonWebKeyStore<TContext>(
     private readonly TenantEntity _currentTenant
         = tenantRepository.GetAsync(
             x => x.TenantConfiguration.TenantKey
-                == contextService.GetCurrentTenantKey())?.Result;
+                == contextService.GetCurrentTenantKey()
+            
+        )?.Result;
 
     /// <summary>
     /// Permite autenticar por tenantKey.
@@ -108,7 +110,11 @@ public class DataBaseJsonWebKeyStore<TContext>(
                 .SetSlidingExpiration(options.Value.CacheTime);
 
             if (credentials != null)
-                memoryCache.Set(cacheKey, credentials, cacheEntryOptions);
+                memoryCache.Set(
+                    cacheKey, 
+                    credentials, 
+                    cacheEntryOptions
+                );
 
             return credentials;
         }

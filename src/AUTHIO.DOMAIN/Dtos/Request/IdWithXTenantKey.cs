@@ -3,7 +3,7 @@
 namespace AUTHIO.DOMAIN.Dtos.Request;
 
 /// <summary>
-/// Busca dados por Id e X-Tenant-Key.
+/// Busca dados por Id e x-tenant-key.
 /// </summary>
 public class IdWithXTenantKey
 {
@@ -15,6 +15,6 @@ public class IdWithXTenantKey
     /// <summary>
     /// Chave do tenant.
     /// </summary>
-    [FromHeader(Name = "X-Tenant-KEY")]
+    [FromHeader(Name = "x-tenant-key")]
     public string TenantKey { get; set; }
 }

@@ -133,7 +133,7 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterTenantUserAsync(
-        [FromHeader(Name = "X-Tenant-KEY")] string tenantKey, 
+        [FromHeader(Name = "x-tenant-key")] string tenantKey, 
         [FromBody] RegisterUserRequest registerUserRequest, 
         CancellationToken cancellationToken)
     {
