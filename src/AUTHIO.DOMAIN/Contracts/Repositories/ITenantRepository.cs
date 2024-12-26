@@ -16,4 +16,11 @@ public interface ITenantRepository
     /// <param name="userId"></param>
     /// <returns></returns>
     Task LinkTenantWithUserAdminAsync(Guid tenantId, Guid userId);
+
+    /// <summary>
+    /// Verifica se um tenant existe baseado na tenant key.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    Task<bool> ExistsByKey(string key);
 }

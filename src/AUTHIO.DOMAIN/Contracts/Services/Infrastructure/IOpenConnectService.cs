@@ -5,8 +5,9 @@ namespace AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 public interface IOpenConnectService
 {
     /// <summary>
-    ///  Recupera as configurações do Open Id.
+    /// Recupera as configurações do Open Id.
     /// </summary>
+    /// <param name="validate"></param>
     /// <param name="tenantKey"></param>
     /// <returns></returns>
     Task<ObjectResult> GetOpenIdConnectConfigurationAsync(
@@ -14,8 +15,12 @@ public interface IOpenConnectService
     );
 
     /// <summary>
-    /// Recupera as chaves de segurança para autenticação.
+    ///  Recupera as chaves de segurança para autenticação.
     /// </summary>
+    /// <param name="validate"></param>
+    /// <param name="tenantKey"></param>
     /// <returns></returns>
-    Task<object> GetJwksAsync();
+    Task<object> GetJwksAsync(
+        string tenantKey = null
+    );
 }

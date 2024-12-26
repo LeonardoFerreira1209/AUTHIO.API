@@ -99,7 +99,9 @@ public class OpenConnectController(
         using (LogContext.PushProperty("Metodo", nameof(GetJwksAsync)))
         {
             return await openConnectService
-                .GetJwksAsync();
+                .GetJwksAsync(
+                    tenantKey
+                );
         };
     }
 }

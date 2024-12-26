@@ -41,6 +41,16 @@ public class OpenConnectService(
 
             if (tenantKey is not null)
             {
+                var exists = await tenantRepository
+                   .ExistsByKey(
+                       tenantKey
+                   );
+
+                if (!exists)
+                    throw new Exception(
+                        "Tenant não existe, verifica se a key esta correta!"
+                    );
+
                 var tenant = await tenantRepository
                     .GetAsync(
                         tenant => tenant
@@ -83,13 +93,25 @@ public class OpenConnectService(
     /// Recupera as chaves de segurança para autenticação.
     /// </summary>
     /// <returns></returns>
-    public async Task<object> GetJwksAsync()
+    public async Task<object> GetJwksAsync(
+        string tenantKey = null
+        )
     {
         Log.Information(
            $"[LOG INFORMATION] - SET TITLE {nameof(OpenConnectService)} - METHOD {nameof(GetJwksAsync)}\n");
 
         try
         {
+            var exists = await tenantRepository
+                 .ExistsByKey(
+                     tenantKey
+                 );
+
+            if (!exists)
+                throw new Exception(
+                    "Tenant não existe, verifica se a key esta correta!"
+                );
+
             var storedKeys 
                 = await jwtService
                     .GetLastKeys();
