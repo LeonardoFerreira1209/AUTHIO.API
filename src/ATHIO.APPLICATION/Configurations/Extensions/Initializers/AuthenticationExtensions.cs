@@ -1,4 +1,5 @@
-﻿using AUTHIO.DOMAIN.Auth;
+﻿using AUTHIO.APPLICATION.Middlewares;
+using AUTHIO.DOMAIN.Auth;
 using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Repositories.Store;
 using AUTHIO.DOMAIN.Dtos.Configurations;
@@ -7,10 +8,13 @@ using AUTHIO.INFRASTRUCTURE.Repositories.Store;
 using AUTHIO.INFRASTRUCTURE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System.Text.RegularExpressions;
 
 namespace AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
 
@@ -90,10 +94,10 @@ public static class AuthenticationExtensions
     }
 
     /// <summary>
-    /// Persiste no banco de dados.
+    ///  Persiste no banco de dados.
     /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="credential">The credential.</param>
+    /// <typeparam name="TContext"></typeparam>
+    /// <param name="builder"></param>
     /// <returns></returns>
     public static IJwksBuilder PersistKeysToDataBaseStore<TContext>(this IJwksBuilder builder) where TContext : DbContext, ISecurityKeyContext
     {
@@ -101,14 +105,4 @@ public static class AuthenticationExtensions
 
         return builder;
     }
-
-    //public static IApplicationBuilder UseJwksDiscovery(this IApplicationBuilder app, string jwtDiscoveryEndpoint = "/jwks")
-    //{
-    //    if (!jwtDiscoveryEndpoint.StartsWith('/')) throw new ArgumentException("The Jwks URI must starts with '/'");
-
-    //    app.Map(new PathString(jwtDiscoveryEndpoint), x =>
-    //        x.UseMiddleware<JwtServiceDiscoveryMiddleware>());
-
-    //    return app;
-    //}
 }

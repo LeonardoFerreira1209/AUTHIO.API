@@ -57,7 +57,8 @@ public class CustomPasswordValidator<TUser>(
 
                return identityResult;
 
-           }).Result;
+           }
+        ).Result;
     }
 
     /// <summary>
@@ -137,6 +138,7 @@ public class CustomPasswordValidator<TUser>(
         return
             await Task.FromResult(errors?.Count > 0
                 ? IdentityResult.Failed([.. errors])
-                : IdentityResult.Success);
+                : IdentityResult.Success
+            );
     }
 }

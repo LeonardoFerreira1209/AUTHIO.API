@@ -150,8 +150,8 @@ public class GenericEntityCoreRepository<T>(DbContext context)
                         .Take(pageSize).ToListAsync();
 
         return new PaginatedResponse<T>(
-                items, totalCount, pageNumber, pageSize
-            );
+            items, totalCount, pageNumber, pageSize
+        );
     }
 
     /// <summary>

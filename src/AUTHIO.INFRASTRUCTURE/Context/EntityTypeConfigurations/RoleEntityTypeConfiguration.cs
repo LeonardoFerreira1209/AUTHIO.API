@@ -23,7 +23,7 @@ public class RoleEntityTypeConfiguration : IEntityTypeConfiguration<RoleEntity>
         builder.HasIndex(r => r.NormalizedName).HasDatabaseName("RoleNameIndex").IsUnique();
 
         // Mapeia para a tabela AspNetRoles
-        builder.ToTable("AspNetRoles");
+        builder.ToTable("Roles");
 
         // Um token de concorrência para uso com a verificação de concorrência otimista
         builder.Property(r => r.ConcurrencyStamp).IsConcurrencyToken();

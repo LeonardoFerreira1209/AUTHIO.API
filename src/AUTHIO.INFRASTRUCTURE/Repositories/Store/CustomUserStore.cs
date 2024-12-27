@@ -40,4 +40,24 @@ public class CustomUserStore<TUser>(
                     .FirstOrDefaultAsync((user)
                         => user.NormalizedUserName == normalizedUserName, cancellationToken);
     }
+
+    /// <summary>
+    /// Busca usuário pelo id e expressao where.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="expression"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public Task<TUser> FindByIdWithExpressionAsync(Guid id,
+        Expression<Func<TUser, bool>> expression, CancellationToken cancellationToken = default)
+    {
+        cancellationToken
+           .ThrowIfCancellationRequested();
+
+        ThrowIfDisposed();
+
+        return Users.Where(expression)
+                    .FirstOrDefaultAsync((user)
+                        => user.Id == id, cancellationToken);
+    }
 }

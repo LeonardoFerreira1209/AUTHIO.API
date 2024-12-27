@@ -11,9 +11,12 @@ public interface IContextService
     /// <summary>
     /// Verifica se o usuário esta logado.
     /// </summary>
-    public bool IsAuthenticated { get; }
+    bool IsAuthenticated { get; }
 
-    public string GetEndpointRoute { get; }
+    /// <summary>
+    /// Permite autenticar por tenantKey.
+    /// </summary>
+    bool IsAuthByTenantKey { get; }
 
     /// <summary>
     /// Recupera do tenantId do usuário logado.
@@ -25,7 +28,24 @@ public interface IContextService
     /// Recupera a tenantKey passada no Header.
     /// </summary>
     /// <returns></returns>
-    public string GetCurrentTenantKey();
+    string GetCurrentTenantKey();
+
+    /// <summary>
+    /// Recupera a tenantKey passada no token.
+    /// </summary>
+    /// <returns></returns>
+    string GetCurrentTenantKeyByToken();
+
+    /// <summary>
+    /// Recupera a tenantKey no header.
+    /// </summary>
+    string GetCurrentTenantKeyByHeader();
+
+    /// <summary>
+    ///  Recupera a tenantKey nas claims.
+    /// </summary>
+    /// <returns></returns>
+    string GetCurrentTenantKeyByClaims();
 
     /// <summary>
     /// Recupera o id do usuário logado.
@@ -40,4 +60,10 @@ public interface IContextService
     /// <param name="value"></param>
     /// <returns></returns>
     bool TryGetValueByHeader(string header, [MaybeNullWhen(false)] out StringValues value);
+
+    /// <summary>
+    /// Retorna a url base.
+    /// </summary>
+    /// <returns></returns>
+    string GetUrlBase();
 }

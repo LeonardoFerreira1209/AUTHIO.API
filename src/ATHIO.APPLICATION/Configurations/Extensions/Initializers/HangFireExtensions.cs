@@ -1,7 +1,7 @@
-﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Contracts.Factories;
+﻿using AUTHIO.DOMAIN.Contracts.Factories;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.INFRASTRUCTURE.Factories;
-using AUTHIO.INFRASTRUCTURE.Jobs.Hangfire;
+using AUTHIO.INFRASTRUCTURE.Providers.Hangfire;
 using Hangfire;
 using Hangfire.MySql;
 using Microsoft.Extensions.Configuration;

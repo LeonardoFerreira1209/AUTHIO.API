@@ -95,7 +95,7 @@ public class TokenService(
         var claims = await Claims(userEntity, roles);
 
         if (userEntity?.Tenant?.TenantConfiguration is not null)
-            claims.Add(new Claim("X-Tenant-KEY", userEntity.Tenant.TenantConfiguration.TenantKey));
+            claims.Add(new Claim("x-tenant-key", userEntity.Tenant.TenantConfiguration.TenantKey));
 
         Log.Information($"[LOG INFORMATION] - Criando o token do usuário.\n");
 
@@ -125,7 +125,7 @@ public class TokenService(
             new TokenJwtBuilder()
               .AddUsername(username)
                 .AddSecurityKey(JwtSecurityKey.Create(tokenConfigs.SecurityKey))
-                   .AddSubject("HYPER.IO PROJECTS L.T.D.A")
+                   .AddSubject(userEntity.Id.ToString())
                       .AddIssuer(tokenConfigs.ValidIssuer)
                           .AddAudience(tokenConfigs.ValidAudience)
                               .AddExpiry(appsettings.Value.Auth.ExpiresIn)

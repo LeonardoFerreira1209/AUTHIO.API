@@ -73,15 +73,14 @@ try
         .UseDefaultFiles()
         .UseStaticFiles()
         .UseCookiePolicy()
-        .UseCors()
+        .UseHsts()
+        .UseCors("AllowAllOrigins")
         .UseResponseCaching()
         .UseAuthorization()
         .UseAuthentication()
         .UseHealthChecks()
-        .UseSwaggerConfigurations(configurations);
-
-    applicationbuilder.UseHsts();
-    applicationbuilder.UseHangfireDashboard();
+        .UseSwaggerConfigurations(configurations)
+        .UseHangfireDashboard();
 
     applicationbuilder.MapControllers();
 

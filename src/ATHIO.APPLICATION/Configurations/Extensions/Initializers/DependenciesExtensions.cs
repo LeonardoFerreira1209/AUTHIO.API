@@ -40,7 +40,6 @@ public static class DependenciesExtensions
             .AddScoped<CustomJwtBearerEvents>()
         // Services
             .AddTransient<IFeatureFlagsService, FeatureFlagsService>()
-            .AddTransient<IContextService, ContextService>()
             .AddTransient<IAuthenticationService, AuthenticationService>()
             .AddTransient<IUserService, UserService>()
             .AddTransient<ITokenService, TokenService>()
@@ -70,8 +69,10 @@ public static class DependenciesExtensions
             .AddTransient<IEmailProviderFactory, EmailProviderFactory>()
             .AddTransient<IEventFactory, EventFactory>()
             .AddTransient<IEventServiceBusProvider, EventServiceBusProvider>()
+            .AddTransient<IOpenConnectService, OpenConnectService>()
             .AddSingleton<ICachingService, CachingService>()
             .AddScoped<ICryptoService, CryptoService>()
+            .AddSingleton<IContextService, ContextService>()
             .AddSingleton<EventServiceBusSubscriber>();
 
         return services;

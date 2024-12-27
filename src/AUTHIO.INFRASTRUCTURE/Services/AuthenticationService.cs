@@ -24,23 +24,21 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// </remarks>
 public sealed class AuthenticationService(
     ITokenService tokenService,
-    IContextService contextService,
     CustomUserManager<UserEntity> customUserManager,
     CustomSignInManager<UserEntity> customSignInManager) : IAuthenticationService
 {
     /// <summary>
-    /// Recupera a chave do tenant passada no contexto.
-    /// </summary>
-    private readonly string CurrentTanantKey 
-        = contextService.GetCurrentTenantKey();
-
-    /// <summary>
     /// Método responsável por fazer a authorização do usuário.
     /// </summary>
     /// <param name="loginRequest"></param>
+    /// <param name="currentTanantKey"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundUserException"></exception>
-    public async Task<ObjectResult> AuthenticationAsync(LoginRequest loginRequest)
+    /// <exception cref="TokenJwtException"></exception>
+    public async Task<ObjectResult> AuthenticationAsync(
+        LoginRequest loginRequest, 
+        string currentTanantKey
+        )
     {
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(AuthenticationService)} - METHOD {nameof(AuthenticationAsync)}\n");
@@ -60,48 +58,51 @@ public sealed class AuthenticationService(
             return await customUserManager.FindByNameWithExpressionAsync(
                 loginRequest.Username,
                 UserFilters<UserEntity>.FilterSystemOrTenantUsers(
-                    CurrentTanantKey)).ContinueWith(async (userEntityTask) =>
+                    currentTanantKey
+                )
+
+            ).ContinueWith(async (userEntityTask) =>
+            {
+                var userEntity =
+                    userEntityTask.Result
+                    ?? throw new NotFoundUserException(loginRequest);
+
+                await customSignInManager.PasswordSignInAsync(
+                    userEntity, loginRequest.Password, true, true).ContinueWith((signInResultTask) =>
                     {
-                        var userEntity =
-                            userEntityTask.Result
-                            ?? throw new NotFoundUserException(loginRequest);
+                        var signInResult = signInResultTask.Result;
 
-                        await customSignInManager.PasswordSignInAsync(
-                            userEntity, loginRequest.Password, true, true).ContinueWith((signInResultTask) =>
-                            {
-                                var signInResult = signInResultTask.Result;
+                        if (signInResult.Succeeded is false)
+                            ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
+                    });
 
-                                if (signInResult.Succeeded is false)
-                                    ThrownAuthorizationException(signInResult, userEntity.Id, loginRequest);
-                            });
+                Log.Information(
+                    $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
+
+                return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
+                    (tokenJwtTask) => {
+
+                        var tokenJWT =
+                            tokenJwtTask.Result
+                            ?? throw new TokenJwtException(null);
 
                         Log.Information(
-                            $"[LOG INFORMATION] - Usuário autenticado com sucesso!\n");
+                            $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
 
-                        return await GenerateTokenJwtAsync(loginRequest).ContinueWith(
-                           (tokenJwtTask) => {
-
-                               var tokenJWT =
-                                   tokenJwtTask.Result
-                                   ?? throw new TokenJwtException(null);
-
-                               Log.Information(
-                                   $"[LOG INFORMATION] - Token gerado com sucesso {JsonConvert.SerializeObject(tokenJWT)}!\n");
-
-                               ObjectResponse response = new(
-                                   HttpStatusCode.Created,
-                                    new ApiResponse<TokenJWT>(
-                                        true, HttpStatusCode.Created, tokenJWT, [
-                                            new("Token criado com sucesso!")
-                                        ]
-                                    )
-                               );
-
-                               return response;
-                           }
+                        ObjectResponse response = new(
+                            HttpStatusCode.Created,
+                            new ApiResponse<TokenJWT>(
+                                true, HttpStatusCode.Created, tokenJWT, [
+                                    new("Token criado com sucesso!")
+                                ]
+                            )
                         );
 
-                    }).Unwrap();
+                        return response;
+                    }
+                );
+
+            }).Unwrap();
         }
         catch (Exception exception)
         {

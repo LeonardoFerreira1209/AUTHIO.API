@@ -18,10 +18,4 @@ public class AuthenticationRequest
     /// </summary>
     [FromHeader]
     public string Password { get; set; }
-
-    /// <summary>
-    /// Chave do tenant.
-    /// </summary>
-    [FromHeader(Name = "X-Tenant-KEY")]
-    public string TenantKey { get; set; }
 }

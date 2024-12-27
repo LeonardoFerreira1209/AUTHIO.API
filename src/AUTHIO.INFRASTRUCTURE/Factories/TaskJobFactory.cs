@@ -1,6 +1,5 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Factories;
 using AUTHIO.DOMAIN.Contracts.Jobs;
-using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AUTHIO.INFRASTRUCTURE.Factories;
@@ -20,7 +19,7 @@ public class TaskJobFactory(
     /// <exception cref="ArgumentException"></exception>
     public IJob GetJobTask(string jobName) => jobName switch {
         "SendEventsToBus" 
-            => serviceProvider.GetService<IEventService>(),
+            => serviceProvider.GetService<ISendEventToBusJob>(),
         "SyncStripeProducts"
             => serviceProvider.GetService<IStripeSyncProductsJob>(),
         _ => 

@@ -2,12 +2,15 @@
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Repositories.Base;
 using AUTHIO.DOMAIN.Contracts.Services;
+using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Helpers.Consts;
+using AUTHIO.DOMAIN.Helpers.Expressions;
+using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
 using AUTHIO.INFRASTRUCTURE.Context;
@@ -28,16 +31,24 @@ namespace AUTHIO.APPLICATION.Services;
 /// </remarks>
 public sealed class UserService(
     CustomUserManager<UserEntity> customUserManager,
+    IContextService contextService,
     IUnitOfWork<AuthIoContext> unitOfWork,
     IEventRepository eventRepository) : IUserService
 {
     /// <summary>
-    /// 
+    /// Recupera o id do usuário atual.
     /// </summary>
-    /// <param name="id"></param>
+    private readonly Guid CurrentUserId
+        = contextService.GetCurrentUserId();
+
+    /// <summary>
+    /// Busca um usuário por Id.
+    /// </summary>
+    /// <param name="idWithXTenantKey"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<ObjectResult> GetUserByIdAsync(
-        Guid id, 
+        IdWithXTenantKey idWithXTenantKey,
         CancellationToken cancellationToken)
     {
         Log.Information(
@@ -46,14 +57,23 @@ public sealed class UserService(
         try
         {
             var user = await customUserManager
-                .GetUserByIdAsync(id);
+                .GetUserByIdAsync(
+                    idWithXTenantKey.Id,
+                    CustomLambdaExpressions.Or(
+                        x => x.Id == CurrentUserId,
+                        UserFilters<UserEntity>.FilterTenantUsers(
+                            idWithXTenantKey.TenantKey
+                        )
+                    ),
+                    cancellationToken
+                );
 
             return new ObjectResponse(
                 HttpStatusCode.OK,
                 new ApiResponse<UserResponse>(
                     true,
                     HttpStatusCode.OK,
-                    user.ToResponse(), [
+                    user?.ToResponse(), [
                         new DataNotifications("Usuário recuperado com sucesso!")
                     ]
                 )
@@ -80,90 +100,89 @@ public sealed class UserService(
         Log.Information(
             $"[LOG INFORMATION] - SET TITLE {nameof(UserService)} - METHOD {nameof(RegisterAsync)}\n");
 
+        var transaction =
+            await unitOfWork.BeginTransactAsync();
+
         try
         {
             await new RegisterUserRequestValidator()
-                .ValidateAsync(registerUserRequest, cancellationToken)
-                    .ContinueWith(async (validationTask) =>
-                    {
-                        var validation = validationTask.Result;
+               .ValidateAsync(registerUserRequest, cancellationToken)
+                   .ContinueWith(async (validationTask) =>
+                   {
+                       var validation = validationTask.Result;
 
-                        if (validation.IsValid is false) 
-                            await validation.GetValidationErrors();
+                       if (validation.IsValid is false)
+                           await validation.GetValidationErrors();
 
-                    }).Unwrap();
+                   }).Unwrap();
 
-            var transaction =
-                await unitOfWork.BeginTransactAsync();
+            var userEntity
+                = registerUserRequest.ToUserSystemEntity();
 
-            try
-            {
-                var userEntity
-                    = registerUserRequest.ToUserSystemEntity();
+            return await customUserManager
+                .CreateAsync(
+                    userEntity,
+                    registerUserRequest.Password
 
-                return await customUserManager
-                    .CreateAsync(userEntity, registerUserRequest.Password).ContinueWith(async (identityResultTask) =>
-                    {
-                        var identityResult
-                                = identityResultTask.Result;
+                ).ContinueWith(async (identityResultTask) =>
+                {
+                    var identityResult
+                            = identityResultTask.Result;
 
-                        if (identityResult.Succeeded is false)
-                            throw new CreateUserFailedException(
-                                registerUserRequest, identityResult.Errors.Select((e)
-                                    => new DataNotifications(e.Description)).ToList()
+                    if (identityResult.Succeeded is false)
+                        throw new CreateUserFailedException(
+                            registerUserRequest, identityResult.Errors.Select((e)
+                                => new DataNotifications(e.Description)).ToList()
+                        );
+
+                    return await customUserManager.AddToRoleAsync(
+                        userEntity, "System").ContinueWith(async (identityResultTask) =>
+                        {
+                            var identityResult
+                                    = identityResultTask.Result;
+
+                            if (identityResult.Succeeded is false)
+                                throw new UserToRoleFailedException(
+                                    registerUserRequest, identityResult.Errors.Select((e)
+                                        => new DataNotifications(e.Description)).ToList()
+                                );
+
+                            var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
+                                    .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
+                                        EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
+                                    )
                             );
 
-                        return await customUserManager.AddToRoleAsync(
-                            userEntity, "System").ContinueWith(async (identityResultTask) =>
-                            {
-                                var identityResult
-                                        = identityResultTask.Result;
+                            await eventRepository.CreateAsync(
+                                CreateEvent.CreateEmailEvent(
+                                    jsonBody
+                                )
+                            );
 
-                                if (identityResult.Succeeded is false)
-                                    throw new UserToRoleFailedException(
-                                        registerUserRequest, identityResult.Errors.Select((e)
-                                            => new DataNotifications(e.Description)).ToList()
-                                    );
+                            await unitOfWork.CommitAsync();
+                            await transaction.CommitAsync();
 
-                                var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
-                                        .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                            EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
-                                        )
-                                );
-
-                                await eventRepository.CreateAsync(
-                                    CreateEvent.CreateEmailEvent(
-                                        jsonBody
-                                    )
-                                );
-
-                                await unitOfWork.CommitAsync();
-                                await transaction.CommitAsync();
-
-                                return new ObjectResponse(
+                            return new ObjectResponse(
+                                HttpStatusCode.Created,
+                                new ApiResponse<UserResponse>(
+                                    identityResult.Succeeded,
                                     HttpStatusCode.Created,
-                                    new ApiResponse<UserResponse>(
-                                        identityResult.Succeeded,
-                                        HttpStatusCode.Created,
-                                        userEntity.ToResponse(), [
-                                            new DataNotifications("Usuário criado com sucesso!")
-                                        ]
-                                    )
-                                );
+                                    userEntity.ToResponse(), [
+                                        new DataNotifications("Usuário criado com sucesso!")
+                                    ]
+                                )
+                            );
 
-                            }).Unwrap();
+                        }).Unwrap();
 
-                    }).Unwrap();
-            }
-            catch
-            {
-                transaction.Rollback(); throw;
-            }
+                }).Unwrap();
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n"); 
-            
+            transaction.Rollback();
+
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
             throw;
         }
     }

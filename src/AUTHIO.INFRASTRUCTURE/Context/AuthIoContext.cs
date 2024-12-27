@@ -1,5 +1,4 @@
-﻿using AUTHIO.DOMAIN.Contracts;
-using AUTHIO.DOMAIN.Contracts.Repositories.Store;
+﻿using AUTHIO.DOMAIN.Contracts.Repositories.Store;
 using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Entities;
@@ -111,13 +110,18 @@ public sealed class AuthIoContext(
 
         modelBuilder
            .ApplyConfiguration(new UserEntityTypeConfiguration())
+           .ApplyConfiguration(new UserLoginEntityTypeConfiguration()) 
+           .ApplyConfiguration(new UserTokenEntityTypeConfiguration())
            .ApplyConfiguration(new RoleEntityTypeConfiguration())
+           .ApplyConfiguration(new UserRoleEntityTypeConfiguration())
+           .ApplyConfiguration(new RoleClaimEntityTypeConfiguration())
+           .ApplyConfiguration(new UserClaimEntityTypeConfiguration())
+           .ApplyConfiguration(new UserIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new TenantEntityTypeConfiguration())
            .ApplyConfiguration(new TenantIdentityConfigurationEntityTypeConfiguration())
-           .ApplyConfiguration(new UserIdentityConfigurationEntityTypeConfiguration())
+           .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration())
            .ApplyConfiguration(new PasswordIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new LockoutIdentityConfigurationEntityTypeConfiguration())
-           .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration())
            .ApplyConfiguration(new KeyMaterialEntityTypeConfiguration());
 
         var roleEntity = new RoleEntity
@@ -133,20 +137,6 @@ public sealed class AuthIoContext(
         modelBuilder.Entity<RoleEntity>().HasData(
         [
             roleEntity
-        ]);
-
-        modelBuilder.Entity<PlanEntity>().HasData(
-        [
-            new() {
-                Id = Guid.NewGuid(),
-                Created = DateTime.Now,
-                Name = "Básico",
-                Description = "Plano para estudos.",
-                QuantUsers = 10,
-                Status = Status.Ativo,
-                Value = 10,
-                MonthlyPayment = true
-            }           
         ]);
 
         modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasData([

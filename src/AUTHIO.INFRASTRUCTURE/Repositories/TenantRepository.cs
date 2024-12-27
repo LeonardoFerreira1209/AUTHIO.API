@@ -2,6 +2,7 @@
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.INFRASTRUCTURE.Context;
 using AUTHIO.INFRASTRUCTURE.Repositories.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace AUTHIO.INFRASTRUCTURE.Repositories;
 
@@ -23,4 +24,20 @@ public sealed class TenantRepository(
     public async Task LinkTenantWithUserAdminAsync(Guid tenantId, Guid userId)
         => await _context.AddAsync(
             new TenantIdentityUserAdminEntity { TenantId = tenantId, UserId = userId });
+
+    /// <summary>
+    /// Verifica se um tenant existe baseado na tenant key.
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public async Task<bool> ExistsByKey(string key)
+    {
+        var exists = await _context
+            .Tenants.AnyAsync(
+                x => x.TenantConfiguration
+                    .TenantKey.Equals(key)
+            );
+
+        return exists;
+    }
 }

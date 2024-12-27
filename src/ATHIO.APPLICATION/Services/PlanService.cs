@@ -86,10 +86,7 @@ public sealed class PlanService(
         try
         {
             return await planRepository
-                .GetAsync(
-                        p => p.ProductId.Equals(product.Id
-                    )
-                ).ContinueWith(async (planEntityTask) =>
+                .GetAsync(p => p.ProductId.Equals(product.Id)).ContinueWith(async (planEntityTask) =>
                 {
                     var plan
                         = planEntityTask.Result

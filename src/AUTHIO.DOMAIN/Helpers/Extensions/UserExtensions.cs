@@ -18,8 +18,7 @@ public static class UserExtensions
     public static UserEntity ToUserSystemEntity(
             this RegisterUserRequest registerUserRequest
         )
-        => registerUserRequest.CreateUserSystem(
-);
+        => registerUserRequest.CreateUserSystem();
 
     /// <summary>
     /// Converte uma request em uma entidade user tenant.

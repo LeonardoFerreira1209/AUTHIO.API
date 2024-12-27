@@ -17,11 +17,12 @@ namespace AUTHIO.API.Controllers;
 /// Controller que cuida do fluxo de usuários.
 /// </summary>
 /// <param name="featureFlags"></param>
+/// <param name="userService"></param>
 [ApiController]
 [Route("api/users")]
 public class UserController(
-    IFeatureFlagsService featureFlags, IUserService userService)
-        : BaseController(featureFlags)
+    IFeatureFlagsService featureFlags,
+    IUserService userService) : BaseController(featureFlags)
 {
     /// <summary>
     /// Endpoint responsável pelo registro de usuários no sistema.
@@ -31,7 +32,10 @@ public class UserController(
     /// <returns></returns>
     [HttpPost]
     [EnableRateLimiting("fixed")]
-    [SwaggerOperation(Summary = "Registrar usuário", Description = "Método responsável por registrar um usuário no sistema!")]
+    [SwaggerOperation(
+        Summary = "Registrar usuário",
+        Description = "Método responsável por registrar um usuário no sistema!"
+    )]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
@@ -52,21 +56,24 @@ public class UserController(
     /// <summary>
     /// Endpoint responsável pelo retorno de usuário por Id.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="idWithXTenantKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpGet("{id}")]
     [Authorize]
+    [HttpGet]
     [EnableRateLimiting("fixed")]
     [SwaggerOperation(Summary = "Recuperar usuário", Description = "Método responsável por buscar um usuário por id!")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Tetsesync(
-       Guid id, 
+    public async Task<IActionResult> GetAsync(
+       IdWithXTenantKey idWithXTenantKey,
        CancellationToken cancellationToken)
     {
-        return await ExecuteAsync(nameof(RegisterAsync),
-                () => userService.GetUserByIdAsync(
-                    id, cancellationToken), "Recuperar usuário por id.");
+        return await ExecuteAsync(nameof(GetAsync),
+            () => userService.GetUserByIdAsync(
+                idWithXTenantKey, 
+                cancellationToken
+            ), "Recuperar usuário por id."
+        );
     }
 }
