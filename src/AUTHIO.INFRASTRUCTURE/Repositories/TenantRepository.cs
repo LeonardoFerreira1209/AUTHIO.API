@@ -32,10 +32,11 @@ public sealed class TenantRepository(
     /// <returns></returns>
     public async Task<bool> ExistsByKey(string key)
     {
-        var exists = await _context.Tenants.FirstOrDefaultAsync(
-            x => x.TenantConfiguration
-                .TenantKey.Equals(key)
-        ) != null;
+        var exists = await _context
+            .Tenants.AnyAsync(
+                x => x.TenantConfiguration
+                    .TenantKey.Equals(key)
+            );
 
         return exists;
     }

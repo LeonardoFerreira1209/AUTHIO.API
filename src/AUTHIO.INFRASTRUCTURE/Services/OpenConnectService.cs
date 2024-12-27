@@ -102,15 +102,18 @@ public class OpenConnectService(
 
         try
         {
-            var exists = await tenantRepository
+            if(tenantKey is not null)
+            {
+                var exists = await tenantRepository
                  .ExistsByKey(
                      tenantKey
                  );
 
-            if (!exists)
-                throw new Exception(
-                    "Tenant não existe, verifica se a key esta correta!"
-                );
+                if (!exists)
+                    throw new Exception(
+                        "Tenant não existe, verifica se a key esta correta!"
+                    );
+            }
 
             var storedKeys 
                 = await jwtService
