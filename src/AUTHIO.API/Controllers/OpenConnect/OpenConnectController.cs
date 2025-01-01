@@ -1,6 +1,7 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -25,7 +26,7 @@ public class OpenConnectController(
         Summary = "Busca dados do open id connect.",
         Description = "Método responsável por retornar os dados do open id connect."
     )]
-    public async Task<IActionResult> OpenIdConfigurationAsync()
+    public async Task<OpenIdConnectConfiguration> OpenIdConfigurationAsync()
     {
         using (LogContext.PushProperty("Controller", nameof(OpenConnectController)))
         using (LogContext.PushProperty("Metodo", nameof(OpenIdConfigurationAsync)))
@@ -66,7 +67,7 @@ public class OpenConnectController(
         Summary = "Busca dados do open id connect baseado no tenatKey.",
         Description = "Método responsável por retornar os dados do open id connect por tenant key."
     )]
-    public async Task<IActionResult> OpenIdConfigurationAsync(
+    public async Task<OpenIdConnectConfiguration> OpenIdConfigurationAsync(
         [FromRoute(Name = "x-tenant-key")] string tenantKey
         )
     {

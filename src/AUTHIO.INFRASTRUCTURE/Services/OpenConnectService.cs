@@ -1,12 +1,11 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
-using AUTHIO.DOMAIN.Dtos.Response.Base;
-using Microsoft.AspNetCore.Mvc;
+using AUTHIO.DOMAIN.Dtos.Configurations;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Newtonsoft.Json;
 using Serilog;
-using System.Net;
 
 namespace AUTHIO.INFRASTRUCTURE.Services;
 
@@ -17,6 +16,7 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <param name="jwtService"></param>
 /// <param name="contextService"></param>
 public class OpenConnectService(
+    IOptions<AppSettings> options,
     ITenantRepository tenantRepository,
     IJwtService jwtService,
     IContextService contextService) : IOpenConnectService
@@ -25,7 +25,7 @@ public class OpenConnectService(
     /// Recupera as configurações do Open Id.
     /// </summary>
     /// <returns></returns>
-    public async Task<ObjectResult> GetOpenIdConnectConfigurationAsync(
+    public async Task<OpenIdConnectConfiguration> GetOpenIdConnectConfigurationAsync(
             string tenantKey = null
         )
     {
@@ -35,8 +35,12 @@ public class OpenConnectService(
         try
         {
             OpenIdConnectConfiguration openIdConnectConfiguration = new() {
-                AuthorizationEndpoint = $"{contextService.GetUrlBase()}/api/authentications//signin",
-                JwksUri = $"{contextService.GetUrlBase()}/jwks"
+                AuthorizationEndpoint = $"{contextService.GetUrlBase()}/api/authentications/signin",
+                JwksUri = $"{contextService.GetUrlBase()}/jwks",
+                TokenEndpoint = $"{contextService.GetUrlBase()}/token",
+                FrontchannelLogoutSessionSupported = false.ToString(),
+                FrontchannelLogoutSupported = false.ToString(),
+                Issuer = options.Value.Auth.ValidIssuer
             };
 
             if (tenantKey is not null)
@@ -63,23 +67,16 @@ public class OpenConnectService(
                     .TenantTokenConfiguration;
 
                 openIdConnectConfiguration = new OpenIdConnectConfiguration {
-                    Issuer = tenantTokenConfiguration.Issuer,
                     AuthorizationEndpoint = $"{contextService.GetUrlBase()}/api/authentications/tenants/{tenantKey}/signin",
-                    JwksUri = $"{contextService.GetUrlBase()}/tenants/{tenantKey}/jwks"
+                    JwksUri = $"{contextService.GetUrlBase()}/tenants/{tenantKey}/jwks",
+                    TokenEndpoint = $"{contextService.GetUrlBase()}/tenants/{tenantKey}/token",
+                    FrontchannelLogoutSessionSupported = false.ToString(),
+                    FrontchannelLogoutSupported = false.ToString(),
+                    Issuer = tenantTokenConfiguration.Issuer,
                 };
             }
 
-            ObjectResponse response = new(
-                HttpStatusCode.OK,
-                new ApiResponse<OpenIdConnectConfiguration>(
-                    true, HttpStatusCode.OK, 
-                    openIdConnectConfiguration, [
-                        new("Configurações retornadas com sucesso!")
-                    ]
-                )
-            );
-
-            return response;
+            return openIdConnectConfiguration;
         }
         catch (Exception exception)
         {
