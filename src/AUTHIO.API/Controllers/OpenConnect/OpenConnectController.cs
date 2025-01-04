@@ -21,7 +21,7 @@ public class OpenConnectController(
     /// <param name="tenantKey"></param>
     /// <returns></returns>
     [HttpGet(".well-known/openid-configuration")]
-    [EnableRateLimiting("fixed")]
+    [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(
         Summary = "Busca dados do open id connect.",
         Description = "Método responsável por retornar os dados do open id connect."
@@ -41,7 +41,7 @@ public class OpenConnectController(
     /// </summary>
     /// <returns></returns>
     [HttpGet("jwks")]
-    [EnableRateLimiting("fixed")]
+    [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(
         Summary = "Busca as chaves de segurança.",
         Description = "Método as chaves de segurança."
@@ -62,7 +62,7 @@ public class OpenConnectController(
     /// <param name="tenantKey"></param>
     /// <returns></returns>
     [HttpGet("tenants/{x-tenant-key}/.well-known/openid-configuration")]
-    [EnableRateLimiting("fixed")]
+    [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(
         Summary = "Busca dados do open id connect baseado no tenatKey.",
         Description = "Método responsável por retornar os dados do open id connect por tenant key."
@@ -87,7 +87,7 @@ public class OpenConnectController(
     /// <param name="tenantKey"></param>
     /// <returns></returns>
     [HttpGet("tenants/{x-tenant-key}/jwks")]
-    [EnableRateLimiting("fixed")]
+    [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(
         Summary = "Busca dados das chaves de segurança por tenant key.",
         Description = "Método responsável por retornar chaves de segurança por tenant key."

@@ -31,7 +31,7 @@ public class UserController(
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost]
-    [EnableRateLimiting("fixed")]
+    [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(
         Summary = "Registrar usuário",
         Description = "Método responsável por registrar um usuário no sistema!"
@@ -59,9 +59,9 @@ public class UserController(
     /// <param name="idWithXTenantKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize]
     [HttpGet]
-    [EnableRateLimiting("fixed")]
+    [Authorize]
+    [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(Summary = "Recuperar usuário", Description = "Método responsável por buscar um usuário por id!")]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]

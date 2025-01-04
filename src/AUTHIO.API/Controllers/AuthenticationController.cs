@@ -32,7 +32,6 @@ public class AuthenticationController(
     /// <param name="password"></param>
     /// <returns></returns>
     [HttpGet("signin")]
-    [EnableRateLimiting("fixed")]
     [SwaggerOperation(
         Summary = "Autenticação do usuário", 
         Description = "Endpoint responsável por fazer a autenticação do usuário, é retornado um token JWT (Json Web Token)."
@@ -67,7 +66,6 @@ public class AuthenticationController(
     /// <param name="authenticationRequest"></param>
     /// <returns></returns>
     [HttpGet("tenants/{x-tenant-key}/signin")]
-    [EnableRateLimiting("fixed")]
     [SwaggerOperation(
         Summary = "Autenticação do usuário",
         Description = "Endpoint responsável por fazer a autenticação do usuário baseado em um tenant, é retornado um token JWT (Json Web Token)."
