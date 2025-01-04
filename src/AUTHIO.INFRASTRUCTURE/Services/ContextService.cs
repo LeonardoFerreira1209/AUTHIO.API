@@ -148,6 +148,6 @@ public class ContextService(
         var request = httpContextAccessor
             .HttpContext.Request;
 
-        return $"{request.Scheme}://{request.Host.Value}";
+        return $"https://{request.Host.Value}";
     }
 }
