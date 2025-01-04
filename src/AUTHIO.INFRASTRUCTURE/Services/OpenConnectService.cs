@@ -72,7 +72,7 @@ public class OpenConnectService(
                     TokenEndpoint = $"{contextService.GetUrlBase()}/tenants/{tenantKey}/token",
                     FrontchannelLogoutSessionSupported = false.ToString(),
                     FrontchannelLogoutSupported = false.ToString(),
-                    Issuer = tenantTokenConfiguration.Issuer,
+                    Issuer = tenantTokenConfiguration.Issuer
                 };
             }
 

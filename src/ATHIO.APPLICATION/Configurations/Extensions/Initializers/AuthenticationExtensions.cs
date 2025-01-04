@@ -1,5 +1,4 @@
-﻿using AUTHIO.APPLICATION.Middlewares;
-using AUTHIO.DOMAIN.Auth;
+﻿using AUTHIO.DOMAIN.Auth;
 using AUTHIO.DOMAIN.Contracts.Jwt;
 using AUTHIO.DOMAIN.Contracts.Repositories.Store;
 using AUTHIO.DOMAIN.Dtos.Configurations;
@@ -8,13 +7,10 @@ using AUTHIO.INFRASTRUCTURE.Repositories.Store;
 using AUTHIO.INFRASTRUCTURE.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System.Text.RegularExpressions;
 
 namespace AUTHIO.APPLICATION.Configurations.Extensions.Initializers;
 

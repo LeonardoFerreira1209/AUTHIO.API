@@ -41,7 +41,7 @@ public static class HangFireExtensions
                     )
                 )
 
-            ).AddHangfireServer();
+        ).AddHangfireServer();
 
         services.AddTransient<ITaskJobFactory, TaskJobFactory>();
         services.AddTransient<IHangFireJobsProvider, HangfireJobsProvider>();
