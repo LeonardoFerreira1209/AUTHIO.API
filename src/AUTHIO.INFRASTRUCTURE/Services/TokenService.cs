@@ -70,7 +70,8 @@ public class TokenService(
                     ValidateAudience = true,
                     ValidAudience = appsettings.Value.Auth.ValidAudience,
                     ClockSkew = TimeSpan.Zero,
-                });
+                }
+            );
 
         var username = tokenValidationResult.IsValid
             ? (string)tokenValidationResult.Claims.First().Value : throw new TokenJwtException(tokenValidationResult);
@@ -132,7 +133,8 @@ public class TokenService(
                                   .AddRoles(roles)
                                       .AddClaims(claims)
                                         .IsEncrypyted(tenantTokenConfiguration?.Encrypted ?? false)
-                                            .Builder(userEntity, encrypted, encryptitedKey, key));
+                                            .Builder(userEntity, encrypted, encryptitedKey, key)
+        );
     }
 
     /// <summary>

@@ -148,9 +148,14 @@ public sealed class UserService(
                                 );
 
                             var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
-                                    .CreateWithHtmlContent(userEntity.FirstName, userEntity.Email,
-                                        EmailConst.SUBJECT_CONFIRMACAO_EMAIL, EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL)
+                                .CreateWithHtmlContent(
+                                    userEntity.FirstName, 
+                                    userEntity.Email,
+                                    EmailConst.SUBJECT_CONFIRMACAO_EMAIL, 
+                                    EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL, 
+                                    EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL
                                     )
+                                )
                             );
 
                             await eventRepository.CreateAsync(
