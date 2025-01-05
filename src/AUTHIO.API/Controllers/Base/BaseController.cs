@@ -1,5 +1,4 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
-using AUTHIO.DOMAIN.Exceptions.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AUTHIO.API.Controllers.Base;
@@ -7,11 +6,7 @@ namespace AUTHIO.API.Controllers.Base;
 /// <summary>
 /// Controller base
 /// </summary>
-/// <remarks>
-/// ctor
-/// </remarks>
 /// <param name="featureFlags"></param>
-/// <param name=""></param>
 public class BaseController(
     IFeatureFlagsService featureFlags) : ControllerBase
 {
@@ -24,9 +19,19 @@ public class BaseController(
     /// <param name="methodName"></param>
     /// <param name="method"></param>
     /// <param name="methodDescription"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    /// <exception cref="CustomException"></exception>
-    protected async Task<T> ExecuteAsync<T>(string methodName,
-        Func<Task<T>> method, string methodDescription) =>
-            await _featureFlags.ExecuteAsync(methodName, method, methodDescription);
+    protected async Task<T> ExecuteAsync<T>(
+        string methodName,
+        Func<Task<T>> method, 
+        string methodDescription, 
+        CancellationToken cancellationToken
+        ) =>
+            await _featureFlags
+                .ExecuteAsync(
+                    methodName, 
+                    method, 
+                    methodDescription, 
+                    cancellationToken
+                );
 }

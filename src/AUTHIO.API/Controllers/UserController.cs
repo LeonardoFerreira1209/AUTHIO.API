@@ -47,9 +47,15 @@ public class UserController(
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(registerUserRequest)))
         using (LogContext.PushProperty("Metodo", "RegisterAsync"))
         {
-            return await ExecuteAsync(nameof(RegisterAsync),
+            return await ExecuteAsync(
+                nameof(RegisterAsync),
                  () => userService.RegisterAsync(
-                     registerUserRequest, cancellationToken), "Registrar usuário no sistema.");
+                     registerUserRequest, 
+                     cancellationToken
+                 ), 
+                 "Registrar usuário no sistema.",
+                 cancellationToken
+            );
         }
     }
 
@@ -69,11 +75,14 @@ public class UserController(
        IdWithXTenantKey idWithXTenantKey,
        CancellationToken cancellationToken)
     {
-        return await ExecuteAsync(nameof(GetAsync),
+        return await ExecuteAsync(
+            nameof(GetAsync),
             () => userService.GetUserByIdAsync(
                 idWithXTenantKey, 
                 cancellationToken
-            ), "Recuperar usuário por id."
+            ), 
+            "Recuperar usuário por id.",
+            cancellationToken
         );
     }
 }

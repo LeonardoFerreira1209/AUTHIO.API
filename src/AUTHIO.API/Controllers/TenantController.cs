@@ -23,7 +23,7 @@ namespace AUTHIO.API.Controllers;
 [Controller]
 [Route("api/tenants")]
 public class TenantController(
-    IFeatureFlagsService featureFlags, 
+    IFeatureFlagsService featureFlags,
     ITenantService tenantService) : BaseController(featureFlags)
 {
     private readonly ITenantService
@@ -44,15 +44,22 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync(
         [FromBody] CreateTenantRequest createTenantRequest,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+        )
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(createTenantRequest)))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))
         {
-            return await ExecuteAsync(nameof(CreateAsync),
-                 () => _tenantService.CreateAsync(
-                     createTenantRequest, cancellationToken), "Registrar tenant.");
+            return await ExecuteAsync(
+                nameof(CreateAsync),
+                () => _tenantService.CreateAsync(
+                    createTenantRequest,
+                    cancellationToken
+                ),
+                "Registrar tenant.",
+                cancellationToken
+            );
         }
     }
 
@@ -66,7 +73,7 @@ public class TenantController(
     [EnableRateLimiting("default-fixed-window")]
     [Authorize(Claims.Tenants, "PUT")]
     [SwaggerOperation(
-        Summary = "Atualizar tenant", 
+        Summary = "Atualizar tenant",
         Description = "Método responsável por atualizar um tenant!"
     )]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
@@ -74,15 +81,22 @@ public class TenantController(
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateAsync(
         [FromBody] UpdateTenantRequest updateTenantRequest,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+        )
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(updateTenantRequest)))
         using (LogContext.PushProperty("Metodo", "UpdateAsync"))
         {
-            return await ExecuteAsync(nameof(UpdateAsync),
-                 () => _tenantService.UpdateAsync(
-                     updateTenantRequest, cancellationToken), "Atualizar tenant.");
+            return await ExecuteAsync(
+                nameof(UpdateAsync),
+                () => _tenantService.UpdateAsync(
+                    updateTenantRequest,
+                    cancellationToken
+                ),
+                "Atualizar tenant.",
+                cancellationToken
+            );
         }
     }
 
@@ -96,22 +110,29 @@ public class TenantController(
     [EnableRateLimiting("default-fixed-window")]
     [Authorize(Claims.Tenants, "GET")]
     [SwaggerOperation(
-        Summary = "Buscar todos os tenants", 
+        Summary = "Buscar todos os tenants",
         Description = "Método responsável por buscar todos os tenants do usuário!"
     )]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync(
-       [FromQuery] FilterRequest filterRequest, 
-       CancellationToken cancellationToken)
+           [FromQuery] FilterRequest filterRequest,
+           CancellationToken cancellationToken
+        )
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Metodo", "CreateAsync"))
         {
-            return await ExecuteAsync(nameof(GetAllAsync),
-                 () => _tenantService.GetAllAsync(
-                     filterRequest, cancellationToken), "Buscar todos os tenants.");
+            return await ExecuteAsync(
+                nameof(GetAllAsync),
+                () => _tenantService.GetAllAsync(
+                    filterRequest,
+                    cancellationToken
+                ),
+                "Buscar todos os tenants.",
+                cancellationToken
+            );
         }
     }
 
@@ -126,24 +147,31 @@ public class TenantController(
     [EnableRateLimiting("default-fixed-window")]
     [Authorize(Claims.Tenants, "PATCH")]
     [SwaggerOperation(
-        Summary = "Registrar usuário no tenant", 
+        Summary = "Registrar usuário no tenant",
         Description = "Método responsável por registrar um usuário no tenant!"
     )]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<TenantResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterTenantUserAsync(
-        [FromHeader(Name = "x-tenant-key")] string tenantKey, 
-        [FromBody] RegisterUserRequest registerUserRequest, 
+        [FromHeader(Name = "x-tenant-key")] string tenantKey,
+        [FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", "TenantController"))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(registerUserRequest)))
         using (LogContext.PushProperty("Metodo", "RegisterTenantUserAsync"))
         {
-            return await ExecuteAsync(nameof(RegisterTenantUserAsync),
-                 () => _tenantService.RegisterTenantUserAsync(
-                     registerUserRequest, tenantKey, cancellationToken), "Registrar usuário no tenant.");
+            return await ExecuteAsync(
+                nameof(RegisterTenantUserAsync),
+                () => _tenantService.RegisterTenantUserAsync(
+                    registerUserRequest,
+                    tenantKey,
+                    cancellationToken
+                ),
+                "Registrar usuário no tenant.",
+                cancellationToken
+            );
         }
     }
 }

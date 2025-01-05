@@ -22,8 +22,15 @@ public class FeatureFlagsRepository(
     /// </summary>
     /// <param name="featureName"></param>
     /// <returns></returns>
-    public async Task<FeatureFlagsEntity> GetFeatureDefinitionAsync(string featureName)
-        => await _context.FeatureFlags.SingleOrDefaultAsync(f => f.Name == featureName);
+    public async Task<FeatureFlagsEntity> GetFeatureDefinitionAsync(
+        string featureName, 
+        CancellationToken cancellationToken
+        )
+        => await _context.FeatureFlags
+            .SingleOrDefaultAsync(
+                f => f.Name == featureName, 
+                cancellationToken
+            );
 
     /// <summary>
     /// Retorna todas as featuire flags.

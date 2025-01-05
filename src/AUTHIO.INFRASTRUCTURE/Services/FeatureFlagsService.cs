@@ -16,7 +16,9 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <param name="featureFlags"></param>
 /// <param name="unitOfWork"></param>
 public class FeatureFlagsService(
-    IFeatureFlagsRepository featureFlags, IUnitOfWork<AuthIoContext> unitOfWork) : IFeatureFlagsService
+    IFeatureFlagsRepository featureFlags, 
+    IUnitOfWork<AuthIoContext> unitOfWork
+    ) : IFeatureFlagsService
 {
     private readonly IFeatureFlagsRepository _featureFlags = featureFlags;
     private readonly IUnitOfWork<AuthIoContext> _unitOfWork = unitOfWork;
@@ -30,10 +32,18 @@ public class FeatureFlagsService(
     /// <param name="methodDescription"></param>
     /// <returns></returns>
     /// <exception cref="CustomException"></exception>
-    public async Task<T> ExecuteAsync<T>(string methodName, Func<Task<T>> method, string methodDescription)
+    public async Task<T> ExecuteAsync<T>(
+        string methodName, 
+        Func<Task<T>> method, 
+        string methodDescription,
+        CancellationToken cancellationToken
+        )
     {
         var featureFlag
-            = await _featureFlags.GetFeatureDefinitionAsync(methodName)
+            = await _featureFlags.GetFeatureDefinitionAsync(
+                methodName,
+                cancellationToken
+                )
             ?? await _featureFlags.CreateAsync(new FeatureFlagsEntity
             {
                 Name = methodName,

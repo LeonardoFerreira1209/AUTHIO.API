@@ -4,7 +4,6 @@ using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
@@ -42,7 +41,9 @@ public class AuthenticationController(
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status423Locked)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SigninAsync(
-        string username, string password)
+        string username, 
+        string password,
+        CancellationToken cancellationToken)
     {
         using (LogContext.PushProperty("Controller", nameof(AuthenticationController)))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(new { username, password })))
@@ -55,7 +56,8 @@ public class AuthenticationController(
                         password
                     ),
                     null
-                ), "Autenticar usuário"
+                ), "Autenticar usuário",
+                cancellationToken
             );
         }
     }
@@ -77,7 +79,8 @@ public class AuthenticationController(
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SigninByTenantAsync(
         [FromRoute(Name = "x-tenant-key")] string tenantKey, 
-        AuthenticationRequest authenticationRequest
+        AuthenticationRequest authenticationRequest,
+        CancellationToken cancellationToken
         )
     {
         using (LogContext.PushProperty("Controller", nameof(AuthenticationController)))
@@ -91,7 +94,9 @@ public class AuthenticationController(
                         authenticationRequest.Password
                     ),
                     tenantKey
-                ), "Autenticar usuário"
+                ), 
+                "Autenticar usuário",
+                cancellationToken
             );
         }
     }
