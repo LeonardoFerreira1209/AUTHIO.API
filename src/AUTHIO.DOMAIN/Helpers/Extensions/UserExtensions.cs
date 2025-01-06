@@ -33,6 +33,26 @@ public static class UserExtensions
         => registerUserRequest.CreateUserTenant(tenantId);
 
     /// <summary>
+    /// Atualiza uma entidade baseada em request.
+    /// </summary>
+    /// <param name="updateUserRequest"></param>
+    /// <param name="userEntity"></param>
+    /// <returns></returns>
+    public static UserEntity UpdateEntity(
+        this UserEntity userEntity,
+        UpdateUserRequest updateUserRequest
+        )
+    {
+        userEntity.FirstName = updateUserRequest.FirstName;
+        userEntity.LastName = updateUserRequest.LastName;
+        userEntity.Email = updateUserRequest.Email;
+        userEntity.Status = updateUserRequest.Status;
+        userEntity.Updated = DateTime.Now;
+
+        return userEntity;
+    }
+
+    /// <summary>
     /// Converte uma entidade em um Response.
     /// </summary>
     /// <param name="userEntity"></param>

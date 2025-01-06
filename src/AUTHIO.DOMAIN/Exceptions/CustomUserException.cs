@@ -268,6 +268,9 @@ public class CustomUserException
         }
     }
 
+    /// <summary>
+    /// Exception para falaha na criação de usuários.
+    /// </summary>
     public class CreateUserFailedException : BaseException
     {
         /// <summary>
@@ -289,6 +292,37 @@ public class CustomUserException
         /// <param name="dados"></param>
         /// <param name="notificacoes"></param>
         public CreateUserFailedException(
+            object dados, List<DataNotifications> notificacoes)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.BadRequest, dados, notificacoes);
+        }
+    }
+
+    /// <summary>
+    /// Exception para falaha na atualização de usuários.
+    /// </summary>
+    public class UpdateUserFailedException : BaseException
+    {
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        public UpdateUserFailedException(
+            object dados)
+        {
+            Response = new ErrorResponse
+               (HttpStatusCode.BadRequest, dados, [
+                   new("Falha na criação do usuário!")
+               ]);
+        }
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="dados"></param>
+        /// <param name="notificacoes"></param>
+        public UpdateUserFailedException(
             object dados, List<DataNotifications> notificacoes)
         {
             Response = new ErrorResponse

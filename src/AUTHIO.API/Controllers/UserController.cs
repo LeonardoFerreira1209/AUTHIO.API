@@ -5,6 +5,7 @@ using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
+using AUTHIO.DOMAIN.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Newtonsoft.Json;
@@ -54,6 +55,44 @@ public class UserController(
                      cancellationToken
                  ), 
                  "Registrar usuário no sistema.",
+                 cancellationToken
+            );
+        }
+    }
+
+    /// <summary>
+    /// Endpoint responsável pela atualização de usuários no sistema.
+    /// </summary>
+    /// <param name="updateUserRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [EnableRateLimiting("default-fixed-window")]
+    [Authorize(Claims.Tenants, "PUT")]
+    [SwaggerOperation(
+        Summary = "Atualizar usuário",
+        Description = "Método responsável por atualizar um usuário no sistema!"
+    )]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateAsync(
+        [FromHeader(Name = "x-tenant-key")] string tenantKey,
+        [FromBody] UpdateUserRequest updateUserRequest,
+        CancellationToken cancellationToken)
+    {
+        using (LogContext.PushProperty("Controller", nameof(UserController)))
+        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(updateUserRequest)))
+        using (LogContext.PushProperty("Metodo", nameof(RegisterAsync)))
+        {
+            return await ExecuteAsync(
+                nameof(UpdateAsync),
+                 () => userService.UpdateAsync(
+                     updateUserRequest,
+                     tenantKey,
+                     cancellationToken
+                 ),
+                 "Atualizar usuário no sistema.",
                  cancellationToken
             );
         }
