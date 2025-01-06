@@ -194,7 +194,8 @@ public class CustomUserManager<TUser>(
                         errors ??= [];
                         errors.AddRange(result.Errors);
                     }
-                });
+                }
+            );
         }
 
         if (errors?.Count > 0)

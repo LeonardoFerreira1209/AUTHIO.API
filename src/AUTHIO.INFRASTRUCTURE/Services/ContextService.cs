@@ -21,7 +21,8 @@ public class ContextService(
     /// </summary>
     private readonly IEnumerable<string> _dontUseTenantConfigAuthEndpoints = [
          "TenantController.RegisterTenantUserAsync",
-         "UserController.GetAsync"
+         "UserController.GetAsync",
+         "UserController.UpdateAsync"
     ];
 
     /// <summary>

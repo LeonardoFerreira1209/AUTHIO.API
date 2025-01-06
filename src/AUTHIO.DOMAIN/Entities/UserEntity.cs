@@ -55,12 +55,12 @@ public class UserEntity
     /// <summary>
     /// Nome do usuário.
     /// </summary>
-    public string FirstName { get; private set; }
+    public string FirstName { get; set; }
 
     /// <summary>
     /// Ultimo nome do usuário.
     /// </summary>
-    public string LastName { get; private set; }
+    public string LastName { get; set; }
 
     /// <summary>
     /// Id da assinatura vinculado ao usuário.
@@ -90,12 +90,12 @@ public class UserEntity
     /// <summary>
     /// Data de atualização.
     /// </summary>
-    public DateTime? Updated { get; private set; }
+    public DateTime? Updated { get; set; }
 
     /// <summary>
     /// Status do cadastro.
     /// </summary>
-    public Status Status { get; private set; }
+    public Status Status { get; set; }
 
     /// <summary>
     /// Pertence ao sistema.

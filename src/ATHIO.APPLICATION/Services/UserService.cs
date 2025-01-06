@@ -42,52 +42,6 @@ public sealed class UserService(
         = contextService.GetCurrentUserId();
 
     /// <summary>
-    /// Busca um usuário por Id.
-    /// </summary>
-    /// <param name="idWithXTenantKey"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<ObjectResult> GetUserByIdAsync(
-        IdWithXTenantKey idWithXTenantKey,
-        CancellationToken cancellationToken)
-    {
-        Log.Information(
-            $"[LOG INFORMATION] - SET TITLE {nameof(UserService)} - METHOD {nameof(GetUserByIdAsync)}\n");
-
-        try
-        {
-            var user = await customUserManager
-                .GetUserByIdAsync(
-                    idWithXTenantKey.Id,
-                    CustomLambdaExpressions.Or(
-                        x => x.Id == CurrentUserId,
-                        UserFilters<UserEntity>.FilterTenantUsers(
-                            idWithXTenantKey.TenantKey
-                        )
-                    ),
-                    cancellationToken
-                );
-
-            return new ObjectResponse(
-                HttpStatusCode.OK,
-                new ApiResponse<UserResponse>(
-                    true,
-                    HttpStatusCode.OK,
-                    user?.ToResponse(), [
-                        new DataNotifications("Usuário recuperado com sucesso!")
-                    ]
-                )
-            );
-        }
-        catch (Exception exception)
-        {
-            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
-
-            throw;
-        }
-    }
-
-    /// <summary>
     /// Método de registro de usuário.
     /// </summary>
     /// <param name="registerUserRequest"></param>
@@ -178,14 +132,174 @@ public sealed class UserService(
                                 )
                             );
 
-                        }).Unwrap();
+                        }, cancellationToken).Unwrap();
 
-                }).Unwrap();
+                }, cancellationToken).Unwrap();
         }
         catch (Exception exception)
         {
             transaction.Rollback();
 
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Método de atualização de usuário.
+    /// </summary>
+    /// <param name="updateUserRequest"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <exception cref="UpdateUserFailedException"></exception>
+    public async Task<ObjectResult> UpdateAsync(
+        [FromBody] UpdateUserRequest updateUserRequest,
+        string tenantKey,
+        CancellationToken cancellationToken
+        )
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(UserService)} - METHOD {nameof(UpdateAsync)}\n");
+
+        var transaction =
+           await unitOfWork.BeginTransactAsync();
+
+        try
+        {
+            await new UpdateUserRequestValidator()
+               .ValidateAsync(updateUserRequest, cancellationToken)
+                   .ContinueWith(async (validationTask) =>
+                   {
+                       var validation = validationTask.Result;
+
+                       if (validation.IsValid is false)
+                           await validation.GetValidationErrors();
+
+                   }, cancellationToken).Unwrap();
+
+            return await customUserManager
+                .GetUserByIdAsync(
+                    updateUserRequest.Id,
+                    CustomLambdaExpressions.Or(
+                        x => x.Id == CurrentUserId,
+                        UserFilters<UserEntity>.FilterTenantUsers(
+                            tenantKey
+                        )
+                    ),
+                    cancellationToken
+
+                ).ContinueWith(async (identityResultTask) =>
+                {
+                    var identityResult
+                        = identityResultTask.Result 
+                            ?? throw new NotFoundUserException(
+                                null
+                            );
+
+                    var userEntity = identityResult
+                        .UpdateEntity(
+                            updateUserRequest
+                        );
+
+                    return await customUserManager.UpdateAsync(
+                        userEntity
+                    ).ContinueWith(async (identityResultTask) =>
+                    {
+                        var identityResult
+                                = identityResultTask.Result;
+
+                        if (identityResult.Succeeded is false)
+                            throw new UpdateUserFailedException(
+                                updateUserRequest, identityResult.Errors.Select((e)
+                                    => new DataNotifications(e.Description)).ToList()
+                            );
+
+                        var jsonBody = JsonConvert.SerializeObject(new EmailEvent(CreateDefaultEmailMessage
+                            .CreateWithHtmlContent(
+                                userEntity.FirstName,
+                                userEntity.Email,
+                                EmailConst.SUBJECT_CONFIRMACAO_EMAIL,
+                                EmailConst.PLAINTEXTCONTENT_CONFIRMACAO_EMAIL,
+                                EmailConst.HTML_CONTENT_CONFIRMACAO_EMAIL
+                                )
+                            )
+                        );
+
+                        await eventRepository.CreateAsync(
+                            CreateEvent.CreateEmailEvent(
+                                jsonBody
+                            )
+                        );
+
+                        await unitOfWork.CommitAsync();
+                        await transaction.CommitAsync();
+
+                        return new ObjectResponse(
+                            HttpStatusCode.OK,
+                            new ApiResponse<UserResponse>(
+                                identityResult.Succeeded,
+                                HttpStatusCode.OK,
+                                userEntity.ToResponse(), [
+                                    new DataNotifications("Usuário atualizado com sucesso!")
+                                ]
+                            )
+                        );
+
+                    }, cancellationToken).Unwrap();
+
+                }, cancellationToken).Unwrap();
+        }
+        catch (Exception exception)
+        {
+            transaction.Rollback();
+
+            Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
+
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Busca um usuário por Id.
+    /// </summary>
+    /// <param name="idWithXTenantKey"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<ObjectResult> GetUserByIdAsync(
+        IdWithXTenantKey idWithXTenantKey,
+        CancellationToken cancellationToken)
+    {
+        Log.Information(
+            $"[LOG INFORMATION] - SET TITLE {nameof(UserService)} - METHOD {nameof(GetUserByIdAsync)}\n");
+
+        try
+        {
+            var user = await customUserManager
+                .GetUserByIdAsync(
+                    idWithXTenantKey.Id,
+                    CustomLambdaExpressions.Or(
+                        x => x.Id == CurrentUserId,
+                        UserFilters<UserEntity>.FilterTenantUsers(
+                            idWithXTenantKey.TenantKey
+                        )
+                    ),
+                    cancellationToken
+                );
+
+            return new ObjectResponse(
+                HttpStatusCode.OK,
+                new ApiResponse<UserResponse>(
+                    true,
+                    HttpStatusCode.OK,
+                    user?.ToResponse(), [
+                        new DataNotifications("Usuário recuperado com sucesso!")
+                    ]
+                )
+            );
+        }
+        catch (Exception exception)
+        {
             Log.Error($"[LOG ERROR] - Exception: {exception.Message} - {JsonConvert.SerializeObject(exception)}\n");
 
             throw;
