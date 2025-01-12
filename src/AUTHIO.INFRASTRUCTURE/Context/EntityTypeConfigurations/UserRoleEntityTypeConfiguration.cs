@@ -8,13 +8,13 @@ namespace AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
 /// <summary>
 /// Configuração de modelo de IdentityUserRole<Guid>.
 /// </summary>
-public class UserRoleEntityTypeConfiguration : IEntityTypeConfiguration<IdentityUserRole<Guid>>
+public class UserRoleEntityTypeConfiguration : IEntityTypeConfiguration<UserRoleEntity>
 {
     /// <summary>
     /// Configura a Entidade de user role.
     /// </summary>
     /// <param name="builder"></param>
-    public void Configure(EntityTypeBuilder<IdentityUserRole<Guid>> builder)
+    public void Configure(EntityTypeBuilder<UserRoleEntity> builder)
     {
         // Define a chave composta com UserId e RoleId
         builder.HasKey(e => new { e.UserId, e.RoleId });

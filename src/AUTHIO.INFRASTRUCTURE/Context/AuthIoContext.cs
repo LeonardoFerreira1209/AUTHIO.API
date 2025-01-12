@@ -19,7 +19,16 @@ namespace AUTHIO.INFRASTRUCTURE.Context;
 /// <param name="options"></param>
 public sealed class AuthIoContext(
     DbContextOptions<AuthIoContext> options, IContextService contextService)
-        : IdentityDbContext<UserEntity, RoleEntity, Guid>(options), IAuthioContext, ISecurityKeyContext
+        : IdentityDbContext<
+            UserEntity, 
+            RoleEntity, 
+            Guid, 
+            UserClaimEntity, 
+            UserRoleEntity, 
+            UserLoginEntity, 
+            RoleClaimEntity, 
+            UserTokenEntity
+        >(options), IAuthioContext, ISecurityKeyContext
 {
     public Guid? CurrentUserId { get; init; }
        = contextService.IsAuthenticated ? contextService.GetCurrentUserId() : null;
@@ -139,27 +148,27 @@ public sealed class AuthIoContext(
             roleEntity
         ]);
 
-        modelBuilder.Entity<IdentityRoleClaim<Guid>>().HasData([
+        modelBuilder.Entity<RoleClaimEntity>().HasData([
 
-            new IdentityRoleClaim<Guid>{
+            new RoleClaimEntity{
                 Id = 1,
                 RoleId = roleEntity.Id,
                 ClaimType = "Clients",
                 ClaimValue = "POST"
             },
-            new IdentityRoleClaim<Guid>{
+            new RoleClaimEntity{
                 Id = 2,
                 RoleId = roleEntity.Id,
                 ClaimType = "Clients",
                 ClaimValue = "GET"
             },
-            new IdentityRoleClaim<Guid>{
+            new RoleClaimEntity{
                 Id = 3,
                 RoleId = roleEntity.Id,
                 ClaimType = "Clients",
                 ClaimValue = "PATCH"
             },
-            new IdentityRoleClaim<Guid>{
+            new RoleClaimEntity{
                 Id = 4,
                 RoleId = roleEntity.Id,
                 ClaimType = "Clients",

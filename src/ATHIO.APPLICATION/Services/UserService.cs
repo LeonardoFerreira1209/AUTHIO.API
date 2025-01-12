@@ -38,8 +38,10 @@ public sealed class UserService(
     /// <summary>
     /// Recupera o id do usuário atual.
     /// </summary>
-    private readonly Guid CurrentUserId
-        = contextService.GetCurrentUserId();
+    private readonly Guid? CurrentUserId
+        = contextService.IsAuthenticated 
+            ? contextService.GetCurrentUserId() 
+            : null;
 
     /// <summary>
     /// Método de registro de usuário.

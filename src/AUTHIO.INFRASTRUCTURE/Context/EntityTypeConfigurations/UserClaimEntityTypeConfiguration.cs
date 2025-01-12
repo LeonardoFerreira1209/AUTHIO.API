@@ -8,13 +8,13 @@ namespace AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
 /// <summary>
 /// Configuração de modelo de IdentityUserClaim<Guid>.
 /// </summary>
-public class UserClaimEntityTypeConfiguration : IEntityTypeConfiguration<IdentityUserClaim<Guid>>
+public class UserClaimEntityTypeConfiguration : IEntityTypeConfiguration<UserClaimEntity>
 {
     /// <summary>
     /// Configura a Entidade de user claim.
     /// </summary>
     /// <param name="builder"></param>
-    public void Configure(EntityTypeBuilder<IdentityUserClaim<Guid>> builder)
+    public void Configure(EntityTypeBuilder<UserClaimEntity> builder)
     {
         // Define a chave primária
         builder.HasKey(e => e.Id);

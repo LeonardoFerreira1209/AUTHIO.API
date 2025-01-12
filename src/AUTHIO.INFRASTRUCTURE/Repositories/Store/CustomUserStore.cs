@@ -17,9 +17,9 @@ namespace AUTHIO.INFRASTRUCTURE.Repositories.Store;
 public class CustomUserStore<TUser>(
         AuthIoContext context,
         IdentityErrorDescriber describer = null)
-    : UserStore<TUser, RoleEntity, AuthIoContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>,
-        IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>(context, describer), ICustomUserStore<TUser>
-    where TUser : IdentityUser<Guid>
+    : UserStore<TUser, RoleEntity, AuthIoContext, Guid, UserClaimEntity, UserRoleEntity,
+        UserLoginEntity, UserTokenEntity, RoleClaimEntity>(context, describer), ICustomUserStore<TUser>
+    where TUser : UserEntity
 {
     /// <summary>
     /// Busca usuário pelo nome e expressao where.

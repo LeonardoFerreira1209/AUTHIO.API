@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace AUTHIO.INFRASTRUCTURE.Migrations
 {
     /// <inheritdoc />
-    public partial class INITIALMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -358,6 +358,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    CustomProperty = table.Column<string>(type: "longtext", nullable: true),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false),
                     ClaimType = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     ClaimValue = table.Column<string>(type: "varchar(1024)", maxLength: 1024, nullable: true)
@@ -380,6 +381,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 {
                     LoginProvider = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     ProviderKey = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
+                    CustomProperty = table.Column<string>(type: "longtext", nullable: true),
                     ProviderDisplayName = table.Column<string>(type: "longtext", nullable: true),
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false)
                 },
@@ -427,6 +429,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     UserId = table.Column<Guid>(type: "char(36)", nullable: false),
                     LoginProvider = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     Name = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
+                    CustomProperty = table.Column<string>(type: "longtext", nullable: true),
                     Value = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
@@ -541,17 +544,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ClientId", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "Updated" },
-                values: new object[] { new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e"), null, null, new DateTime(2025, 1, 11, 19, 14, 20, 301, DateTimeKind.Local).AddTicks(7124), "System", "SYSTEM", 1, true, null });
+                values: new object[] { new Guid("71fef5b0-f011-422a-961a-2833f52800e3"), null, null, new DateTime(2025, 1, 12, 2, 30, 35, 918, DateTimeKind.Local).AddTicks(3771), "System", "SYSTEM", 1, true, null });
 
             migrationBuilder.InsertData(
                 table: "RoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Clients", "POST", new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e") },
-                    { 2, "Clients", "GET", new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e") },
-                    { 3, "Clients", "PATCH", new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e") },
-                    { 4, "Clients", "PUT", new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e") }
+                    { 1, "Clients", "POST", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") },
+                    { 2, "Clients", "GET", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") },
+                    { 3, "Clients", "PATCH", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") },
+                    { 4, "Clients", "PUT", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") }
                 });
 
             migrationBuilder.CreateIndex(

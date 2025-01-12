@@ -44,7 +44,7 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
 
         // Cada Usuário pode ter muitos UserClaims
         builder
-            .HasMany<IdentityUserClaim<Guid>>()
+            .HasMany<UserClaimEntity>()
             .WithOne()
             .HasForeignKey(uc => uc.UserId)
             .IsRequired()
@@ -52,7 +52,7 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
 
         // Cada Usuário pode ter muitos UserLogins
         builder
-            .HasMany<IdentityUserLogin<Guid>>()
+            .HasMany<UserLoginEntity>()
             .WithOne()
             .HasForeignKey(ul => ul.UserId)
             .IsRequired()
@@ -60,7 +60,7 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
 
         // Cada Usuário pode ter muitos UserTokens
         builder
-            .HasMany<IdentityUserLogin<Guid>>()
+            .HasMany<UserLoginEntity>()
             .WithOne()
             .HasForeignKey(ut => ut.UserId)
             .IsRequired()
@@ -68,7 +68,7 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
 
         // Cada Usuário pode ter muitas entradas na tabela de junção UserRole
         builder
-            .HasMany<IdentityUserRole<Guid>>()
+            .HasMany<UserLoginEntity>()
             .WithOne()
             .HasForeignKey(ur => ur.UserId)
             .IsRequired()

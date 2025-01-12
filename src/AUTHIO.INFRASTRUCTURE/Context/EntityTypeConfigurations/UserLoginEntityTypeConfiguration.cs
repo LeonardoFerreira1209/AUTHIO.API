@@ -8,13 +8,13 @@ namespace AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
 /// <summary>
 /// Configuração de modelo de IdentityUserLogin<Guid>.
 /// </summary>
-public class UserLoginEntityTypeConfiguration : IEntityTypeConfiguration<IdentityUserLogin<Guid>>
+public class UserLoginEntityTypeConfiguration : IEntityTypeConfiguration<UserLoginEntity>
 {
     /// <summary>
     /// Configura a Entidade de user login.
     /// </summary>
     /// <param name="builder"></param>
-    public void Configure(EntityTypeBuilder<IdentityUserLogin<Guid>> builder)
+    public void Configure(EntityTypeBuilder<UserLoginEntity> builder)
     {
         // Define a chave composta usando LoginProvider e ProviderKey
         builder.HasKey(e => new { e.LoginProvider, e.ProviderKey });

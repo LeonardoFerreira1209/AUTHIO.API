@@ -36,11 +36,11 @@ public class RoleEntityTypeConfiguration : IEntityTypeConfiguration<RoleEntity>
         // Observe que essas relações são configuradas sem propriedades de navegação
 
         // Cada Role pode ter muitas entradas na tabela de junção UserRole
-        builder.HasMany<IdentityUserRole<Guid>>().WithOne().HasForeignKey(ur => ur.RoleId).IsRequired();
+        builder.HasMany<UserRoleEntity>().WithOne().HasForeignKey(ur => ur.RoleId).IsRequired();
 
         // Cada Role pode ter muitas entradas na tabela de junção UserRole. Esta configuração especifica que o relacionamento entre Role e UserRole é de um-para-muitos,
         // onde cada Role pode estar associado a muitos UserRole. A chave estrangeira RoleId em UserRole é usada para estabelecer este relacionamento e é marcada como obrigatória.
-        builder.HasMany<IdentityRoleClaim<Guid>>().WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
+        builder.HasMany<RoleClaimEntity>().WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
 
         // Define a relação entre o Role e a entidade Client. Cada Role pertence a um Client,
         // e cada Client pode ter vários Roles. Esta relação é configurada para não permitir a exclusão em cascata.

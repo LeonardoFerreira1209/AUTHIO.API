@@ -399,6 +399,58 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("Plans");
                 });
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleClaimEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleClaims", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaimType = "Clients",
+                            ClaimValue = "POST",
+                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaimType = "Clients",
+                            ClaimValue = "GET",
+                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaimType = "Clients",
+                            ClaimValue = "PATCH",
+                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaimType = "Clients",
+                            ClaimValue = "PUT",
+                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                        });
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -445,8 +497,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e"),
-                            Created = new DateTime(2025, 1, 11, 19, 14, 20, 301, DateTimeKind.Local).AddTicks(7124),
+                            Id = new Guid("71fef5b0-f011-422a-961a-2833f52800e3"),
+                            Created = new DateTime(2025, 1, 12, 2, 30, 35, 918, DateTimeKind.Local).AddTicks(3771),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -521,6 +573,33 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .IsUnique();
 
                     b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserClaimEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasMaxLength(1024)
+                        .HasColumnType("varchar(1024)");
+
+                    b.Property<string>("CustomProperty")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
@@ -643,83 +722,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("UserIdentityConfigurations", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleClaims", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "Clients",
-                            ClaimValue = "POST",
-                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClaimType = "Clients",
-                            ClaimValue = "GET",
-                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClaimType = "Clients",
-                            ClaimValue = "PATCH",
-                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "Clients",
-                            ClaimValue = "PUT",
-                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
-                        });
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("ClaimType")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasMaxLength(1024)
-                        .HasColumnType("varchar(1024)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserLoginEntity", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128)
@@ -728,6 +731,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<string>("ProviderKey")
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
+
+                    b.Property<string>("CustomProperty")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("longtext");
@@ -742,7 +748,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("UserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserRoleEntity", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -757,7 +763,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("UserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserTokenEntity", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -769,6 +775,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
+
+                    b.Property<string>("CustomProperty")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Value")
                         .HasColumnType("longtext");
@@ -863,6 +872,15 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("ClientIdentityConfiguration");
                 });
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleClaimEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.RoleEntity", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.ClientEntity", "Client")
@@ -903,6 +921,15 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserClaimEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.ClientEntity", "Client")
@@ -924,16 +951,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("ClientIdentityConfiguration");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.RoleEntity", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserLoginEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", null)
                         .WithMany()
@@ -942,16 +960,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserRoleEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.RoleEntity", null)
                         .WithMany()
@@ -966,7 +975,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserTokenEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", null)
                         .WithMany()
