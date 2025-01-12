@@ -44,22 +44,22 @@ public class JwtServiceValidationHandler(
         if (contextService.TryGetValueByHeader(
                 "Authorization", out StringValues authHeader))
         {
-            var tenantKey =
-                GetTenantKeyByToken(authHeader.ToString()) 
-                    ?? contextService.GetCurrentTenantKey();
+            var ClientKey =
+                GetClientKeyByToken(authHeader.ToString()) 
+                    ?? contextService.GetCurrentClientKey();
 
-            if (tenantKey is not null && contextService.IsAuthByTenantKey)
+            if (ClientKey is not null && contextService.IsAuthByClientKey)
             {
-                ITenantConfigurationRepository tenantConfigurationRepository =
+                IClientConfigurationRepository ClientConfigurationRepository =
                     scope.ServiceProvider
-                        .GetRequiredService<ITenantConfigurationRepository>();
+                        .GetRequiredService<IClientConfigurationRepository>();
 
-                var tenantConfigurationEntity =
-                    tenantConfigurationRepository
-                        .GetAsync(x => x.TenantKey == tenantKey).Result;
+                var ClientConfigurationEntity =
+                    ClientConfigurationRepository
+                        .GetAsync(x => x.ClientKey == ClientKey).Result;
 
-                var tenantTokenConfiguration =
-                    tenantConfigurationEntity.TenantTokenConfiguration;
+                var ClientTokenConfiguration =
+                    ClientConfigurationEntity.ClientTokenConfiguration;
 
                 keyMaterialTask =
                     jwtService.GetLastKeys();
@@ -73,10 +73,10 @@ public class JwtServiceValidationHandler(
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    RequireSignedTokens = !tenantTokenConfiguration.Encrypted,
+                    RequireSignedTokens = !ClientTokenConfiguration.Encrypted,
                     ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = tenantTokenConfiguration.Issuer,
-                    ValidAudience = tenantTokenConfiguration.Audience,
+                    ValidIssuer = ClientTokenConfiguration.Issuer,
+                    ValidAudience = ClientTokenConfiguration.Audience,
                     IssuerSigningKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey()),
                     TokenDecryptionKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey()),
                 };
@@ -107,11 +107,11 @@ public class JwtServiceValidationHandler(
     }
 
     /// <summary>
-    /// Recupera um tenantKey do JwtToken.
+    /// Recupera um ClientKey do JwtToken.
     /// </summary>
     /// <param name="authHeader"></param>
     /// <returns></returns>
-    private static string GetTenantKeyByToken(string authHeader)
+    private static string GetClientKeyByToken(string authHeader)
     {
         var handler =
             new JwtSecurityTokenHandler();
@@ -126,6 +126,6 @@ public class JwtServiceValidationHandler(
 
         return tokenJson.Claims
             .FirstOrDefault(x =>
-                x.Type == "x-tenant-key")?.Value;
+                x.Type == "x-Client-key")?.Value;
     }
 }

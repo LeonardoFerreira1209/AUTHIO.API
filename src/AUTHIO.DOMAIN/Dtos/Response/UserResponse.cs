@@ -23,14 +23,14 @@ public class UserResponse
     public string Email { get; set; }
 
     /// <summary>
-    /// Id do tenant responsavel.
+    /// Id do Client responsavel.
     /// </summary>
-    public Guid? TenantId { get; set; }
+    public Guid? ClientId { get; set; }
 
     /// <summary>
-    /// Tenant.
+    /// Client.
     /// </summary>
-    public TenantResponse Tenant { get; set; }
+    public ClientResponse Client { get; set; }
 
     /// <summary>
     /// Id da assinatura.

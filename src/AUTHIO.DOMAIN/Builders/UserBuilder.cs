@@ -16,7 +16,7 @@ public sealed class UserBuilder
     private DateTime? updated;
     private Status status;
     private bool emailConfirmed;
-    private Guid? tenantId;
+    private Guid? ClientId;
     private Guid? SubscriptionId;
     private bool system;
 
@@ -145,13 +145,13 @@ public sealed class UserBuilder
     }
 
     /// <summary>
-    /// Adiciona o tenantId.
+    /// Adiciona o ClientId.
     /// </summary>
-    /// <param name="tenantId"></param>
+    /// <param name="ClientId"></param>
     /// <returns></returns>
-    public UserBuilder AddTenantId(Guid tenantId)
+    public UserBuilder AddClientId(Guid ClientId)
     {
-        this.tenantId = tenantId;
+        this.ClientId = ClientId;
 
         return this;
     }
@@ -177,6 +177,6 @@ public sealed class UserBuilder
         email, phoneNumber, 
         status, created, 
         emailConfirmed, SubscriptionId, updated,
-        tenantId, system
+        ClientId, system
     );
 }

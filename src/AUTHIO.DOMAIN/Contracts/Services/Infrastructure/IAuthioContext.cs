@@ -11,12 +11,12 @@ public interface IAuthioContext
     public Guid? CurrentUserId { get; init; }
 
     /// <summary>
-    /// Id do tenant atual.
+    /// Id do Client atual.
     /// </summary>
-    public Guid? TenantId { get; init; }
+    public Guid? ClientId { get; init; }
 
     /// <summary>
-    /// Chave do tenant atual.
+    /// Chave do Client atual.
     /// </summary>
-    public string TenantKey { get; init; }
+    public string ClientKey { get; init; }
 }

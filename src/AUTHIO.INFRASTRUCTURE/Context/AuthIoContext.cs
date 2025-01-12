@@ -24,26 +24,26 @@ public sealed class AuthIoContext(
     public Guid? CurrentUserId { get; init; }
        = contextService.IsAuthenticated ? contextService.GetCurrentUserId() : null;
 
-    public Guid? TenantId { get; init; }
-        = contextService?.GetCurrentTenantId();
+    public Guid? ClientId { get; init; }
+        = contextService?.GetCurrentClientId();
 
-    public string TenantKey { get; init; }
-        = contextService?.GetCurrentTenantKey();
-
-    /// <summary>
-    /// Tabela de Tenants.
-    /// </summary>
-    public DbSet<TenantEntity> Tenants => Set<TenantEntity>();
+    public string ClientKey { get; init; }
+        = contextService?.GetCurrentClientKey();
 
     /// <summary>
-    /// Tabela de Tenant Configurations.
+    /// Tabela de Clients.
     /// </summary>
-    public DbSet<TenantConfigurationEntity> TenantConfigurations => Set<TenantConfigurationEntity>();
+    public DbSet<ClientEntity> Clients => Set<ClientEntity>();
 
     /// <summary>
-    /// Tabela de Tenant Identity Configurations.
+    /// Tabela de Client Configurations.
     /// </summary>
-    public DbSet<TenantIdentityConfigurationEntity> TenantIdentityConfigurations => Set<TenantIdentityConfigurationEntity>();
+    public DbSet<ClientConfigurationEntity> ClientConfigurations => Set<ClientConfigurationEntity>();
+
+    /// <summary>
+    /// Tabela de Client Identity Configurations.
+    /// </summary>
+    public DbSet<ClientIdentityConfigurationEntity> ClientIdentityConfigurations => Set<ClientIdentityConfigurationEntity>();
 
     /// <summary>
     /// Tabela de User Identity Configurations.
@@ -61,14 +61,14 @@ public sealed class AuthIoContext(
     public DbSet<LockoutIdentityConfigurationEntity> LockoutIdentityConfigurations => Set<LockoutIdentityConfigurationEntity>();
 
     /// <summary>
-    /// Tabela de Tenant Email Configurations.
+    /// Tabela de Client Email Configurations.
     /// </summary>
-    public DbSet<TenantEmailConfigurationEntity> TenantEmailConfigurations => Set<TenantEmailConfigurationEntity>();
+    public DbSet<ClientEmailConfigurationEntity> ClientEmailConfigurations => Set<ClientEmailConfigurationEntity>();
 
     /// <summary>
-    /// Tabela de Tenant Token Configurations.
+    /// Tabela de Client Token Configurations.
     /// </summary>
-    public DbSet<TenantTokenConfigurationEntity> TenantTokenConfigurations => Set<TenantTokenConfigurationEntity>();
+    public DbSet<ClientTokenConfigurationEntity> ClientTokenConfigurations => Set<ClientTokenConfigurationEntity>();
 
     /// <summary>
     /// Tabela de configuração do SendGrid.
@@ -117,9 +117,9 @@ public sealed class AuthIoContext(
            .ApplyConfiguration(new RoleClaimEntityTypeConfiguration())
            .ApplyConfiguration(new UserClaimEntityTypeConfiguration())
            .ApplyConfiguration(new UserIdentityConfigurationEntityTypeConfiguration())
-           .ApplyConfiguration(new TenantEntityTypeConfiguration())
-           .ApplyConfiguration(new TenantIdentityConfigurationEntityTypeConfiguration())
-           .ApplyConfiguration(new TenantUserAdminEntityTypeConfiguration())
+           .ApplyConfiguration(new ClientEntityTypeConfiguration())
+           .ApplyConfiguration(new ClientIdentityConfigurationEntityTypeConfiguration())
+           .ApplyConfiguration(new ClientUserAdminEntityTypeConfiguration())
            .ApplyConfiguration(new PasswordIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new LockoutIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new KeyMaterialEntityTypeConfiguration());
@@ -144,25 +144,25 @@ public sealed class AuthIoContext(
             new IdentityRoleClaim<Guid>{
                 Id = 1,
                 RoleId = roleEntity.Id,
-                ClaimType = "Tenants",
+                ClaimType = "Clients",
                 ClaimValue = "POST"
             },
             new IdentityRoleClaim<Guid>{
                 Id = 2,
                 RoleId = roleEntity.Id,
-                ClaimType = "Tenants",
+                ClaimType = "Clients",
                 ClaimValue = "GET"
             },
             new IdentityRoleClaim<Guid>{
                 Id = 3,
                 RoleId = roleEntity.Id,
-                ClaimType = "Tenants",
+                ClaimType = "Clients",
                 ClaimValue = "PATCH"
             },
             new IdentityRoleClaim<Guid>{
                 Id = 4,
                 RoleId = roleEntity.Id,
-                ClaimType = "Tenants",
+                ClaimType = "Clients",
                 ClaimValue = "PUT"
             }
         ]);

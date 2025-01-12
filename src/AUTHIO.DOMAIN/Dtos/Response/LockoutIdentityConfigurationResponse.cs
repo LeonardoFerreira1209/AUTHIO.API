@@ -23,12 +23,12 @@ public class LockoutIdentityConfigurationResponse : LockoutOptions
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant identity configuration.
+    /// Id do Client identity configuration.
     /// </summary>
-    public Guid TenantIdentityConfigurationId { get; set; }
+    public Guid ClientIdentityConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant identity configuration.
+    /// Entidade do Client identity configuration.
     /// </summary>
-    public virtual TenantIdentityConfigurationResponse TenantIdentityConfiguration { get; set; }
+    public virtual ClientIdentityConfigurationResponse ClientIdentityConfiguration { get; set; }
 }

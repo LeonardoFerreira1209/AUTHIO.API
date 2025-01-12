@@ -21,16 +21,16 @@ public static class UserExtensions
         => registerUserRequest.CreateUserSystem();
 
     /// <summary>
-    /// Converte uma request em uma entidade user tenant.
+    /// Converte uma request em uma entidade user Client.
     /// </summary>
     /// <param name="registerUserRequest"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="ClientId"></param>
     /// <returns></returns>
-    public static UserEntity ToUserTenantEntity(
+    public static UserEntity ToUserClientEntity(
             this RegisterUserRequest registerUserRequest, 
-            Guid tenantId
+            Guid ClientId
         )
-        => registerUserRequest.CreateUserTenant(tenantId);
+        => registerUserRequest.CreateUserClient(ClientId);
 
     /// <summary>
     /// Atualiza uma entidade baseada em request.
@@ -71,7 +71,7 @@ public static class UserExtensions
             Created = userEntity.Created,
             Updated = userEntity.Updated,
             Status = userEntity.Status,
-            TenantId = userEntity.TenantId,
+            ClientId = userEntity.ClientId,
             UserName = userEntity.UserName,
             System = userEntity.System,
             Subscription = includeSubscription 

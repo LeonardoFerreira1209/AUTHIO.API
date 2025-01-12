@@ -18,20 +18,20 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <param name="cryptoService"></param>
 /// <param name="contextService"></param>
 /// <param name="options"></param>
-/// <param name="tenantRepository"></param>
+/// <param name="ClientRepository"></param>
 public class JwtService(
     IJsonWebKeyStore store,
     ICryptoService cryptoService,
     IContextService contextService,
     IOptions<JwtOptions> options,
-    ITenantRepository tenantRepository) : IJwtService
+    IClientRepository ClientRepository) : IJwtService
 {
     private readonly IJsonWebKeyStore _store = store;
     private readonly IOptions<JwtOptions> _options = options;
 
-    private readonly TenantEntity _tenant
-      = tenantRepository.GetAsync(
-          x => x.TenantConfiguration.TenantKey == contextService.GetCurrentTenantKey())?.Result;
+    private readonly ClientEntity _Client
+      = ClientRepository.GetAsync(
+          x => x.ClientConfiguration.ClientKey == contextService.GetCurrentClientKey())?.Result;
 
     /// <summary>
     /// Gerar chave.
@@ -39,26 +39,26 @@ public class JwtService(
     /// <returns></returns>
     public async Task<SecurityKey> GenerateKey()
     {
-        var tenantTokenConfiguration =
-            _tenant?.TenantConfiguration
-                ?.TenantTokenConfiguration;
+        var ClientTokenConfiguration =
+            _Client?.ClientConfiguration
+                ?.ClientTokenConfiguration;
 
-        var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
+        var encrypted = ClientTokenConfiguration?.Encrypted ?? false;
 
         JwtType jwtType = encrypted
             ? JwtType.Jwe
             : JwtType.Jws;
 
         AlgorithmType algorithmType = encrypted
-            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType
-            : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
+            ? ClientTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType
+            : ClientTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
 
         var key = new CryptographicKey(
             cryptoService,
                 Algorithm.Create(algorithmType, jwtType)
         );
 
-        var model = new KeyMaterial(key, _tenant?.Id);
+        var model = new KeyMaterial(key, _Client?.Id);
 
         await _store.Store(model);
 
@@ -94,15 +94,15 @@ public class JwtService(
     /// <returns></returns>
     public async Task<SigningCredentials> GetCurrentSigningCredentials()
     {
-        var tenantTokenConfiguration =
-           _tenant?.TenantConfiguration
-               ?.TenantTokenConfiguration;
+        var ClientTokenConfiguration =
+           _Client?.ClientConfiguration
+               ?.ClientTokenConfiguration;
 
         var current = await GetCurrentSecurityKey();
 
         return new SigningCredentials(current,
-            tenantTokenConfiguration is not null
-                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJwsType, JwtType.Jws)
+            ClientTokenConfiguration is not null
+                ? Algorithm.Create(ClientTokenConfiguration.AlgorithmJwsType, JwtType.Jws)
                 : _options.Value.Jws
         );
     }
@@ -113,14 +113,14 @@ public class JwtService(
     /// <returns></returns>
     public async Task<EncryptingCredentials> GetCurrentEncryptingCredentials()
     {
-        var tenantTokenConfiguration =
-            _tenant?.TenantConfiguration
-                ?.TenantTokenConfiguration;
+        var ClientTokenConfiguration =
+            _Client?.ClientConfiguration
+                ?.ClientTokenConfiguration;
 
         var current = await GetCurrentSecurityKey();
 
-        var jwe = tenantTokenConfiguration is not null
-                ? Algorithm.Create(tenantTokenConfiguration.AlgorithmJweType, JwtType.Jwe)
+        var jwe = ClientTokenConfiguration is not null
+                ? Algorithm.Create(ClientTokenConfiguration.AlgorithmJweType, JwtType.Jwe)
                 : _options.Value.Jwe;
 
         return new EncryptingCredentials(current, jwe.Alg, jwe.EncryptionAlgorithmContent);
@@ -145,19 +145,19 @@ public class JwtService(
     /// <returns></returns>
     private async Task<bool> CheckCompatibility(KeyMaterial currentKey)
     {
-        var tenantTokenConfiguration =
-           _tenant?.TenantConfiguration
-               ?.TenantTokenConfiguration;
+        var ClientTokenConfiguration =
+           _Client?.ClientConfiguration
+               ?.ClientTokenConfiguration;
 
-        var encrypted = tenantTokenConfiguration?.Encrypted ?? false;
+        var encrypted = ClientTokenConfiguration?.Encrypted ?? false;
 
         JwtType jwtType = encrypted
             ? JwtType.Jwe
             : JwtType.Jws;
 
         AlgorithmType algorithmType = encrypted
-            ? tenantTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType
-            : tenantTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
+            ? ClientTokenConfiguration?.AlgorithmJweType ?? _options.Value.Jwe.AlgorithmType
+            : ClientTokenConfiguration?.AlgorithmJwsType ?? _options.Value.Jws.AlgorithmType;
 
         Algorithm jwtAlgorithm =
             Algorithm.Create(algorithmType, jwtType);

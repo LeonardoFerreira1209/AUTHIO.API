@@ -10,9 +10,9 @@ public static class CreatePasswordIdentityConfiguration
     /// <summary>
     /// Cria um password identity configuration com os dados de cadastro inicial.
     /// </summary>
-    /// <param name="tenantConfigurationId"></param>
+    /// <param name="ClientConfigurationId"></param>
     /// <returns></returns>
-    public static PasswordIdentityConfigurationEntity CreateDefault(Guid tenantConfigurationId)
+    public static PasswordIdentityConfigurationEntity CreateDefault(Guid ClientConfigurationId)
         => new PasswordIdentityConfigurationBuilder()
             .AddRequiredLength(15)
             .AddRequiredUniqueChars(1)
@@ -20,7 +20,7 @@ public static class CreatePasswordIdentityConfiguration
             .AddRequireLowercase(true)
             .AddRequireUppercase(true)
             .AddRequireDigit(true)
-            .AddTenantIdentityConfigurationId(tenantConfigurationId)
+            .AddClientIdentityConfigurationId(ClientConfigurationId)
             .AddCreated()
             .Builder();
 }

@@ -7,7 +7,7 @@ namespace AUTHIO.DOMAIN.Entities;
 /// Classe de entidade de usuário.
 /// </summary>
 public class UserEntity
-    : IdentityUser<Guid>, IEntityBase, IEntityTenantNullAble, IEntitySystem
+    : IdentityUser<Guid>, IEntityBase, IEntityClientNullAble, IEntitySystem
 {
     /// <summary>
     /// ctor
@@ -30,13 +30,13 @@ public class UserEntity
     /// <param name="emailConfirmed"></param>
     /// <param name="subscriptionId"></param>
     /// <param name="updated"></param>
-    /// <param name="tenantId"></param>
+    /// <param name="ClientId"></param>
     /// <param name="system"></param>
     public UserEntity(string firstName, string lastName,
         string userName, string email, string phoneNumber, Status status,
         DateTime created, bool emailConfirmed,
         Guid? subscriptionId, DateTime? updated = null,
-        Guid? tenantId = null, bool system = false)
+        Guid? ClientId = null, bool system = false)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -48,7 +48,7 @@ public class UserEntity
         Created = created;
         Updated = updated;
         SubscriptionId = subscriptionId;
-        TenantId = tenantId;
+        ClientId = ClientId;
         System = system;
     }
 
@@ -73,14 +73,14 @@ public class UserEntity
     public virtual SubscriptionEntity Subscription { get; private set; }
 
     /// <summary>
-    /// Id do tenant responsavel.
+    /// Id do Client responsavel.
     /// </summary>
-    public Guid? TenantId { get; private set; }
+    public Guid? ClientId { get; private set; }
 
     /// <summary>
-    /// Tenant.
+    /// Client.
     /// </summary>
-    public virtual TenantEntity Tenant { get; private set; }
+    public virtual ClientEntity Client { get; private set; }
 
     /// <summary>
     /// Data de criação.

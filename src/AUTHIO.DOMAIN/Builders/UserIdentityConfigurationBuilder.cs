@@ -7,7 +7,7 @@ namespace AUTHIO.DOMAIN.Builders;
 /// </summary>
 public sealed class UserIdentityConfigurationBuilder
 {
-    private Guid tenantIdentityConfigurationId;
+    private Guid ClientIdentityConfigurationId;
     private DateTime? updated = null;
     private DateTime created;
     private string allowedUserNameCharacters;
@@ -38,13 +38,13 @@ public sealed class UserIdentityConfigurationBuilder
     }
 
     /// <summary>
-    /// Adiciona um TenantIdentityConfigurationId.
+    /// Adiciona um ClientIdentityConfigurationId.
     /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <param name="ClientIdentityConfigurationId"></param>
     /// <returns></returns>
-    public UserIdentityConfigurationBuilder AddTenantIdentityConfigurationId(Guid tenantIdentityConfigurationId)
+    public UserIdentityConfigurationBuilder AddClientIdentityConfigurationId(Guid ClientIdentityConfigurationId)
     {
-        this.tenantIdentityConfigurationId = tenantIdentityConfigurationId;
+        this.ClientIdentityConfigurationId = ClientIdentityConfigurationId;
 
         return this;
     }
@@ -83,6 +83,6 @@ public sealed class UserIdentityConfigurationBuilder
     /// </summary>
     /// <returns></returns>
     public UserIdentityConfigurationEntity Builder()
-        => new(tenantIdentityConfigurationId, created,
+        => new(ClientIdentityConfigurationId, created,
             updated, requireUniqueEmail, allowedUserNameCharacters);
 }

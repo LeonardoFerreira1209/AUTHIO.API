@@ -22,7 +22,7 @@ public class HealthCheckSwagger : IDocumentFilter
         pathItem.Operations.Add(OperationType.Get, new OpenApiOperation
         {
             OperationId = "HeathCheck",
-            Tags = [new OpenApiTag { Name = "HealthCheck" }],
+            Tags = [new OpenApiTag { Name = "Health-Check" }],
             Responses = new OpenApiResponses
             {
                 ["200"] = new OpenApiResponse { Description = "Healthy" },

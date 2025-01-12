@@ -15,6 +15,7 @@ namespace AUTHIO.API.Controllers.WebHooks;
 /// <param name="httpContextAccessor"></param>
 /// <param name="configurations"></param>
 [ApiController]
+[ControllerName("Stripe-Web-Hooks")]
 [Route("api/stripe/webhook")]
 public class StripeWebHooks(
     IPlanService planService,

@@ -38,12 +38,12 @@ public sealed class UpdatePlanRequest
     public bool MonthlyPayment { get; set; }
 
     /// <summary>
-    /// Quantidade de tenants liberado para cadastro.
+    /// Quantidade de Clients liberado para cadastro.
     /// </summary>
-    public int QuantTenants { get; set; }
+    public int QuantClients { get; set; }
 
     /// <summary>
-    /// Quantidade de usuários liberado para cadastro em cada tenant.
+    /// Quantidade de usuários liberado para cadastro em cada Client.
     /// </summary>
     public int QuantUsers { get; set; }
 }

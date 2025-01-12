@@ -7,7 +7,7 @@ namespace AUTHIO.DOMAIN.Builders;
 /// </summary>
 public sealed class LockoutIdentityConfigurationBuilder
 {
-    private Guid tenantConfigurationId;
+    private Guid ClientConfigurationId;
     private DateTime? updated = null;
     private DateTime created;
     private bool allowedForNewUsers;
@@ -15,13 +15,13 @@ public sealed class LockoutIdentityConfigurationBuilder
     private TimeSpan defaultLockoutTimeSpan;
 
     /// <summary>
-    /// Adiciona um Tenant configuration Id.
+    /// Adiciona um Client configuration Id.
     /// </summary>
-    /// <param name="tenantConfigurationId"></param>
+    /// <param name="ClientConfigurationId"></param>
     /// <returns></returns>
-    public LockoutIdentityConfigurationBuilder AddTenantConfigurationId(Guid tenantConfigurationId)
+    public LockoutIdentityConfigurationBuilder AddClientConfigurationId(Guid ClientConfigurationId)
     {
-        this.tenantConfigurationId = tenantConfigurationId;
+        this.ClientConfigurationId = ClientConfigurationId;
 
         return this;
     }
@@ -95,6 +95,6 @@ public sealed class LockoutIdentityConfigurationBuilder
     /// </summary>
     /// <returns></returns>
     public LockoutIdentityConfigurationEntity Builder()
-        => new(tenantConfigurationId, created, updated,
+        => new(ClientConfigurationId, created, updated,
             allowedForNewUsers, maxFailedAccessAttempts, defaultLockoutTimeSpan);
 }

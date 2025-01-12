@@ -24,7 +24,7 @@ public static class PlanExtensions
             Description = product.Description,
             ProductId = product.Id,
             MonthlyPayment = true,
-            QuantTenants = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantTenants").Value),
+            QuantClients = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantClients").Value),
             QuantUsers = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantUsers").Value),
             Value = ((product.DefaultPrice?.UnitAmountDecimal ?? 0) / 100),
             Status = Status.Ativo
@@ -45,7 +45,7 @@ public static class PlanExtensions
         planEntity.Description = product.Description;
         planEntity.Updated = DateTime.Now;
         planEntity.Value = ((product.DefaultPrice?.UnitAmountDecimal ?? 0) / 100);
-        planEntity.QuantTenants = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantTenants").Value);
+        planEntity.QuantClients = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantClients").Value);
         planEntity.QuantUsers = Convert.ToInt32(product.Metadata.FirstOrDefault(x => x.Key == "QuantUsers").Value);
 
         return planEntity;
@@ -66,7 +66,7 @@ public static class PlanExtensions
         planEntity.Description = updatePlanRequest.Description;
         planEntity.Updated = DateTime.Now;
         planEntity.Value = updatePlanRequest.Value;
-        planEntity.QuantTenants = updatePlanRequest.QuantTenants;
+        planEntity.QuantClients = updatePlanRequest.QuantClients;
         planEntity.QuantUsers = updatePlanRequest.QuantUsers;
 
         return planEntity;
@@ -86,7 +86,7 @@ public static class PlanExtensions
             Id = plan.Id,
             MonthlyPayment = plan.MonthlyPayment,
             Name = plan.Name,
-            QuantTenants = plan.QuantTenants,
+            QuantClients = plan.QuantClients,
             QuantUsers = plan.QuantUsers,
             Status = plan.Status,
             Updated = plan.Updated,

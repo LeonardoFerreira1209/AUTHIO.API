@@ -18,15 +18,15 @@ public class LockoutIdentityConfigurationEntity : LockoutOptions, IEntityPrimary
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <param name="ClientIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public LockoutIdentityConfigurationEntity(
-        Guid tenantIdentityConfigurationId,
+        Guid ClientIdentityConfigurationId,
         DateTime created, DateTime? updated,
         bool allowedForNewUsers, int maxFailedAccessAttempts, TimeSpan defaultLockoutTimeSpan)
     {
-        TenantIdentityConfigurationId = tenantIdentityConfigurationId;
+        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
         Created = created;
         Updated = updated;
         AllowedForNewUsers = allowedForNewUsers;
@@ -37,14 +37,14 @@ public class LockoutIdentityConfigurationEntity : LockoutOptions, IEntityPrimary
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <param name="ClientIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public LockoutIdentityConfigurationEntity(
-        Guid tenantIdentityConfigurationId,
+        Guid ClientIdentityConfigurationId,
         DateTime created, DateTime? updated)
     {
-        TenantIdentityConfigurationId = tenantIdentityConfigurationId;
+        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
         Created = created;
         Updated = updated;
     }
@@ -65,12 +65,12 @@ public class LockoutIdentityConfigurationEntity : LockoutOptions, IEntityPrimary
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant identity configuration.
+    /// Id do Client identity configuration.
     /// </summary>
-    public Guid TenantIdentityConfigurationId { get; set; }
+    public Guid ClientIdentityConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant identity configuration.
+    /// Entidade do Client identity configuration.
     /// </summary>
-    public virtual TenantIdentityConfigurationEntity TenantIdentityConfiguration { get; private set; }
+    public virtual ClientIdentityConfigurationEntity ClientIdentityConfiguration { get; private set; }
 }

@@ -6,7 +6,7 @@
 public sealed class UpdateSendGridConfigurationRequest
 {
     /// <summary>
-    /// Id do tenant.
+    /// Id do Client.
     /// </summary>
     public required Guid Id { get; set; }
 

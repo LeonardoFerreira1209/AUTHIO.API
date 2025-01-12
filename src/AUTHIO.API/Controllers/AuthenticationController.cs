@@ -16,6 +16,7 @@ namespace AUTHIO.API.Controllers;
 /// <param name="featureFlags"></param>
 /// <param name="authenticationService"></param>
 [ApiController]
+[ControllerName("Authentications")]
 [Route("api/authentications")]
 public class AuthenticationController(
     IFeatureFlagsService featureFlags, 
@@ -63,29 +64,29 @@ public class AuthenticationController(
     }
 
     /// <summary>
-    /// Endpoint responsável por fazer a autenticação do usuário baseado em um tenant, é retornado um token JWT (Json Web Token).
+    /// Endpoint responsável por fazer a autenticação do usuário baseado em um Client, é retornado um token JWT (Json Web Token).
     /// </summary>
     /// <param name="authenticationRequest"></param>
     /// <returns></returns>
-    [HttpGet("tenants/{x-tenant-key}/signin")]
+    [HttpGet("Clients/{x-Client-key}/signin")]
     [SwaggerOperation(
         Summary = "Autenticação do usuário",
-        Description = "Endpoint responsável por fazer a autenticação do usuário baseado em um tenant, é retornado um token JWT (Json Web Token)."
+        Description = "Endpoint responsável por fazer a autenticação do usuário baseado em um Client, é retornado um token JWT (Json Web Token)."
     )]
     [ProducesResponseType(typeof(ApiResponse<TokenJWT>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status423Locked)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> SigninByTenantAsync(
-        [FromRoute(Name = "x-tenant-key")] string tenantKey, 
+    public async Task<IActionResult> SigninByClientAsync(
+        [FromRoute(Name = "x-Client-key")] string ClientKey, 
         AuthenticationRequest authenticationRequest,
         CancellationToken cancellationToken
         )
     {
         using (LogContext.PushProperty("Controller", nameof(AuthenticationController)))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(authenticationRequest)))
-        using (LogContext.PushProperty("Metodo", nameof(SigninByTenantAsync)))
+        using (LogContext.PushProperty("Metodo", nameof(SigninByClientAsync)))
         {
             return await ExecuteAsync(nameof(SigninAsync),
                 () => _authenticationService.AuthenticationAsync(
@@ -93,7 +94,7 @@ public class AuthenticationController(
                         authenticationRequest.Username,
                         authenticationRequest.Password
                     ),
-                    tenantKey
+                    ClientKey
                 ), 
                 "Autenticar usuário",
                 cancellationToken

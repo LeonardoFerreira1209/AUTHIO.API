@@ -10,16 +10,16 @@ public static class CreateLockoutIdentityConfiguration
     /// <summary>
     /// Cria uma instância de LockoutIdentityConfigurationEntity padrão.
     /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <param name="ClientIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="allowedForNewUsers"></param>
     /// <param name="maxFailedAccessAttempts"></param>
     /// <param name="defaultLockoutTimeSpan"></param>
     /// <returns></returns>
-    public static LockoutIdentityConfigurationEntity CreateDefault(Guid tenantIdentityConfigurationId)
+    public static LockoutIdentityConfigurationEntity CreateDefault(Guid ClientIdentityConfigurationId)
             => new LockoutIdentityConfigurationBuilder()
-                .AddTenantConfigurationId(tenantIdentityConfigurationId)
+                .AddClientConfigurationId(ClientIdentityConfigurationId)
                 .AddCreated(DateTime.Now)
                 .AddAllowedForNewUsers(true)
                 .AddMaxFailedAccessAttempts(3)

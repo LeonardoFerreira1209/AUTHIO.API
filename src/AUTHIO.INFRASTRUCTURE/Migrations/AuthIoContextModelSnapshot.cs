@@ -16,7 +16,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -30,6 +30,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.Property<int>("AlgorithmType")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
@@ -51,15 +54,180 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<string>("RevokedReason")
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("Type")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("SecurityKeys");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("ClientKey")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId")
+                        .IsUnique();
+
+                    b.ToTable("ClientConfigurations");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientEmailConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("ClientConfigurationId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsEmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SendersEmail")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SendersName")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientConfigurationId")
+                        .IsUnique();
+
+                    b.ToTable("ClientEmailConfigurations");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(512)
+                        .HasColumnType("varchar(512)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("ClientConfigurationId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientConfigurationId")
+                        .IsUnique();
+
+                    b.ToTable("ClientIdentityConfigurations");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientIdentityUserAdminEntity", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("UserId", "ClientId");
+
+                    b.HasIndex("ClientId");
+
+                    b.ToTable("ClientUserAdmins", (string)null);
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientTokenConfigurationEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("AlgorithmJweType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AlgorithmJwsType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Audience")
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("ClientConfigurationId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Encrypted")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Issuer")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SecurityKey")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientConfigurationId")
+                        .IsUnique();
+
+                    b.ToTable("ClientTokenConfigurations");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.EventEntity", b =>
@@ -126,6 +294,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<bool>("AllowedForNewUsers")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<Guid>("ClientIdentityConfigurationId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
@@ -135,15 +306,12 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<int>("MaxFailedAccessAttempts")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TenantIdentityConfigurationId")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantIdentityConfigurationId")
+                    b.HasIndex("ClientIdentityConfigurationId")
                         .IsUnique();
 
                     b.ToTable("LockoutIdentityConfigurations", (string)null);
@@ -153,6 +321,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("ClientIdentityConfigurationId")
                         .HasColumnType("char(36)");
 
                     b.Property<DateTime>("Created")
@@ -176,15 +347,12 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<int>("RequiredUniqueChars")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TenantIdentityConfigurationId")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantIdentityConfigurationId")
+                    b.HasIndex("ClientIdentityConfigurationId")
                         .IsUnique();
 
                     b.ToTable("PasswordIdentityConfigurations", (string)null);
@@ -211,7 +379,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<string>("ProductId")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("QuantTenants")
+                    b.Property<int>("QuantClients")
                         .HasColumnType("int");
 
                     b.Property<int>("QuantUsers")
@@ -237,6 +405,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
@@ -258,27 +429,24 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<bool>("System")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d"),
-                            Created = new DateTime(2024, 10, 25, 2, 37, 15, 989, DateTimeKind.Local).AddTicks(8655),
+                            Id = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e"),
+                            Created = new DateTime(2025, 1, 11, 19, 14, 20, 301, DateTimeKind.Local).AddTicks(7124),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -292,14 +460,14 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("ClientEmailConfigurationId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("SendGridApiKey")
                         .HasColumnType("longtext");
-
-                    b.Property<Guid>("TenantEmailConfigurationId")
-                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
@@ -309,7 +477,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantEmailConfigurationId")
+                    b.HasIndex("ClientEmailConfigurationId")
                         .IsUnique();
 
                     b.ToTable("SendGridConfigurations");
@@ -355,174 +523,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("Subscriptions");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("TenantKey")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantId")
-                        .IsUnique();
-
-                    b.ToTable("TenantConfigurations");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsEmailConfirmed")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("SendersEmail")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SendersName")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("TenantConfigurationId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantConfigurationId")
-                        .IsUnique();
-
-                    b.ToTable("TenantEmailConfigurations");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(512)
-                        .HasColumnType("varchar(512)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tenants");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantIdentityConfigurationEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("TenantConfigurationId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantConfigurationId")
-                        .IsUnique();
-
-                    b.ToTable("TenantIdentityConfigurations");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantIdentityUserAdminEntity", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("TenantId")
-                        .HasColumnType("char(36)");
-
-                    b.HasKey("UserId", "TenantId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("TenantUserAdmins", (string)null);
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantTokenConfigurationEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("AlgorithmJweType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AlgorithmJwsType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Audience")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("Encrypted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Issuer")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SecurityKey")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("TenantConfigurationId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TenantConfigurationId")
-                        .IsUnique();
-
-                    b.ToTable("TenantTokenConfigurations");
-                });
-
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -531,6 +531,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<Guid?>("ClientId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -587,9 +590,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Property<bool>("System")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<Guid?>("TenantId")
-                        .HasColumnType("char(36)");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
@@ -602,13 +602,13 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("TenantId");
 
                     b.ToTable("Users", (string)null);
                 });
@@ -623,21 +623,21 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("ClientIdentityConfigurationId")
+                        .HasColumnType("char(36)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
                     b.Property<bool>("RequireUniqueEmail")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<Guid>("TenantIdentityConfigurationId")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantIdentityConfigurationId")
+                    b.HasIndex("ClientIdentityConfigurationId")
                         .IsUnique();
 
                     b.ToTable("UserIdentityConfigurations", (string)null);
@@ -668,30 +668,30 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         new
                         {
                             Id = 1,
-                            ClaimType = "Tenants",
+                            ClaimType = "Clients",
                             ClaimValue = "POST",
-                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
+                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
                         },
                         new
                         {
                             Id = 2,
-                            ClaimType = "Tenants",
+                            ClaimType = "Clients",
                             ClaimValue = "GET",
-                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
+                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
                         },
                         new
                         {
                             Id = 3,
-                            ClaimType = "Tenants",
+                            ClaimType = "Clients",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
+                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
                         },
                         new
                         {
                             Id = 4,
-                            ClaimType = "Tenants",
+                            ClaimType = "Clients",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("c4f6a43f-7d9d-4a9d-8210-7f4cef9a9b5d")
+                            RoleId = new Guid("53010be9-4627-4b59-9e7b-e7ceeec7e91e")
                         });
                 });
 
@@ -778,47 +778,110 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.LockoutIdentityConfigurationEntity", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", b =>
                 {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantIdentityConfigurationEntity", "TenantIdentityConfiguration")
-                        .WithOne("LockoutIdentityConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.LockoutIdentityConfigurationEntity", "TenantIdentityConfigurationId")
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientEntity", "Client")
+                        .WithOne("ClientConfiguration")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", "ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TenantIdentityConfiguration");
+                    b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientEmailConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", "ClientConfiguration")
+                        .WithOne("ClientEmailConfiguration")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.ClientEmailConfigurationEntity", "ClientConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientConfiguration");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", "ClientConfiguration")
+                        .WithOne("ClientIdentityConfiguration")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", "ClientConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientConfiguration");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientIdentityUserAdminEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientEntity", "Client")
+                        .WithMany("UserAdmins")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientTokenConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", "ClientConfiguration")
+                        .WithOne("ClientTokenConfiguration")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.ClientTokenConfigurationEntity", "ClientConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientConfiguration");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.LockoutIdentityConfigurationEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", "ClientIdentityConfiguration")
+                        .WithOne("LockoutIdentityConfiguration")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.LockoutIdentityConfigurationEntity", "ClientIdentityConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ClientIdentityConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PasswordIdentityConfigurationEntity", b =>
                 {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantIdentityConfigurationEntity", "TenantIdentityConfiguration")
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", "ClientIdentityConfiguration")
                         .WithOne("PasswordIdentityConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.PasswordIdentityConfigurationEntity", "TenantIdentityConfigurationId")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.PasswordIdentityConfigurationEntity", "ClientIdentityConfigurationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TenantIdentityConfiguration");
+                    b.Navigation("ClientIdentityConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleEntity", b =>
                 {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientEntity", "Client")
                         .WithMany("Roles")
-                        .HasForeignKey("TenantId")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Tenant");
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SendGridConfigurationEntity", b =>
                 {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", "TenantEmailConfiguration")
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientEmailConfigurationEntity", "ClientEmailConfiguration")
                         .WithOne("SendGridConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.SendGridConfigurationEntity", "TenantEmailConfigurationId")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.SendGridConfigurationEntity", "ClientEmailConfigurationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TenantEmailConfiguration");
+                    b.Navigation("ClientEmailConfiguration");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.SubscriptionEntity", b =>
@@ -840,88 +903,25 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
-                        .WithOne("TenantConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", "TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", "TenantConfiguration")
-                        .WithOne("TenantEmailConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", "TenantConfigurationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TenantConfiguration");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantIdentityConfigurationEntity", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", "TenantConfiguration")
-                        .WithOne("TenantIdentityConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.TenantIdentityConfigurationEntity", "TenantConfigurationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TenantConfiguration");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantIdentityUserAdminEntity", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
-                        .WithMany("UserAdmins")
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AUTHIO.DOMAIN.Entities.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tenant");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantTokenConfigurationEntity", b =>
-                {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", "TenantConfiguration")
-                        .WithOne("TenantTokenConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.TenantTokenConfigurationEntity", "TenantConfigurationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TenantConfiguration");
-                });
-
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>
                 {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantEntity", "Tenant")
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientEntity", "Client")
                         .WithMany("Users")
-                        .HasForeignKey("TenantId")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Tenant");
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserIdentityConfigurationEntity", b =>
                 {
-                    b.HasOne("AUTHIO.DOMAIN.Entities.TenantIdentityConfigurationEntity", "TenantIdentityConfiguration")
+                    b.HasOne("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", "ClientIdentityConfiguration")
                         .WithOne("UserIdentityConfiguration")
-                        .HasForeignKey("AUTHIO.DOMAIN.Entities.UserIdentityConfigurationEntity", "TenantIdentityConfigurationId")
+                        .HasForeignKey("AUTHIO.DOMAIN.Entities.UserIdentityConfigurationEntity", "ClientIdentityConfigurationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("TenantIdentityConfiguration");
+                    b.Navigation("ClientIdentityConfiguration");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -975,43 +975,43 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PlanEntity", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", b =>
                 {
-                    b.Navigation("Subscriptions");
+                    b.Navigation("ClientEmailConfiguration");
+
+                    b.Navigation("ClientIdentityConfiguration");
+
+                    b.Navigation("ClientTokenConfiguration");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantConfigurationEntity", b =>
-                {
-                    b.Navigation("TenantEmailConfiguration");
-
-                    b.Navigation("TenantIdentityConfiguration");
-
-                    b.Navigation("TenantTokenConfiguration");
-                });
-
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEmailConfigurationEntity", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientEmailConfigurationEntity", b =>
                 {
                     b.Navigation("SendGridConfiguration");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantEntity", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientEntity", b =>
                 {
-                    b.Navigation("Roles");
+                    b.Navigation("ClientConfiguration");
 
-                    b.Navigation("TenantConfiguration");
+                    b.Navigation("Roles");
 
                     b.Navigation("UserAdmins");
 
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.TenantIdentityConfigurationEntity", b =>
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", b =>
                 {
                     b.Navigation("LockoutIdentityConfiguration");
 
                     b.Navigation("PasswordIdentityConfiguration");
 
                     b.Navigation("UserIdentityConfiguration");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PlanEntity", b =>
+                {
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>

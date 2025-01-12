@@ -14,38 +14,38 @@ public interface IContextService
     bool IsAuthenticated { get; }
 
     /// <summary>
-    /// Permite autenticar por tenantKey.
+    /// Permite autenticar por ClientKey.
     /// </summary>
-    bool IsAuthByTenantKey { get; }
+    bool IsAuthByClientKey { get; }
 
     /// <summary>
-    /// Recupera do tenantId do usuário logado.
+    /// Recupera do ClientId do usuário logado.
     /// </summary>
     /// <returns></returns>
-    Guid? GetCurrentTenantId();
+    Guid? GetCurrentClientId();
 
     /// <summary>
-    /// Recupera a tenantKey passada no Header.
+    /// Recupera a ClientKey passada no Header.
     /// </summary>
     /// <returns></returns>
-    string GetCurrentTenantKey();
+    string GetCurrentClientKey();
 
     /// <summary>
-    /// Recupera a tenantKey passada no token.
+    /// Recupera a ClientKey passada no token.
     /// </summary>
     /// <returns></returns>
-    string GetCurrentTenantKeyByToken();
+    string GetCurrentClientKeyByToken();
 
     /// <summary>
-    /// Recupera a tenantKey no header.
+    /// Recupera a ClientKey no header.
     /// </summary>
-    string GetCurrentTenantKeyByHeader();
+    string GetCurrentClientKeyByHeader();
 
     /// <summary>
-    ///  Recupera a tenantKey nas claims.
+    ///  Recupera a ClientKey nas claims.
     /// </summary>
     /// <returns></returns>
-    string GetCurrentTenantKeyByClaims();
+    string GetCurrentClientKeyByClaims();
 
     /// <summary>
     /// Recupera o id do usuário logado.

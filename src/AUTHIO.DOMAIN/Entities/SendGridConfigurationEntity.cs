@@ -1,7 +1,7 @@
 ﻿namespace AUTHIO.DOMAIN.Entities;
 
 /// <summary>
-/// Classe de vinculo entre usuário admin e tenant.
+/// Classe de vinculo entre usuário admin e Client.
 /// </summary>
 public class SendGridConfigurationEntity : IEntityPrimaryKey<Guid>
 {
@@ -16,16 +16,16 @@ public class SendGridConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="tenantEmailConfigurationId"></param>
+    /// <param name="ClientEmailConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="sendGridApiKey"></param>
     /// <param name="welcomeTemplateId"></param>
     public SendGridConfigurationEntity(
-        Guid tenantEmailConfigurationId, DateTime created,
+        Guid ClientEmailConfigurationId, DateTime created,
         DateTime? updated, string sendGridApiKey, string welcomeTemplateId)
     {
-        TenantEmailConfigurationId = tenantEmailConfigurationId;
+        ClientEmailConfigurationId = ClientEmailConfigurationId;
         Created = created;
         Updated = updated;
         SendGridApiKey = sendGridApiKey;
@@ -58,12 +58,12 @@ public class SendGridConfigurationEntity : IEntityPrimaryKey<Guid>
     public string WelcomeTemplateId { get; set; } = null;
 
     /// <summary>
-    /// Id do tenant email configuration Id.
+    /// Id do Client email configuration Id.
     /// </summary>
-    public Guid TenantEmailConfigurationId { get; set; }
+    public Guid ClientEmailConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant email configuration.
+    /// Entidade do Client email configuration.
     /// </summary>
-    public virtual TenantEmailConfigurationEntity TenantEmailConfiguration { get; private set; }
+    public virtual ClientEmailConfigurationEntity ClientEmailConfiguration { get; private set; }
 }

@@ -57,7 +57,7 @@ public sealed class AuthenticationService(
 
             return await customUserManager.FindByNameWithExpressionAsync(
                 loginRequest.Username,
-                UserFilters<UserEntity>.FilterSystemOrTenantUsers(
+                UserFilters<UserEntity>.FilterSystemOrClientUsers(
                     currentTanantKey
                 )
 

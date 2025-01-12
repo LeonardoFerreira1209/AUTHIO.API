@@ -31,12 +31,12 @@ public class SendGridConfigurationResponse
     public string WelcomeTemplateId { get; set; } = null;
 
     /// <summary>
-    /// Id do tenant email configuration Id.
+    /// Id do Client email configuration Id.
     /// </summary>
-    public Guid TenantEmailConfigurationId { get; set; }
+    public Guid ClientEmailConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant email configuration.
+    /// Entidade do Client email configuration.
     /// </summary>
-    public TenantEmailConfigurationResponse TenantEmailConfiguration { get; set; }
+    public ClientEmailConfigurationResponse ClientEmailConfiguration { get; set; }
 }

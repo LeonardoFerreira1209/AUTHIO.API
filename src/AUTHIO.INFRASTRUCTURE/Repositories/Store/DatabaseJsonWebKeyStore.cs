@@ -25,23 +25,23 @@ public class DataBaseJsonWebKeyStore<TContext>(
     IOptions<JwtOptions> options,
     IMemoryCache memoryCache,
     IContextService contextService,
-    ITenantRepository tenantRepository) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
+    IClientRepository ClientRepository) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
 {
     /// <summary>
-    /// Tenant atual.
+    /// Client atual.
     /// </summary>
-    private readonly TenantEntity _currentTenant
-        = tenantRepository.GetAsync(
-            x => x.TenantConfiguration.TenantKey
-                == contextService.GetCurrentTenantKey()
+    private readonly ClientEntity _currentClient
+        = ClientRepository.GetAsync(
+            x => x.ClientConfiguration.ClientKey
+                == contextService.GetCurrentClientKey()
             
         )?.Result;
 
     /// <summary>
-    /// Permite autenticar por tenantKey.
+    /// Permite autenticar por ClientKey.
     /// </summary>
-    private readonly bool _isAuthByTenantKey 
-        = contextService.IsAuthByTenantKey;
+    private readonly bool _isAuthByClientKey 
+        = contextService.IsAuthByClientKey;
 
     /// <summary>
     /// Armazenar.
@@ -68,8 +68,8 @@ public class DataBaseJsonWebKeyStore<TContext>(
         string cacheKey =
              JwkContants.CurrentJwkCache;
 
-        if (_currentTenant is not null && _isAuthByTenantKey)
-            cacheKey += $".{_currentTenant.Id}";
+        if (_currentClient is not null && _isAuthByClientKey)
+            cacheKey += $".{_currentClient.Id}";
 
         if (!memoryCache.TryGetValue(
             cacheKey,
@@ -78,25 +78,25 @@ public class DataBaseJsonWebKeyStore<TContext>(
             IQueryable<KeyMaterial> query
             = context.SecurityKeys;
 
-            if (_currentTenant is not null && _isAuthByTenantKey)
+            if (_currentClient is not null && _isAuthByClientKey)
             {
-                var tokenConfig = _currentTenant
-                    .TenantConfiguration
-                        .TenantTokenConfiguration;
+                var tokenConfig = _currentClient
+                    .ClientConfiguration
+                        .ClientTokenConfiguration;
 
                 var jwt = tokenConfig.Encrypted
                     ? Algorithm.Create(tokenConfig.AlgorithmJweType, JwtType.Jwe)
                     : Algorithm.Create(tokenConfig.AlgorithmJwsType, JwtType.Jws);
 
                 query = query.Where(
-                    key => key.TenantId == _currentTenant.Id
+                    key => key.ClientId == _currentClient.Id
                     && jwt.Kty() == key.Type
                     && jwt.AlgorithmType == key.AlgorithmType
                 );
             }
             else
                 query = query.Where(
-                    key => key.TenantId == null
+                    key => key.ClientId == null
                 );
 
             credentials = await query.Where(keyMa => !keyMa.IsRevoked)
@@ -132,8 +132,8 @@ public class DataBaseJsonWebKeyStore<TContext>(
         string cacheKey =
             JwkContants.CurrentJwkCache;
 
-        if (_currentTenant is not null && _isAuthByTenantKey)
-            cacheKey += $".{_currentTenant.Id}";
+        if (_currentClient is not null && _isAuthByClientKey)
+            cacheKey += $".{_currentClient.Id}";
 
         if (!memoryCache.TryGetValue(
             cacheKey,
@@ -143,25 +143,25 @@ public class DataBaseJsonWebKeyStore<TContext>(
             IQueryable<KeyMaterial> query
                 = context.SecurityKeys;
 
-            if (_currentTenant is not null && _isAuthByTenantKey)
+            if (_currentClient is not null && _isAuthByClientKey)
             {
-                var tokenConfig = _currentTenant
-                   .TenantConfiguration
-                       .TenantTokenConfiguration;
+                var tokenConfig = _currentClient
+                   .ClientConfiguration
+                       .ClientTokenConfiguration;
 
                 var jwt = tokenConfig.Encrypted
                    ? Algorithm.Create(tokenConfig.AlgorithmJweType, JwtType.Jwe)
                    : Algorithm.Create(tokenConfig.AlgorithmJwsType, JwtType.Jws);
 
                 query = query.Where(
-                   key => key.TenantId == _currentTenant.Id
+                   key => key.ClientId == _currentClient.Id
                     && jwt.Kty() == key.Type
                     && jwt.AlgorithmType == key.AlgorithmType
                 );
             }
             else
                 query = query.Where(
-                    key => key.TenantId == null
+                    key => key.ClientId == null
                 );
 
             keys = query.OrderByDescending(
@@ -200,13 +200,13 @@ public class DataBaseJsonWebKeyStore<TContext>(
         IQueryable<KeyMaterial> query
            = context.SecurityKeys;
 
-        if (_currentTenant is not null)
+        if (_currentClient is not null)
             query.Where(
-                key => key.TenantId == _currentTenant.Id
+                key => key.ClientId == _currentClient.Id
             );
         else
             query = query.Where(
-                key => key.TenantId == null
+                key => key.ClientId == null
             );
 
         foreach (var securityKeyWithPrivate in query.ToList())
@@ -254,10 +254,10 @@ public class DataBaseJsonWebKeyStore<TContext>(
         string currentCacheKey =
            JwkContants.CurrentJwkCache;
 
-        if (_currentTenant is not null && _isAuthByTenantKey)
+        if (_currentClient is not null && _isAuthByClientKey)
         {
-            cacheKey += $".{_currentTenant.Id}";
-            currentCacheKey += $".{_currentTenant.Id}";
+            cacheKey += $".{_currentClient.Id}";
+            currentCacheKey += $".{_currentClient.Id}";
         }
 
         memoryCache.Remove(cacheKey);

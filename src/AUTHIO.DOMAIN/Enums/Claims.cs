@@ -6,7 +6,7 @@ namespace AUTHIO.DOMAIN.Enums
     {
         [Description("Accesso á Usuários.")]
         User = 1,
-        [Description("Accesso á Tenants.")]
-        Tenants = 2,
+        [Description("Accesso á Clients.")]
+        Clients = 2,
     }
 }

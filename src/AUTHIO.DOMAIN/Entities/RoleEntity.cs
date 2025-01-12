@@ -7,7 +7,7 @@ namespace AUTHIO.DOMAIN.Entities;
 /// Classe de entidade de roles.
 /// </summary>
 public class RoleEntity : IdentityRole<Guid>,
-    IEntityBase, IEntityTenantNullAble, IEntitySystem
+    IEntityBase, IEntityClientNullAble, IEntitySystem
 {
     /// <summary>
     /// Data de criação.
@@ -25,14 +25,14 @@ public class RoleEntity : IdentityRole<Guid>,
     public Status Status { get; set; }
 
     /// <summary>
-    /// Id do tenant.
+    /// Id do Client.
     /// </summary>
-    public Guid? TenantId { get; set; }
+    public Guid? ClientId { get; set; }
 
     /// <summary>
-    /// Tenant.
+    /// Client.
     /// </summary>
-    public virtual TenantEntity Tenant { get; private set; }
+    public virtual ClientEntity Client { get; private set; }
 
     /// <summary>
     /// Role do sistema.

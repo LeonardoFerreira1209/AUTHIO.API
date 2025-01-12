@@ -16,7 +16,7 @@ public class AuthorizeAttribute : TypeFilterAttribute
     /// <param name="claim"></param>
     /// <param name="values"></param>
     public AuthorizeAttribute(
-        Claims claim = Claims.Tenants,
+        Claims claim = Claims.Clients,
         params string[] values) : base(typeof(CustomAuthorizeFilter))
     {
         Arguments = [

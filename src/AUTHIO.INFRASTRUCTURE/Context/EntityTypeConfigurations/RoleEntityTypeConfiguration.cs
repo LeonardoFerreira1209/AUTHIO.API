@@ -42,8 +42,8 @@ public class RoleEntityTypeConfiguration : IEntityTypeConfiguration<RoleEntity>
         // onde cada Role pode estar associado a muitos UserRole. A chave estrangeira RoleId em UserRole é usada para estabelecer este relacionamento e é marcada como obrigatória.
         builder.HasMany<IdentityRoleClaim<Guid>>().WithOne().HasForeignKey(rc => rc.RoleId).IsRequired();
 
-        // Define a relação entre o Role e a entidade Tenant. Cada Role pertence a um Tenant,
-        // e cada Tenant pode ter vários Roles. Esta relação é configurada para não permitir a exclusão em cascata.
-        builder.HasOne(x => x.Tenant).WithMany(t => t.Roles).HasForeignKey(x => x.TenantId).OnDelete(DeleteBehavior.Restrict);
+        // Define a relação entre o Role e a entidade Client. Cada Role pertence a um Client,
+        // e cada Client pode ter vários Roles. Esta relação é configurada para não permitir a exclusão em cascata.
+        builder.HasOne(x => x.Client).WithMany(t => t.Roles).HasForeignKey(x => x.ClientId).OnDelete(DeleteBehavior.Restrict);
     }
 }

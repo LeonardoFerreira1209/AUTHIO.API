@@ -12,12 +12,12 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <summary>
 /// Serviço de Open Id.
 /// </summary>
-/// <param name="tenantRepository"></param>
+/// <param name="ClientRepository"></param>
 /// <param name="jwtService"></param>
 /// <param name="contextService"></param>
 public class OpenConnectService(
     IOptions<AppSettings> options,
-    ITenantRepository tenantRepository,
+    IClientRepository ClientRepository,
     IJwtService jwtService,
     IContextService contextService) : IOpenConnectService
 {
@@ -26,7 +26,7 @@ public class OpenConnectService(
     /// </summary>
     /// <returns></returns>
     public async Task<OpenIdConnectConfiguration> GetOpenIdConnectConfigurationAsync(
-            string tenantKey = null
+            string ClientKey = null
         )
     {
         Log.Information(
@@ -43,36 +43,36 @@ public class OpenConnectService(
                 Issuer = options.Value.Auth.ValidIssuer
             };
 
-            if (tenantKey is not null)
+            if (ClientKey is not null)
             {
-                var exists = await tenantRepository
+                var exists = await ClientRepository
                    .ExistsByKey(
-                       tenantKey
+                       ClientKey
                    );
 
                 if (!exists)
                     throw new Exception(
-                        "Tenant não existe, verifica se a key esta correta!"
+                        "Client não existe, verifica se a key esta correta!"
                     );
 
-                var tenant = await tenantRepository
+                var Client = await ClientRepository
                     .GetAsync(
-                        tenant => tenant
-                            .TenantConfiguration
-                                .TenantKey == tenantKey
+                        Client => Client
+                            .ClientConfiguration
+                                .ClientKey == ClientKey
                     );
 
-                var tenantTokenConfiguration = tenant
-                    .TenantConfiguration
-                    .TenantTokenConfiguration;
+                var ClientTokenConfiguration = Client
+                    .ClientConfiguration
+                    .ClientTokenConfiguration;
 
                 openIdConnectConfiguration = new OpenIdConnectConfiguration {
-                    AuthorizationEndpoint = $"{contextService.GetUrlBase()}/api/authentications/tenants/{tenantKey}/signin",
-                    JwksUri = $"{contextService.GetUrlBase()}/tenants/{tenantKey}/jwks",
-                    TokenEndpoint = $"{contextService.GetUrlBase()}/tenants/{tenantKey}/token",
+                    AuthorizationEndpoint = $"{contextService.GetUrlBase()}/api/authentications/Clients/{ClientKey}/signin",
+                    JwksUri = $"{contextService.GetUrlBase()}/Clients/{ClientKey}/jwks",
+                    TokenEndpoint = $"{contextService.GetUrlBase()}/Clients/{ClientKey}/token",
                     FrontchannelLogoutSessionSupported = false.ToString(),
                     FrontchannelLogoutSupported = false.ToString(),
-                    Issuer = tenantTokenConfiguration.Issuer
+                    Issuer = ClientTokenConfiguration.Issuer
                 };
             }
 
@@ -91,7 +91,7 @@ public class OpenConnectService(
     /// </summary>
     /// <returns></returns>
     public async Task<object> GetJwksAsync(
-        string tenantKey = null
+        string ClientKey = null
         )
     {
         Log.Information(
@@ -99,16 +99,16 @@ public class OpenConnectService(
 
         try
         {
-            if(tenantKey is not null)
+            if(ClientKey is not null)
             {
-                var exists = await tenantRepository
+                var exists = await ClientRepository
                  .ExistsByKey(
-                     tenantKey
+                     ClientKey
                  );
 
                 if (!exists)
                     throw new Exception(
-                        "Tenant não existe, verifica se a key esta correta!"
+                        "Client não existe, verifica se a key esta correta!"
                     );
             }
 

@@ -10,17 +10,17 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// Classe customizada de validação de senha.
 /// </summary>
 /// <typeparam name="TUser"></typeparam>
-/// <param name="tenantIdentityConfigurationRepository"></param>
+/// <param name="ClientIdentityConfigurationRepository"></param>
 /// <param name="contextService"></param>
 /// <param name="customIdentityErrorDescriber"></param>
 public class CustomPasswordValidator<TUser>(
-        ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
+        IClientIdentityConfigurationRepository ClientIdentityConfigurationRepository,
         IContextService contextService, 
         CustomIdentityErrorDescriber customIdentityErrorDescriber)
     : PasswordValidator<TUser>(customIdentityErrorDescriber) where TUser : UserEntity, new()
 {
-    private readonly string _tenantKey
-        = contextService.GetCurrentTenantKey();
+    private readonly string _ClientKey
+        = contextService.GetCurrentClientKey();
 
     /// <summary>
     /// Valida o usuário.
@@ -34,19 +34,19 @@ public class CustomPasswordValidator<TUser>(
     {
         var customManager = manager as CustomUserManager<TUser>;
 
-        var tenantIdentityConfigurationEntity = await tenantIdentityConfigurationRepository
-            .GetAsync(config => config.TenantConfiguration.TenantKey == _tenantKey)
-                .ContinueWith((tenantIdentityTask) =>
+        var ClientIdentityConfigurationEntity = await ClientIdentityConfigurationRepository
+            .GetAsync(config => config.ClientConfiguration.ClientKey == _ClientKey)
+                .ContinueWith((ClientIdentityTask) =>
                 {
-                    var tenantIdentityConfigurationEntity
-                        = tenantIdentityTask;
+                    var ClientIdentityConfigurationEntity
+                        = ClientIdentityTask;
 
-                    return tenantIdentityConfigurationEntity;
+                    return ClientIdentityConfigurationEntity;
 
                 }).Result;
 
         PasswordOptions passwordOptions
-            = tenantIdentityConfigurationEntity?
+            = ClientIdentityConfigurationEntity?
                 .PasswordIdentityConfiguration;
 
         return await ValidatePasswordAsync(manager, user, password, passwordOptions).ContinueWith(

@@ -33,11 +33,11 @@ public sealed class UpdatePlanRequestValidator : AbstractValidator<UpdatePlanReq
             .WithErrorCode(ErrorCode.ErroInesperado.ToCode())
             .WithMessage("Preencha o campo descrição.");
 
-        RuleFor(p => p.QuantTenants)
+        RuleFor(p => p.QuantClients)
             .NotEmpty()
             .NotNull()
             .WithErrorCode(ErrorCode.ErroInesperado.ToCode())
-            .WithMessage("Preencha o campo quantidade de tenants.");
+            .WithMessage("Preencha o campo quantidade de Clients.");
 
         RuleFor(p => p.QuantUsers)
            .NotEmpty()

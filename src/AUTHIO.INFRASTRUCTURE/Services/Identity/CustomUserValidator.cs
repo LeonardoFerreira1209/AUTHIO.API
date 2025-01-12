@@ -11,12 +11,12 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// Classe customizada de validação de usuários.
 /// </summary>
 public class CustomUserValidator<TUser>(
-        ITenantIdentityConfigurationRepository tenantIdentityConfigurationRepository,
+        IClientIdentityConfigurationRepository ClientIdentityConfigurationRepository,
         IContextService contextService)
     : UserValidator<TUser> where TUser : UserEntity, new()
 {
-    private readonly string _tenantKey
-        = contextService.GetCurrentTenantKey();
+    private readonly string _ClientKey
+        = contextService.GetCurrentClientKey();
 
     /// <summary>
     /// Valida o usuário.
@@ -29,19 +29,19 @@ public class CustomUserValidator<TUser>(
     {
         var customManager = manager as CustomUserManager<TUser>;
 
-        var tenantIdentityConfigurationEntity = await tenantIdentityConfigurationRepository
-            .GetAsync(config => config.TenantConfiguration.TenantKey == _tenantKey)
-                .ContinueWith((tenantIdentityTask) =>
+        var ClientIdentityConfigurationEntity = await ClientIdentityConfigurationRepository
+            .GetAsync(config => config.ClientConfiguration.ClientKey == _ClientKey)
+                .ContinueWith((ClientIdentityTask) =>
                 {
-                    var tenantIdentityConfigurationEntity
-                        = tenantIdentityTask;
+                    var ClientIdentityConfigurationEntity
+                        = ClientIdentityTask;
 
-                    return tenantIdentityConfigurationEntity;
+                    return ClientIdentityConfigurationEntity;
 
                 }).Result;
 
         UserOptions userOptions
-            = tenantIdentityConfigurationEntity?
+            = ClientIdentityConfigurationEntity?
                 .UserIdentityConfiguration;
 
         return await ValidateUserName(customManager, user, userOptions).ContinueWith(
@@ -107,7 +107,7 @@ public class CustomUserValidator<TUser>(
                 {
                     var owner = await manager.FindByNameWithExpressionAsync(
                         userName, UserFilters<TUser>
-                            .FilterSystemOrTenantUsers(_tenantKey));
+                            .FilterSystemOrClientUsers(_ClientKey));
 
                     if (owner != null &&
                         !string.Equals(await manager.GetUserIdAsync(

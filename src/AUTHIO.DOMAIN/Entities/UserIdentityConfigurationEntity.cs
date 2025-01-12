@@ -18,14 +18,14 @@ public class UserIdentityConfigurationEntity : UserOptions, IEntityPrimaryKey<Gu
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <param name="ClientIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public UserIdentityConfigurationEntity(
-        Guid tenantIdentityConfigurationId,
+        Guid ClientIdentityConfigurationId,
         DateTime created, DateTime? updated, bool requireUniqueEmail, string allowedUserNameCharacters)
     {
-        TenantIdentityConfigurationId = tenantIdentityConfigurationId;
+        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
         Created = created;
         Updated = updated;
         RequireUniqueEmail = requireUniqueEmail;
@@ -48,12 +48,12 @@ public class UserIdentityConfigurationEntity : UserOptions, IEntityPrimaryKey<Gu
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant identity configuration.
+    /// Id do Client identity configuration.
     /// </summary>
-    public Guid TenantIdentityConfigurationId { get; set; }
+    public Guid ClientIdentityConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant identity configuration.
+    /// Entidade do Client identity configuration.
     /// </summary>
-    public virtual TenantIdentityConfigurationEntity TenantIdentityConfiguration { get; set; }
+    public virtual ClientIdentityConfigurationEntity ClientIdentityConfiguration { get; set; }
 }

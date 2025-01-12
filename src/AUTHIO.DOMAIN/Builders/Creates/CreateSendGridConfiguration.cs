@@ -10,14 +10,14 @@ public static class CreateSendGridConfiguration
     /// <summary>
     ///  Cria uma instância de SendGridConfigurationEntity padrão.
     /// </summary>
-    /// <param name="tenantEmailConfigurationId"></param>
+    /// <param name="ClientEmailConfigurationId"></param>
     /// <param name="sendGridApiKey"></param>
     /// <param name="welcomeTemplateId"></param>
     /// <returns></returns>
-    public static SendGridConfigurationEntity CreateDefault(Guid tenantEmailConfigurationId, 
+    public static SendGridConfigurationEntity CreateDefault(Guid ClientEmailConfigurationId, 
         string sendGridApiKey, string welcomeTemplateId)
             => new SendGridConfigurationBuilder()
-                .AddTenantEmailConfigurationId(tenantEmailConfigurationId)
+                .AddClientEmailConfigurationId(ClientEmailConfigurationId)
                 .AddCreated(DateTime.Now)
                 .AddSendGridApiKey(sendGridApiKey)
                 .AddWelcomeTemplateId(welcomeTemplateId)

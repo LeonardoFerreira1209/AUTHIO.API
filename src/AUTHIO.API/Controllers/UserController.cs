@@ -20,6 +20,7 @@ namespace AUTHIO.API.Controllers;
 /// <param name="featureFlags"></param>
 /// <param name="userService"></param>
 [ApiController]
+[ControllerName("Users")]
 [Route("api/users")]
 public class UserController(
     IFeatureFlagsService featureFlags,
@@ -68,7 +69,7 @@ public class UserController(
     /// <returns></returns>
     [HttpPut]
     [EnableRateLimiting("default-fixed-window")]
-    [Authorize(Claims.Tenants, "PUT")]
+    [Authorize(Claims.Clients, "PUT")]
     [SwaggerOperation(
         Summary = "Atualizar usuário",
         Description = "Método responsável por atualizar um usuário no sistema!"
@@ -77,7 +78,7 @@ public class UserController(
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateAsync(
-        [FromHeader(Name = "x-tenant-key")] string tenantKey,
+        [FromHeader(Name = "x-Client-key")] string ClientKey,
         [FromBody] UpdateUserRequest updateUserRequest,
         CancellationToken cancellationToken)
     {
@@ -89,7 +90,7 @@ public class UserController(
                 nameof(UpdateAsync),
                  () => userService.UpdateAsync(
                      updateUserRequest,
-                     tenantKey,
+                     ClientKey,
                      cancellationToken
                  ),
                  "Atualizar usuário no sistema.",
@@ -101,7 +102,7 @@ public class UserController(
     /// <summary>
     /// Endpoint responsável pelo retorno de usuário por Id.
     /// </summary>
-    /// <param name="idWithXTenantKey"></param>
+    /// <param name="idWithXClientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpGet]
@@ -111,13 +112,13 @@ public class UserController(
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAsync(
-       IdWithXTenantKey idWithXTenantKey,
+       IdWithXClientKey idWithXClientKey,
        CancellationToken cancellationToken)
     {
         return await ExecuteAsync(
             nameof(GetAsync),
             () => userService.GetUserByIdAsync(
-                idWithXTenantKey, 
+                idWithXClientKey, 
                 cancellationToken
             ), 
             "Recuperar usuário por id.",

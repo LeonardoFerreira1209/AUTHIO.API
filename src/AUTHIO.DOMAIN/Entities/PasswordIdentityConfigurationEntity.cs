@@ -18,7 +18,7 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <param name="ClientIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="requiredLength"></param>
@@ -28,12 +28,12 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     /// <param name="requireLowercase"></param>
     /// <param name="requireUppercase"></param>
     public PasswordIdentityConfigurationEntity(
-        Guid tenantIdentityConfigurationId,
+        Guid ClientIdentityConfigurationId,
         DateTime created, DateTime? updated, int requiredLength,
         bool requireDigit, int requiredUniqueChars, bool requireNonAlphanumeric,
         bool requireLowercase, bool requireUppercase)
     {
-        TenantIdentityConfigurationId = tenantIdentityConfigurationId;
+        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
         Created = created;
         Updated = updated;
         RequiredLength = requiredLength;
@@ -60,12 +60,12 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     public DateTime? Updated { get; set; }
 
     /// <summary>
-    /// Id do tenant identity configuration.
+    /// Id do Client identity configuration.
     /// </summary>
-    public Guid TenantIdentityConfigurationId { get; set; }
+    public Guid ClientIdentityConfigurationId { get; set; }
 
     /// <summary>
-    /// Entidade do tenant identity configuration.
+    /// Entidade do Client identity configuration.
     /// </summary>
-    public virtual TenantIdentityConfigurationEntity TenantIdentityConfiguration { get; private set; }
+    public virtual ClientIdentityConfigurationEntity ClientIdentityConfiguration { get; private set; }
 }

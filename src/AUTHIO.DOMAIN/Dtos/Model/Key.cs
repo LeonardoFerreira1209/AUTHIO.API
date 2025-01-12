@@ -11,7 +11,7 @@ namespace AUTHIO.DOMAIN.Dtos.Model;
 /// Classe de key.
 /// </summary>
 [DebuggerDisplay("{Type}-{KeyId}")]
-public class KeyMaterial : IEntityTenantNullAble
+public class KeyMaterial : IEntityClientNullAble
 {
     /// <summary>
     /// ctor.
@@ -23,7 +23,7 @@ public class KeyMaterial : IEntityTenantNullAble
     /// </summary>
     /// <param name="cryptographicKey"></param>
     public KeyMaterial(
-        CryptographicKey cryptographicKey, Guid? tenantId)
+        CryptographicKey cryptographicKey, Guid? ClientId)
     {
         CreationDate = DateTime.UtcNow;
 
@@ -36,7 +36,7 @@ public class KeyMaterial : IEntityTenantNullAble
 
         KeyId = cryptographicKey.Key.KeyId;
 
-        TenantId = tenantId;
+        ClientId = ClientId;
     }
 
     /// <summary>
@@ -50,9 +50,9 @@ public class KeyMaterial : IEntityTenantNullAble
     public string KeyId { get; set; }
 
     /// <summary>
-    /// Id do tenant.
+    /// Id do Client.
     /// </summary>
-    public Guid? TenantId {  get; set; }
+    public Guid? ClientId {  get; set; }
 
     /// <summary>
     /// Tipo

@@ -74,12 +74,12 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<UserEntity>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Define a relação entre o Usuário e a entidade Tenant. Cada Usuário pertence a um Tenant,
-        // e cada Tenant pode ter vários Usuários. Esta relação é configurada para não permitir a exclusão em cascata.
+        // Define a relação entre o Usuário e a entidade Client. Cada Usuário pertence a um Client,
+        // e cada Client pode ter vários Usuários. Esta relação é configurada para não permitir a exclusão em cascata.
         builder
-            .HasOne(u => u.Tenant)
+            .HasOne(u => u.Client)
             .WithMany(t => t.Users)
-            .HasForeignKey(u => u.TenantId)
+            .HasForeignKey(u => u.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

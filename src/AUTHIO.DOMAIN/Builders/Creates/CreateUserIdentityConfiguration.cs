@@ -8,13 +8,13 @@ namespace AUTHIO.DOMAIN.Builders.Creates;
 public static class CreateUserIdentityConfiguration
 {
     /// <summary>
-    /// Cria um User tenant configuration com os dados de cadastro inicial.
+    /// Cria um User Client configuration com os dados de cadastro inicial.
     /// </summary>
-    /// <param name="tenantIdentityConfigurationId"></param>
+    /// <param name="ClientIdentityConfigurationId"></param>
     /// <returns></returns>
-    public static UserIdentityConfigurationEntity CreateDefault(Guid tenantIdentityConfigurationId)
+    public static UserIdentityConfigurationEntity CreateDefault(Guid ClientIdentityConfigurationId)
         => new UserIdentityConfigurationBuilder()
-                .AddTenantIdentityConfigurationId(tenantIdentityConfigurationId)
+                .AddClientIdentityConfigurationId(ClientIdentityConfigurationId)
                     .AddRequireUniqueEmail(true)
                         .AddCreated().Builder();
 }

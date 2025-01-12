@@ -17,10 +17,10 @@ public class ContextService(
     IHttpContextAccessor httpContextAccessor) : IContextService
 {
     /// <summary>
-    /// Lista de endpoints que devem ignorar a validação do token por tenantKey.
+    /// Lista de endpoints que devem ignorar a validação do token por ClientKey.
     /// </summary>
-    private readonly IEnumerable<string> _dontUseTenantConfigAuthEndpoints = [
-         "TenantController.RegisterTenantUserAsync",
+    private readonly IEnumerable<string> _dontUseClientConfigAuthEndpoints = [
+         "ClientController.RegisterClientUserAsync",
          "UserController.GetAsync",
          "UserController.UpdateAsync"
     ];
@@ -31,53 +31,53 @@ public class ContextService(
     private string GetEndpointRoute => httpContextAccessor.HttpContext?.GetEndpoint()?.DisplayName;
 
     /// <summary>
-    /// Recupera o tenantId do usuário logado.
+    /// Recupera o ClientId do usuário logado.
     /// </summary>
     /// <returns></returns>
-    public Guid? GetCurrentTenantId()
+    public Guid? GetCurrentClientId()
     {
         if (IsAuthenticated)
         {
-            var tenantId
+            var ClientId
                 = httpContextAccessor.HttpContext?.User?
-                    .FindFirstValue("TenantId");
+                    .FindFirstValue("ClientId");
 
-            if (tenantId is not null)
-                return Guid.Parse(tenantId);
+            if (ClientId is not null)
+                return Guid.Parse(ClientId);
         }
 
         return null;
     }
 
     /// <summary>
-    /// Recupera a tenantKey passada no Header.
+    /// Recupera a ClientKey passada no Header.
     /// </summary>
     /// <returns></returns>
-    public string GetCurrentTenantKey() => 
-        GetCurrentTenantKeyByHeader() 
-        ?? GetCurrentTenantKeyByClaims()
-        ?? GetCurrentTenantKeyByPath();
+    public string GetCurrentClientKey() => 
+        GetCurrentClientKeyByHeader() 
+        ?? GetCurrentClientKeyByClaims()
+        ?? GetCurrentClientKeyByPath();
 
     /// <summary>
-    /// Recupera a tenantKey no Header.
+    /// Recupera a ClientKey no Header.
     /// </summary>
-    public string GetCurrentTenantKeyByHeader() => httpContextAccessor.HttpContext?.Request?.Headers
+    public string GetCurrentClientKeyByHeader() => httpContextAccessor.HttpContext?.Request?.Headers
         ?.FirstOrDefault(header => header.Key.Equals(
-            "x-tenant-key", StringComparison.OrdinalIgnoreCase)).Value;
+            "x-Client-key", StringComparison.OrdinalIgnoreCase)).Value;
 
     /// <summary>
-    /// Recupera a tenantKey nas claims.
+    /// Recupera a ClientKey nas claims.
     /// </summary>
-    public string GetCurrentTenantKeyByClaims() => httpContextAccessor.HttpContext?.User?.Claims
+    public string GetCurrentClientKeyByClaims() => httpContextAccessor.HttpContext?.User?.Claims
         ?.FirstOrDefault(claim => claim.Issuer.Equals(
-            "x-tenant-key", StringComparison.OrdinalIgnoreCase))?.Value;
+            "x-Client-key", StringComparison.OrdinalIgnoreCase))?.Value;
 
     /// <summary>
-    /// Recupera a tenantKey nas claims.
+    /// Recupera a ClientKey nas claims.
     /// </summary>
-    public string GetCurrentTenantKeyByPath() => httpContextAccessor.HttpContext?.Request?.RouteValues
+    public string GetCurrentClientKeyByPath() => httpContextAccessor.HttpContext?.Request?.RouteValues
         ?.FirstOrDefault(route => route.Key.Equals(
-            "x-tenant-key", StringComparison.OrdinalIgnoreCase)).Value?.ToString();
+            "x-Client-key", StringComparison.OrdinalIgnoreCase)).Value?.ToString();
 
     /// <summary>
     /// Verifica se o usuário esta logado.
@@ -106,10 +106,10 @@ public class ContextService(
                    .Headers.TryGetValue(key, out value);
 
     /// <summary>
-    /// Recupera o x-tenant-key do token de usuário atual.
+    /// Recupera o x-Client-key do token de usuário atual.
     /// </summary>
     /// <returns></returns>
-    public string GetCurrentTenantKeyByToken()
+    public string GetCurrentClientKeyByToken()
     {
         if (TryGetValueByHeader(
                 "Authorization", out StringValues authHeader))
@@ -127,17 +127,17 @@ public class ContextService(
 
             return tokenJson.Claims
                 .FirstOrDefault(x =>
-                    x.Type == "x-tenant-key")?.Value;
+                    x.Type == "x-Client-key")?.Value;
         }
 
         return null;
     }
 
     /// <summary>
-    /// Permite autenticar por tenantKey. 
+    /// Permite autenticar por ClientKey. 
     /// </summary>
-    public bool IsAuthByTenantKey =>
-        GetEndpointRoute is not null && !_dontUseTenantConfigAuthEndpoints
+    public bool IsAuthByClientKey =>
+        GetEndpointRoute is not null && !_dontUseClientConfigAuthEndpoints
             .Any(x => GetEndpointRoute.Contains(x));
 
     /// <summary>

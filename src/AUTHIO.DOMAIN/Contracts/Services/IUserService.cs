@@ -23,23 +23,23 @@ public interface IUserService
     /// Método de atualização de usuário.
     /// </summary>
     /// <param name="updateUserRequest"></param>
-    /// <param name="tenantKey"></param>
+    /// <param name="ClientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> UpdateAsync(
         UpdateUserRequest updateUserRequest,
-        string tenantKey,
+        string ClientKey,
         CancellationToken cancellationToken
         );
 
     /// <summary>
     /// Método de registro 
     /// </summary>
-    /// <param name="idWithXTenantKey"></param>
+    /// <param name="idWithXClientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> GetUserByIdAsync(
-        IdWithXTenantKey idWithXTenantKey,
+        IdWithXClientKey idWithXClientKey,
         CancellationToken cancellationToken
     );
 }

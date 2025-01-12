@@ -9,34 +9,34 @@ namespace AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 public static class UserFilters<TUser> where TUser : UserEntity, new()
 {
     /// <summary>
-    /// Filtra um usuários pertencente a um tenant.
+    /// Filtra um usuários pertencente a um Client.
     /// </summary>
-    /// <param name="tenantKey"></param>
+    /// <param name="ClientKey"></param>
     /// <returns></returns>
-    public static Expression<Func<TUser, bool>> FilterTenantUsers(string tenantKey)
+    public static Expression<Func<TUser, bool>> FilterClientUsers(string ClientKey)
         => entidade =>
-            entidade.Tenant != null
-                && entidade.Tenant.TenantConfiguration != null
-                && entidade.Tenant.TenantConfiguration.TenantKey == tenantKey
+            entidade.Client != null
+                && entidade.Client.ClientConfiguration != null
+                && entidade.Client.ClientConfiguration.ClientKey == ClientKey
                 && !entidade.System;
 
     /// <summary>
     /// Filta usuários que são do sistema.
     /// </summary>
-    /// <param name="tenantKey"></param>
+    /// <param name="ClientKey"></param>
     /// <returns></returns>
-    public static Expression<Func<TUser, bool>> FilterSystemUsers(string tenantKey)
+    public static Expression<Func<TUser, bool>> FilterSystemUsers(string ClientKey)
         => entidade =>
-            tenantKey == null
-                && entidade.TenantId == null
+            ClientKey == null
+                && entidade.ClientId == null
                 && entidade.System;
 
     /// <summary>
-    /// Se tiver um tenantkey filtra usuários de tenant se não do sistema.
+    /// Se tiver um Clientkey filtra usuários de Client se não do sistema.
     /// </summary>
-    /// <param name="tenantKey"></param>
+    /// <param name="ClientKey"></param>
     /// <returns></returns>
-    public static Expression<Func<TUser, bool>> FilterSystemOrTenantUsers(string tenantKey)
+    public static Expression<Func<TUser, bool>> FilterSystemOrClientUsers(string ClientKey)
         => CustomLambdaExpressions.Or(
-            FilterTenantUsers(tenantKey), FilterSystemUsers(tenantKey));
+            FilterClientUsers(ClientKey), FilterSystemUsers(ClientKey));
 }

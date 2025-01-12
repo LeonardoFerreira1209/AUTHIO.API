@@ -7,20 +7,20 @@ namespace AUTHIO.DOMAIN.Builders;
 /// </summary>
 public sealed class SendGridConfigurationBuilder
 {
-    private Guid tenantEmailConfigurationId;
+    private Guid ClientEmailConfigurationId;
     private string sendGridApiKey = null;
     private string welcomeTemplateId = null;
     private DateTime created;
     private DateTime? updated = null;
 
     /// <summary>
-    /// Adiciona um Tenant email configuration Id.
+    /// Adiciona um Client email configuration Id.
     /// </summary>
-    /// <param name="tenantEmailConfigurationId"></param>
+    /// <param name="ClientEmailConfigurationId"></param>
     /// <returns></returns>
-    public SendGridConfigurationBuilder AddTenantEmailConfigurationId(Guid tenantEmailConfigurationId)
+    public SendGridConfigurationBuilder AddClientEmailConfigurationId(Guid ClientEmailConfigurationId)
     {
-        this.tenantEmailConfigurationId = tenantEmailConfigurationId;
+        this.ClientEmailConfigurationId = ClientEmailConfigurationId;
 
         return this;
     }
@@ -82,7 +82,7 @@ public sealed class SendGridConfigurationBuilder
     /// </summary>
     /// <returns></returns>
     public SendGridConfigurationEntity Builder()
-        => new(tenantEmailConfigurationId, created,
+        => new(ClientEmailConfigurationId, created,
             updated, sendGridApiKey,
             welcomeTemplateId);
 }

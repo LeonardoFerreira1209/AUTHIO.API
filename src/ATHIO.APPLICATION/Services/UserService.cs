@@ -155,7 +155,7 @@ public sealed class UserService(
     /// <exception cref="UpdateUserFailedException"></exception>
     public async Task<ObjectResult> UpdateAsync(
         [FromBody] UpdateUserRequest updateUserRequest,
-        string tenantKey,
+        string ClientKey,
         CancellationToken cancellationToken
         )
     {
@@ -183,8 +183,8 @@ public sealed class UserService(
                     updateUserRequest.Id,
                     CustomLambdaExpressions.Or(
                         x => x.Id == CurrentUserId,
-                        UserFilters<UserEntity>.FilterTenantUsers(
-                            tenantKey
+                        UserFilters<UserEntity>.FilterClientUsers(
+                            ClientKey
                         )
                     ),
                     cancellationToken
@@ -263,11 +263,11 @@ public sealed class UserService(
     /// <summary>
     /// Busca um usuário por Id.
     /// </summary>
-    /// <param name="idWithXTenantKey"></param>
+    /// <param name="idWithXClientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<ObjectResult> GetUserByIdAsync(
-        IdWithXTenantKey idWithXTenantKey,
+        IdWithXClientKey idWithXClientKey,
         CancellationToken cancellationToken)
     {
         Log.Information(
@@ -277,11 +277,11 @@ public sealed class UserService(
         {
             var user = await customUserManager
                 .GetUserByIdAsync(
-                    idWithXTenantKey.Id,
+                    idWithXClientKey.Id,
                     CustomLambdaExpressions.Or(
                         x => x.Id == CurrentUserId,
-                        UserFilters<UserEntity>.FilterTenantUsers(
-                            idWithXTenantKey.TenantKey
+                        UserFilters<UserEntity>.FilterClientUsers(
+                            idWithXClientKey.ClientKey
                         )
                     ),
                     cancellationToken

@@ -33,7 +33,7 @@ public class TokenService(
     IContextService contextService,
     IJwtService jwtService,
     IOptions<AppSettings> appsettings,
-    ITenantTokenConfigurationRepository tenantTokenConfigurationRepository) : ITokenService
+    IClientTokenConfigurationRepository ClientTokenConfigurationRepository) : ITokenService
 {
     /// <summary>
     /// Cria o JWT TOKEN
@@ -88,33 +88,33 @@ public class TokenService(
     private async Task<TokenJWT> BuildToken(string username)
     {
         var userEntity = await userManager.FindByNameWithExpressionAsync(username, 
-            UserFilters<UserEntity>.FilterSystemOrTenantUsers(
-                contextService.GetCurrentTenantKey())) ?? throw new NotFoundUserException(username);
+            UserFilters<UserEntity>.FilterSystemOrClientUsers(
+                contextService.GetCurrentClientKey())) ?? throw new NotFoundUserException(username);
 
         var roles = await Roles(userEntity);
 
         var claims = await Claims(userEntity, roles);
 
-        if (userEntity?.Tenant?.TenantConfiguration is not null)
-            claims.Add(new Claim("x-tenant-key", userEntity.Tenant.TenantConfiguration.TenantKey));
+        if (userEntity?.Client?.ClientConfiguration is not null)
+            claims.Add(new Claim("x-Client-key", userEntity.Client.ClientConfiguration.ClientKey));
 
         Log.Information($"[LOG INFORMATION] - Criando o token do usuário.\n");
 
-        var tenantTokenConfiguration = await tenantTokenConfigurationRepository
+        var ClientTokenConfiguration = await ClientTokenConfigurationRepository
             .GetAsync(ttc => !userEntity.System && 
-                ttc.TenantConfigurationId == userEntity.Tenant.TenantConfiguration.Id);
+                ttc.ClientConfigurationId == userEntity.Client.ClientConfiguration.Id);
 
         var tokenConfigs = new {
 
-            SecurityKey = tenantTokenConfiguration?.SecurityKey 
+            SecurityKey = ClientTokenConfiguration?.SecurityKey 
                 ?? appsettings.Value.Auth.SecurityKey,
-            ValidIssuer = tenantTokenConfiguration?.Issuer 
+            ValidIssuer = ClientTokenConfiguration?.Issuer 
                 ?? appsettings.Value.Auth.ValidIssuer,
-            ValidAudience = tenantTokenConfiguration?.Audience
+            ValidAudience = ClientTokenConfiguration?.Audience
                 ?? appsettings.Value.Auth.ValidAudience
         };
 
-        bool encrypted = tenantTokenConfiguration?.Encrypted ?? false;
+        bool encrypted = ClientTokenConfiguration?.Encrypted ?? false;
 
         SigningCredentials key = 
             await jwtService.GetCurrentSigningCredentials();
@@ -132,7 +132,7 @@ public class TokenService(
                               .AddExpiry(appsettings.Value.Auth.ExpiresIn)
                                   .AddRoles(roles)
                                       .AddClaims(claims)
-                                        .IsEncrypyted(tenantTokenConfiguration?.Encrypted ?? false)
+                                        .IsEncrypyted(ClientTokenConfiguration?.Encrypted ?? false)
                                             .Builder(userEntity, encrypted, encryptitedKey, key)
         );
     }
