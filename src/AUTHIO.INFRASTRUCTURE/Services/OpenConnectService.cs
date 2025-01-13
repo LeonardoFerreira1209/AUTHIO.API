@@ -12,21 +12,22 @@ namespace AUTHIO.INFRASTRUCTURE.Services;
 /// <summary>
 /// Serviço de Open Id.
 /// </summary>
-/// <param name="ClientRepository"></param>
+/// <param name="clientRepository"></param>
 /// <param name="jwtService"></param>
 /// <param name="contextService"></param>
 public class OpenConnectService(
     IOptions<AppSettings> options,
-    IClientRepository ClientRepository,
+    IClientRepository clientRepository,
     IJwtService jwtService,
     IContextService contextService) : IOpenConnectService
 {
     /// <summary>
     /// Recupera as configurações do Open Id.
     /// </summary>
+    /// <param name="clientKey"></param>
     /// <returns></returns>
     public async Task<OpenIdConnectConfiguration> GetOpenIdConnectConfigurationAsync(
-            string ClientKey = null
+            string clientKey = null
         )
     {
         Log.Information(
@@ -43,11 +44,11 @@ public class OpenConnectService(
                 Issuer = options.Value.Auth.ValidIssuer
             };
 
-            if (ClientKey is not null)
+            if (clientKey is not null)
             {
-                var exists = await ClientRepository
+                var exists = await clientRepository
                    .ExistsByKey(
-                       ClientKey
+                       clientKey
                    );
 
                 if (!exists)
@@ -55,11 +56,11 @@ public class OpenConnectService(
                         "Client não existe, verifica se a key esta correta!"
                     );
 
-                var Client = await ClientRepository
+                var Client = await clientRepository
                     .GetAsync(
                         Client => Client
                             .ClientConfiguration
-                                .ClientKey == ClientKey
+                                .ClientKey == clientKey
                     );
 
                 var ClientTokenConfiguration = Client
@@ -67,9 +68,9 @@ public class OpenConnectService(
                     .ClientTokenConfiguration;
 
                 openIdConnectConfiguration = new OpenIdConnectConfiguration {
-                    AuthorizationEndpoint = $"{contextService.GetUrlBase()}/api/authentications/Clients/{ClientKey}/signin",
-                    JwksUri = $"{contextService.GetUrlBase()}/Clients/{ClientKey}/jwks",
-                    TokenEndpoint = $"{contextService.GetUrlBase()}/Clients/{ClientKey}/token",
+                    AuthorizationEndpoint = $"{contextService.GetUrlBase()}/api/authentications/clients/{clientKey}/signin",
+                    JwksUri = $"{contextService.GetUrlBase()}/clients/{clientKey}/jwks",
+                    TokenEndpoint = $"{contextService.GetUrlBase()}/clients/{clientKey}/token",
                     FrontchannelLogoutSessionSupported = false.ToString(),
                     FrontchannelLogoutSupported = false.ToString(),
                     Issuer = ClientTokenConfiguration.Issuer
@@ -89,9 +90,10 @@ public class OpenConnectService(
     /// <summary>
     /// Recupera as chaves de segurança para autenticação.
     /// </summary>
+    /// <param name="clientKey"></param>
     /// <returns></returns>
     public async Task<object> GetJwksAsync(
-        string ClientKey = null
+        string clientKey = null
         )
     {
         Log.Information(
@@ -99,11 +101,11 @@ public class OpenConnectService(
 
         try
         {
-            if(ClientKey is not null)
+            if(clientKey is not null)
             {
-                var exists = await ClientRepository
+                var exists = await clientRepository
                  .ExistsByKey(
-                     ClientKey
+                     clientKey
                  );
 
                 if (!exists)

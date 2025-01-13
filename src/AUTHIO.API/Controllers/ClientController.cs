@@ -19,16 +19,16 @@ namespace AUTHIO.API.Controllers;
 /// Controller que cuida do fluxo de autenticação.
 /// </summary>
 /// <param name="featureFlags"></param>
-/// <param name="Clientservice"></param>
+/// <param name="clientservice"></param>
 [ApiController]
 [ControllerName("Clients")]
-[Route("api/Clients")]
+[Route("api/clients")]
 public class ClientController(
     IFeatureFlagsService featureFlags,
-    IClientservice Clientservice) : BaseController(featureFlags)
+    IClientservice clientservice) : BaseController(featureFlags)
 {
     private readonly IClientservice
-        _Clientservice = Clientservice;
+        _clientservice = clientservice;
 
     /// <summary>
     /// Endpoint responsável pelo registro de Client.
@@ -54,7 +54,7 @@ public class ClientController(
         {
             return await ExecuteAsync(
                 nameof(CreateAsync),
-                () => _Clientservice.CreateAsync(
+                () => _clientservice.CreateAsync(
                     createClientRequest,
                     cancellationToken
                 ),
@@ -91,7 +91,7 @@ public class ClientController(
         {
             return await ExecuteAsync(
                 nameof(UpdateAsync),
-                () => _Clientservice.UpdateAsync(
+                () => _clientservice.UpdateAsync(
                     updateClientRequest,
                     cancellationToken
                 ),
@@ -127,7 +127,7 @@ public class ClientController(
         {
             return await ExecuteAsync(
                 nameof(GetAllAsync),
-                () => _Clientservice.GetAllAsync(
+                () => _clientservice.GetAllAsync(
                     filterRequest,
                     cancellationToken
                 ),
@@ -141,7 +141,7 @@ public class ClientController(
     /// Endpoint responsável pelo registro de usuário em um Client.
     /// </summary>
     /// <param name="registerUserRequest"></param>
-    /// <param name="ClientKey"></param>
+    /// <param name="clientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPatch("users/register")]
@@ -155,7 +155,7 @@ public class ClientController(
     [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterClientUserAsync(
-        [FromHeader(Name = "x-Client-key")] string ClientKey,
+        [FromHeader(Name = "x-Client-key")] string clientKey,
         [FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken cancellationToken)
     {
@@ -165,9 +165,9 @@ public class ClientController(
         {
             return await ExecuteAsync(
                 nameof(RegisterClientUserAsync),
-                () => _Clientservice.RegisterClientUserAsync(
+                () => _clientservice.RegisterClientUserAsync(
                     registerUserRequest,
-                    ClientKey,
+                    clientKey,
                     cancellationToken
                 ),
                 "Registrar usuário no Client.",

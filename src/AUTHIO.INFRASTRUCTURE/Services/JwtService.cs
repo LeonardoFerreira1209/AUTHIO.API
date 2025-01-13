@@ -29,7 +29,7 @@ public class JwtService(
     private readonly IJsonWebKeyStore _store = store;
     private readonly IOptions<JwtOptions> _options = options;
 
-    private readonly ClientEntity _Client
+    private readonly ClientEntity _client
       = ClientRepository.GetAsync(
           x => x.ClientConfiguration.ClientKey == contextService.GetCurrentClientKey())?.Result;
 
@@ -40,7 +40,7 @@ public class JwtService(
     public async Task<SecurityKey> GenerateKey()
     {
         var ClientTokenConfiguration =
-            _Client?.ClientConfiguration
+            _client?.ClientConfiguration
                 ?.ClientTokenConfiguration;
 
         var encrypted = ClientTokenConfiguration?.Encrypted ?? false;
@@ -58,7 +58,7 @@ public class JwtService(
                 Algorithm.Create(algorithmType, jwtType)
         );
 
-        var model = new KeyMaterial(key, _Client?.Id);
+        var model = new KeyMaterial(key, _client?.Id);
 
         await _store.Store(model);
 
@@ -95,7 +95,7 @@ public class JwtService(
     public async Task<SigningCredentials> GetCurrentSigningCredentials()
     {
         var ClientTokenConfiguration =
-           _Client?.ClientConfiguration
+           _client?.ClientConfiguration
                ?.ClientTokenConfiguration;
 
         var current = await GetCurrentSecurityKey();
@@ -114,7 +114,7 @@ public class JwtService(
     public async Task<EncryptingCredentials> GetCurrentEncryptingCredentials()
     {
         var ClientTokenConfiguration =
-            _Client?.ClientConfiguration
+            _client?.ClientConfiguration
                 ?.ClientTokenConfiguration;
 
         var current = await GetCurrentSecurityKey();
@@ -146,7 +146,7 @@ public class JwtService(
     private async Task<bool> CheckCompatibility(KeyMaterial currentKey)
     {
         var ClientTokenConfiguration =
-           _Client?.ClientConfiguration
+           _client?.ClientConfiguration
                ?.ClientTokenConfiguration;
 
         var encrypted = ClientTokenConfiguration?.Encrypted ?? false;

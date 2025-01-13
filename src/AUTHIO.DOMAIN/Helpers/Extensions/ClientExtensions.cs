@@ -57,21 +57,21 @@ public static class ClientExtensions
     /// Atualiza a entidade de Client.
     /// </summary>
     /// <param name="updateClientRequest"></param>
-    /// <param name="ClientEntity"></param>
+    /// <param name="clientEntity"></param>
     /// <returns></returns>
     public static ClientEntity UpdateEntity(
-        this UpdateClientRequest updateClientRequest, ClientEntity ClientEntity)
+        this UpdateClientRequest updateClientRequest, ClientEntity clientEntity)
     {
-        ClientEntity.Name = updateClientRequest.Name;
-        ClientEntity.Description = updateClientRequest.Description;
-        ClientEntity.Updated = DateTime.Now;
+        clientEntity.Name = updateClientRequest.Name;
+        clientEntity.Description = updateClientRequest.Description;
+        clientEntity.Updated = DateTime.Now;
 
-        ClientEntity.ClientConfiguration 
+        clientEntity.ClientConfiguration 
             = updateClientRequest
                 ?.ClientConfiguration
-                    ?.UpdateEntity(ClientEntity.ClientConfiguration) ?? ClientEntity.ClientConfiguration;
+                    ?.UpdateEntity(clientEntity.ClientConfiguration) ?? clientEntity.ClientConfiguration;
 
-        return ClientEntity;
+        return clientEntity;
     }
     
     /// <summary>
@@ -81,61 +81,61 @@ public static class ClientExtensions
     /// <param name="ClientConfigurationEntity"></param>
     /// <returns></returns>
     public static ClientConfigurationEntity UpdateEntity(
-        this UpdateClientConfigurationRequest updateClientConfigurationRequest, ClientConfigurationEntity ClientConfigurationEntity)
+        this UpdateClientConfigurationRequest updateClientConfigurationRequest, ClientConfigurationEntity clientConfigurationEntity)
     {
-        ClientConfigurationEntity.Updated = DateTime.Now;
+        clientConfigurationEntity.Updated = DateTime.Now;
 
-        ClientConfigurationEntity.ClientIdentityConfiguration 
+        clientConfigurationEntity.ClientIdentityConfiguration 
             = updateClientConfigurationRequest
                 ?.ClientIdentityConfiguration
-                    ?.UpdateEntity(ClientConfigurationEntity.ClientIdentityConfiguration) 
-                        ?? ClientConfigurationEntity.ClientIdentityConfiguration;
+                    ?.UpdateEntity(clientConfigurationEntity.ClientIdentityConfiguration) 
+                        ?? clientConfigurationEntity.ClientIdentityConfiguration;
 
-        ClientConfigurationEntity.ClientEmailConfiguration 
+        clientConfigurationEntity.ClientEmailConfiguration 
             = updateClientConfigurationRequest
                 ?.ClientEmailConfiguration
-                    ?.UpdateEntity(ClientConfigurationEntity.ClientEmailConfiguration) 
-                        ?? ClientConfigurationEntity.ClientEmailConfiguration;
+                    ?.UpdateEntity(clientConfigurationEntity.ClientEmailConfiguration) 
+                        ?? clientConfigurationEntity.ClientEmailConfiguration;
 
-        ClientConfigurationEntity.ClientTokenConfiguration
+        clientConfigurationEntity.ClientTokenConfiguration
             = updateClientConfigurationRequest
                 ?.ClientTokenConfiguration
-                    ?.UpdateEntity(ClientConfigurationEntity.ClientTokenConfiguration) 
-                        ?? ClientConfigurationEntity.ClientTokenConfiguration;
+                    ?.UpdateEntity(clientConfigurationEntity.ClientTokenConfiguration) 
+                        ?? clientConfigurationEntity.ClientTokenConfiguration;
 
-        return ClientConfigurationEntity;
+        return clientConfigurationEntity;
     }
 
     /// <summary>
     /// Atualiza a entidade de Client identity configuration.
     /// </summary>
     /// <param name="updateClientIdentityConfigurationRequest"></param>
-    /// <param name="ClientIdentityConfigurationEntity"></param>
+    /// <param name="clientIdentityConfigurationEntity"></param>
     /// <returns></returns>
     public static ClientIdentityConfigurationEntity UpdateEntity(
-        this UpdateClientIdentityConfigurationRequest updateClientIdentityConfigurationRequest, ClientIdentityConfigurationEntity ClientIdentityConfigurationEntity)
+        this UpdateClientIdentityConfigurationRequest updateClientIdentityConfigurationRequest, ClientIdentityConfigurationEntity clientIdentityConfigurationEntity)
     { 
-        ClientIdentityConfigurationEntity.Updated = DateTime.Now;
+        clientIdentityConfigurationEntity.Updated = DateTime.Now;
 
-        ClientIdentityConfigurationEntity.UserIdentityConfiguration 
+        clientIdentityConfigurationEntity.UserIdentityConfiguration 
             = updateClientIdentityConfigurationRequest
                 ?.UserIdentityConfiguration
-                    ?.UpdateEntity(ClientIdentityConfigurationEntity.UserIdentityConfiguration) 
-                        ?? ClientIdentityConfigurationEntity.UserIdentityConfiguration;
+                    ?.UpdateEntity(clientIdentityConfigurationEntity.UserIdentityConfiguration) 
+                        ?? clientIdentityConfigurationEntity.UserIdentityConfiguration;
 
-        ClientIdentityConfigurationEntity.PasswordIdentityConfiguration 
+        clientIdentityConfigurationEntity.PasswordIdentityConfiguration 
             = updateClientIdentityConfigurationRequest
                 ?.PasswordIdentityConfiguration
-                    ?.UpdateEntity(ClientIdentityConfigurationEntity.PasswordIdentityConfiguration) 
-                        ?? ClientIdentityConfigurationEntity.PasswordIdentityConfiguration;
+                    ?.UpdateEntity(clientIdentityConfigurationEntity.PasswordIdentityConfiguration) 
+                        ?? clientIdentityConfigurationEntity.PasswordIdentityConfiguration;
 
-        ClientIdentityConfigurationEntity.LockoutIdentityConfiguration 
+        clientIdentityConfigurationEntity.LockoutIdentityConfiguration 
             = updateClientIdentityConfigurationRequest
                 ?.LockoutIdentityConfiguration
-                    ?.UpdateEntity(ClientIdentityConfigurationEntity.LockoutIdentityConfiguration) 
-                        ?? ClientIdentityConfigurationEntity.LockoutIdentityConfiguration;
+                    ?.UpdateEntity(clientIdentityConfigurationEntity.LockoutIdentityConfiguration) 
+                        ?? clientIdentityConfigurationEntity.LockoutIdentityConfiguration;
 
-        return ClientIdentityConfigurationEntity;
+        return clientIdentityConfigurationEntity;
     }
 
     /// <summary>
@@ -162,23 +162,23 @@ public static class ClientExtensions
     /// Atualiza a entidade de Client Email Configuration.
     /// </summary>
     /// <param name="updateClientEmailConfigurationRequest"></param>
-    /// <param name="ClientEmailConfigurationEntity"></param>
+    /// <param name="clientEmailConfigurationEntity"></param>
     /// <returns></returns>
     public static ClientEmailConfigurationEntity UpdateEntity(
-        this UpdateClientEmailConfigurationRequest updateClientEmailConfigurationRequest, ClientEmailConfigurationEntity ClientEmailConfigurationEntity)
+        this UpdateClientEmailConfigurationRequest updateClientEmailConfigurationRequest, ClientEmailConfigurationEntity clientEmailConfigurationEntity)
     {
-        ClientEmailConfigurationEntity.Updated = DateTime.Now;
-        ClientEmailConfigurationEntity.SendersName = updateClientEmailConfigurationRequest.SendersName;
-        ClientEmailConfigurationEntity.SendersEmail = updateClientEmailConfigurationRequest.SendersEmail;
-        ClientEmailConfigurationEntity.IsEmailConfirmed = updateClientEmailConfigurationRequest.IsEmailConfirmed;
+        clientEmailConfigurationEntity.Updated = DateTime.Now;
+        clientEmailConfigurationEntity.SendersName = updateClientEmailConfigurationRequest.SendersName;
+        clientEmailConfigurationEntity.SendersEmail = updateClientEmailConfigurationRequest.SendersEmail;
+        clientEmailConfigurationEntity.IsEmailConfirmed = updateClientEmailConfigurationRequest.IsEmailConfirmed;
 
-        ClientEmailConfigurationEntity.SendGridConfiguration 
+        clientEmailConfigurationEntity.SendGridConfiguration 
             = updateClientEmailConfigurationRequest
                 ?.SendGridConfiguration
-                    ?.UpdateEntity(ClientEmailConfigurationEntity.SendGridConfiguration) 
-                        ?? ClientEmailConfigurationEntity.SendGridConfiguration;
+                    ?.UpdateEntity(clientEmailConfigurationEntity.SendGridConfiguration) 
+                        ?? clientEmailConfigurationEntity.SendGridConfiguration;
 
-        return ClientEmailConfigurationEntity;
+        return clientEmailConfigurationEntity;
     }
 
 
@@ -186,20 +186,20 @@ public static class ClientExtensions
     /// Atualiza a entidade de Client Email Configuration.
     /// </summary>
     /// <param name="updateClientEmailConfigurationRequest"></param>
-    /// <param name="ClientEmailConfigurationEntity"></param>
+    /// <param name="clientEmailConfigurationEntity"></param>
     /// <returns></returns>
     public static ClientTokenConfigurationEntity UpdateEntity(
-        this UpdateClientTokenConfigurationRequest updateClientTokenConfigurationRequest, ClientTokenConfigurationEntity ClientTokenConfigurationEntity)
+        this UpdateClientTokenConfigurationRequest updateClientTokenConfigurationRequest, ClientTokenConfigurationEntity clientTokenConfigurationEntity)
     {
-        ClientTokenConfigurationEntity.Updated = DateTime.Now;
-        ClientTokenConfigurationEntity.Audience = updateClientTokenConfigurationRequest.Audience;
-        ClientTokenConfigurationEntity.Issuer = updateClientTokenConfigurationRequest.Issuer;
-        ClientTokenConfigurationEntity.SecurityKey = updateClientTokenConfigurationRequest.SecurityKey;
-        ClientTokenConfigurationEntity.Encrypted = updateClientTokenConfigurationRequest.Encrypted;
-        ClientTokenConfigurationEntity.AlgorithmJwsType = updateClientTokenConfigurationRequest.AlgorithmJwsType;
-        ClientTokenConfigurationEntity.AlgorithmJweType = updateClientTokenConfigurationRequest.AlgorithmJweType;
+        clientTokenConfigurationEntity.Updated = DateTime.Now;
+        clientTokenConfigurationEntity.Audience = updateClientTokenConfigurationRequest.Audience;
+        clientTokenConfigurationEntity.Issuer = updateClientTokenConfigurationRequest.Issuer;
+        clientTokenConfigurationEntity.SecurityKey = updateClientTokenConfigurationRequest.SecurityKey;
+        clientTokenConfigurationEntity.Encrypted = updateClientTokenConfigurationRequest.Encrypted;
+        clientTokenConfigurationEntity.AlgorithmJwsType = updateClientTokenConfigurationRequest.AlgorithmJwsType;
+        clientTokenConfigurationEntity.AlgorithmJweType = updateClientTokenConfigurationRequest.AlgorithmJweType;
 
-        return ClientTokenConfigurationEntity;
+        return clientTokenConfigurationEntity;
     }
 
     /// <summary>
@@ -254,93 +254,93 @@ public static class ClientExtensions
     /// <summary>
     /// Transforma um Client Entity em response.
     /// </summary>
-    /// <param name="ClientEntity"></param>
+    /// <param name="clientEntity"></param>
     /// <returns></returns>
-    public static ClientResponse ToResponse(this ClientEntity ClientEntity,
+    public static ClientResponse ToResponse(this ClientEntity clientEntity,
         bool includeUsers = true, bool includeUserAdmins = true, bool includeClientConfig = true)
         => new()
         {
-            Id = ClientEntity.Id,
-            Created = ClientEntity.Created,
-            Updated = ClientEntity.Updated,
-            Name = ClientEntity.Name,
-            Description = ClientEntity.Description,
-            Status = ClientEntity.Status,
+            Id = clientEntity.Id,
+            Created = clientEntity.Created,
+            Updated = clientEntity.Updated,
+            Name = clientEntity.Name,
+            Description = clientEntity.Description,
+            Status = clientEntity.Status,
 
             UserAdmins = includeUserAdmins
-                ? ClientEntity?.UserAdmins?.Select(user => new ClientUserAdminResponse { ClientId = user.ClientId, UserId = user.UserId }).ToList()
+                ? clientEntity?.UserAdmins?.Select(user => new ClientUserAdminResponse { ClientId = user.ClientId, UserId = user.UserId }).ToList()
                 : [],
 
             Users = includeUsers
-                ? ClientEntity?.Users?.Select(user => user?.ToResponse()).ToList()
+                ? clientEntity?.Users?.Select(user => user?.ToResponse()).ToList()
                 : [],
 
             ClientConfiguration = includeClientConfig
-                ? ClientEntity?.ClientConfiguration?.ToResponse()
+                ? clientEntity?.ClientConfiguration?.ToResponse()
                 : null
         };
 
     /// <summary>
     /// Transforma Client config em Client config response.
     /// </summary>
-    /// <param name="ClientConfigurationEntity"></param>
+    /// <param name="clientConfigurationEntity"></param>
     /// <returns></returns>
-    public static ClientConfigurationResponse ToResponse(this ClientConfigurationEntity ClientConfigurationEntity,
+    public static ClientConfigurationResponse ToResponse(this ClientConfigurationEntity clientConfigurationEntity,
         bool includeClient = false, bool includeClientIdentityConfiguration = true, bool includeClientEmailConfiguration = true, bool includeClientTokenConfiguration = true)
         => new()
         {
-            Id = ClientConfigurationEntity.Id,
-            ClientId = ClientConfigurationEntity.ClientId,
-            Created = ClientConfigurationEntity.Created,
-            Updated = ClientConfigurationEntity.Updated,
-            ClientKey = ClientConfigurationEntity.ClientKey,
+            Id = clientConfigurationEntity.Id,
+            ClientId = clientConfigurationEntity.ClientId,
+            Created = clientConfigurationEntity.Created,
+            Updated = clientConfigurationEntity.Updated,
+            ClientKey = clientConfigurationEntity.ClientKey,
 
             ClientIdentityConfiguration = includeClientIdentityConfiguration
-                ? ClientConfigurationEntity.ClientIdentityConfiguration?.ToResponse()
+                ? clientConfigurationEntity.ClientIdentityConfiguration?.ToResponse()
                 : null,
 
             ClientEmailConfiguration = includeClientEmailConfiguration 
-                ? ClientConfigurationEntity.ClientEmailConfiguration?.ToResponse() 
+                ? clientConfigurationEntity.ClientEmailConfiguration?.ToResponse() 
                 : null,
 
             ClientTokenConfiguration = includeClientTokenConfiguration
-                ? ClientConfigurationEntity.ClientTokenConfiguration?.ToResponse()
+                ? clientConfigurationEntity.ClientTokenConfiguration?.ToResponse()
                 : null,
 
             Client = includeClient
-                ? ClientConfigurationEntity.Client?.ToResponse()
+                ? clientConfigurationEntity.Client?.ToResponse()
                 : null
         };
 
     /// <summary>
     /// Transforma um ClientIdentityConfigurationEntity em response.
     /// </summary>
-    /// <param name="ClientIdentityConfigurationEntity"></param>
+    /// <param name="clientIdentityConfigurationEntity"></param>
     /// <returns></returns>
-    public static ClientIdentityConfigurationResponse ToResponse(this ClientIdentityConfigurationEntity ClientIdentityConfigurationEntity,
+    public static ClientIdentityConfigurationResponse ToResponse(this ClientIdentityConfigurationEntity clientIdentityConfigurationEntity,
         bool includeClientConfiguration = false, bool includeUserIdentityConfiguration = true,
         bool includePasswordIdentityConfiguration = true, bool includeLockoutIdentityConfiguration = true)
         => new()
         {
-            Id = ClientIdentityConfigurationEntity.Id,
-            ClientConfigurationId = ClientIdentityConfigurationEntity.ClientConfigurationId,
-            Created = ClientIdentityConfigurationEntity.Created,
-            Updated = ClientIdentityConfigurationEntity.Updated,
+            Id = clientIdentityConfigurationEntity.Id,
+            ClientConfigurationId = clientIdentityConfigurationEntity.ClientConfigurationId,
+            Created = clientIdentityConfigurationEntity.Created,
+            Updated = clientIdentityConfigurationEntity.Updated,
 
             UserIdentityConfiguration = includeUserIdentityConfiguration
-                ? ClientIdentityConfigurationEntity?.UserIdentityConfiguration?.ToResponse()
+                ? clientIdentityConfigurationEntity?.UserIdentityConfiguration?.ToResponse()
                 : null,
 
             PasswordIdentityConfiguration = includePasswordIdentityConfiguration
-                ? ClientIdentityConfigurationEntity?.PasswordIdentityConfiguration?.ToResponse()
+                ? clientIdentityConfigurationEntity?.PasswordIdentityConfiguration?.ToResponse()
                 : null,
 
             LockoutIdentityConfiguration = includeLockoutIdentityConfiguration
-                 ? ClientIdentityConfigurationEntity.LockoutIdentityConfiguration?.ToResponse()
+                 ? clientIdentityConfigurationEntity.LockoutIdentityConfiguration?.ToResponse()
                 : null,
 
             ClientConfiguration = includeClientConfiguration
-                ? ClientIdentityConfigurationEntity.ClientConfiguration?.ToResponse()
+                ? clientIdentityConfigurationEntity.ClientConfiguration?.ToResponse()
                 : null
         };
 
@@ -412,22 +412,22 @@ public static class ClientExtensions
     /// <summary>
     /// Transforma um ClientEmailConfigurationEntity em response.
     /// </summary>
-    /// <param name="ClientEmailConfigurationEntity"></param>
+    /// <param name="clientEmailConfigurationEntity"></param>
     /// <returns></returns>
-    public static ClientEmailConfigurationResponse ToResponse(this ClientEmailConfigurationEntity ClientEmailConfigurationEntity,
+    public static ClientEmailConfigurationResponse ToResponse(this ClientEmailConfigurationEntity clientEmailConfigurationEntity,
         bool includeClientConfiguration = false)
         => new()
         {
-            Id = ClientEmailConfigurationEntity.Id,
-            Created = ClientEmailConfigurationEntity.Created,
-            Updated = ClientEmailConfigurationEntity.Updated,
-            SendersName = ClientEmailConfigurationEntity.SendersName,
-            SendersEmail = ClientEmailConfigurationEntity.SendersEmail,
-            IsEmailConfirmed = ClientEmailConfigurationEntity.IsEmailConfirmed,
-            ClientConfigurationId = ClientEmailConfigurationEntity.ClientConfigurationId,
-            SendGridConfiguration = ClientEmailConfigurationEntity?.SendGridConfiguration?.ToResponse(false),
+            Id = clientEmailConfigurationEntity.Id,
+            Created = clientEmailConfigurationEntity.Created,
+            Updated = clientEmailConfigurationEntity.Updated,
+            SendersName = clientEmailConfigurationEntity.SendersName,
+            SendersEmail = clientEmailConfigurationEntity.SendersEmail,
+            IsEmailConfirmed = clientEmailConfigurationEntity.IsEmailConfirmed,
+            ClientConfigurationId = clientEmailConfigurationEntity.ClientConfigurationId,
+            SendGridConfiguration = clientEmailConfigurationEntity?.SendGridConfiguration?.ToResponse(false),
             ClientConfiguration = includeClientConfiguration
-                ? ClientEmailConfigurationEntity?.ClientConfiguration?.ToResponse()
+                ? clientEmailConfigurationEntity?.ClientConfiguration?.ToResponse()
                 : null
         };
 
@@ -455,24 +455,24 @@ public static class ClientExtensions
     /// <summary>
     /// Transforma um ClientTokenConfigurationEntity em response.
     /// </summary>
-    /// <param name="ClientTokenConfigurationEntity"></param>
+    /// <param name="clientTokenConfigurationEntity"></param>
     /// <returns>ClientTokenConfigurationResponse</returns>
-    public static ClientTokenConfigurationResponse ToResponse(this ClientTokenConfigurationEntity ClientTokenConfigurationEntity,
+    public static ClientTokenConfigurationResponse ToResponse(this ClientTokenConfigurationEntity clientTokenConfigurationEntity,
         bool includeClientConfiguration = false)
         => new()
         {
-            Id = ClientTokenConfigurationEntity.Id,
-            Created = ClientTokenConfigurationEntity.Created,
-            Updated = ClientTokenConfigurationEntity.Updated,
-            SecurityKey = ClientTokenConfigurationEntity.SecurityKey,
-            Issuer = ClientTokenConfigurationEntity.Issuer,
-            Audience = ClientTokenConfigurationEntity.Audience,
-            Encrypted = ClientTokenConfigurationEntity.Encrypted,
-            AlgorithmJwsType = ClientTokenConfigurationEntity.AlgorithmJwsType,
-            AlgorithmJweType = ClientTokenConfigurationEntity.AlgorithmJweType,
-            ClientConfigurationId = ClientTokenConfigurationEntity.ClientConfigurationId,
+            Id = clientTokenConfigurationEntity.Id,
+            Created = clientTokenConfigurationEntity.Created,
+            Updated = clientTokenConfigurationEntity.Updated,
+            SecurityKey = clientTokenConfigurationEntity.SecurityKey,
+            Issuer = clientTokenConfigurationEntity.Issuer,
+            Audience = clientTokenConfigurationEntity.Audience,
+            Encrypted = clientTokenConfigurationEntity.Encrypted,
+            AlgorithmJwsType = clientTokenConfigurationEntity.AlgorithmJwsType,
+            AlgorithmJweType = clientTokenConfigurationEntity.AlgorithmJweType,
+            ClientConfigurationId = clientTokenConfigurationEntity.ClientConfigurationId,
             ClientConfiguration = includeClientConfiguration
-                ? ClientTokenConfigurationEntity?.ClientConfiguration?.ToResponse()
+                ? clientTokenConfigurationEntity?.ClientConfiguration?.ToResponse()
                 : null
         };
 }

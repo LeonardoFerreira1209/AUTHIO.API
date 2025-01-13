@@ -33,7 +33,7 @@ public class TokenService(
     IContextService contextService,
     IJwtService jwtService,
     IOptions<AppSettings> appsettings,
-    IClientTokenConfigurationRepository ClientTokenConfigurationRepository) : ITokenService
+    IClientTokenConfigurationRepository clientTokenConfigurationRepository) : ITokenService
 {
     /// <summary>
     /// Cria o JWT TOKEN
@@ -52,7 +52,7 @@ public class TokenService(
     /// <summary>
     /// Cria o JWT TOKEN através de um REFRESH TOKEN.
     /// </summary>
-    /// <param name="username"></param>
+    /// <param name="refreshToken"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundUserException"></exception>
     public async Task<TokenJWT> CreateJsonWebTokenByRefreshToken(string refreshToken)
@@ -100,21 +100,21 @@ public class TokenService(
 
         Log.Information($"[LOG INFORMATION] - Criando o token do usuário.\n");
 
-        var ClientTokenConfiguration = await ClientTokenConfigurationRepository
+        var clientTokenConfiguration = await clientTokenConfigurationRepository
             .GetAsync(ttc => !userEntity.System && 
                 ttc.ClientConfigurationId == userEntity.Client.ClientConfiguration.Id);
 
         var tokenConfigs = new {
 
-            SecurityKey = ClientTokenConfiguration?.SecurityKey 
+            SecurityKey = clientTokenConfiguration?.SecurityKey 
                 ?? appsettings.Value.Auth.SecurityKey,
-            ValidIssuer = ClientTokenConfiguration?.Issuer 
+            ValidIssuer = clientTokenConfiguration?.Issuer 
                 ?? appsettings.Value.Auth.ValidIssuer,
-            ValidAudience = ClientTokenConfiguration?.Audience
+            ValidAudience = clientTokenConfiguration?.Audience
                 ?? appsettings.Value.Auth.ValidAudience
         };
 
-        bool encrypted = ClientTokenConfiguration?.Encrypted ?? false;
+        bool encrypted = clientTokenConfiguration?.Encrypted ?? false;
 
         SigningCredentials key = 
             await jwtService.GetCurrentSigningCredentials();
@@ -132,7 +132,7 @@ public class TokenService(
                               .AddExpiry(appsettings.Value.Auth.ExpiresIn)
                                   .AddRoles(roles)
                                       .AddClaims(claims)
-                                        .IsEncrypyted(ClientTokenConfiguration?.Encrypted ?? false)
+                                        .IsEncrypyted(clientTokenConfiguration?.Encrypted ?? false)
                                             .Builder(userEntity, encrypted, encryptitedKey, key)
         );
     }

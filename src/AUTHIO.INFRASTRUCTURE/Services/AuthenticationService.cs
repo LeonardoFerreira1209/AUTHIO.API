@@ -31,13 +31,13 @@ public sealed class AuthenticationService(
     /// Método responsável por fazer a authorização do usuário.
     /// </summary>
     /// <param name="loginRequest"></param>
-    /// <param name="currentTanantKey"></param>
+    /// <param name="clientKey"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundUserException"></exception>
     /// <exception cref="TokenJwtException"></exception>
     public async Task<ObjectResult> AuthenticationAsync(
         LoginRequest loginRequest, 
-        string currentTanantKey
+        string clientKey
         )
     {
         Log.Information(
@@ -58,7 +58,7 @@ public sealed class AuthenticationService(
             return await customUserManager.FindByNameWithExpressionAsync(
                 loginRequest.Username,
                 UserFilters<UserEntity>.FilterSystemOrClientUsers(
-                    currentTanantKey
+                    clientKey
                 )
 
             ).ContinueWith(async (userEntityTask) =>

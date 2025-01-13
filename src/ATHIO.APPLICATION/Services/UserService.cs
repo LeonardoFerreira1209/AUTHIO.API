@@ -38,7 +38,7 @@ public sealed class UserService(
     /// <summary>
     /// Recupera o id do usuário atual.
     /// </summary>
-    private readonly Guid? CurrentUserId
+    private readonly Guid? currentUserId
         = contextService.IsAuthenticated 
             ? contextService.GetCurrentUserId() 
             : null;
@@ -184,7 +184,7 @@ public sealed class UserService(
                 .GetUserByIdAsync(
                     updateUserRequest.Id,
                     CustomLambdaExpressions.Or(
-                        x => x.Id == CurrentUserId,
+                        x => x.Id == currentUserId,
                         UserFilters<UserEntity>.FilterClientUsers(
                             ClientKey
                         )
@@ -281,7 +281,7 @@ public sealed class UserService(
                 .GetUserByIdAsync(
                     idWithXClientKey.Id,
                     CustomLambdaExpressions.Or(
-                        x => x.Id == CurrentUserId,
+                        x => x.Id == currentUserId,
                         UserFilters<UserEntity>.FilterClientUsers(
                             idWithXClientKey.ClientKey
                         )

@@ -12,10 +12,10 @@ public interface IAuthenticationService
     /// Método responsável por fazer a autenticação do usuário
     /// </summary>
     /// <param name="loginRequest"></param>
-    /// <param name="currentTanantKey"></param>
+    /// <param name="clientKey"></param>
     /// <returns></returns>
     Task<ObjectResult> AuthenticationAsync(
         LoginRequest loginRequest,
-        string currentTanantKey
+        string clientKey
         );
 }

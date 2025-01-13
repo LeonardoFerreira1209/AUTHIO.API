@@ -43,10 +43,10 @@ public interface IClientservice
     /// <summary>
     /// Recupera um Client pela chave.
     /// </summary>
-    /// <param name="key"></param>
+    /// <param name="clientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<ObjectResult> GetClientByKeyAsync(string key, 
+    Task<ObjectResult> GetClientByKeyAsync(string clientKey, 
         CancellationToken cancellationToken
     );
 
@@ -54,12 +54,12 @@ public interface IClientservice
     /// Método responsável por criar um usuário no Client.
     /// </summary>
     /// <param name="registerUserRequest"></param>
-    /// <param name="ClientKey"></param>
+    /// <param name="clientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<ObjectResult> RegisterClientUserAsync(
         RegisterUserRequest registerUserRequest, 
-        string ClientKey, 
+        string clientKey, 
         CancellationToken cancellationToken
     );
 }

@@ -11,11 +11,11 @@ namespace AUTHIO.INFRASTRUCTURE.Services.Identity;
 /// Classe customizada de validação de usuários.
 /// </summary>
 public class CustomUserValidator<TUser>(
-        IClientIdentityConfigurationRepository ClientIdentityConfigurationRepository,
+        IClientIdentityConfigurationRepository clientIdentityConfigurationRepository,
         IContextService contextService)
     : UserValidator<TUser> where TUser : UserEntity, new()
 {
-    private readonly string _ClientKey
+    private readonly string _clientKey
         = contextService.GetCurrentClientKey();
 
     /// <summary>
@@ -29,19 +29,19 @@ public class CustomUserValidator<TUser>(
     {
         var customManager = manager as CustomUserManager<TUser>;
 
-        var ClientIdentityConfigurationEntity = await ClientIdentityConfigurationRepository
-            .GetAsync(config => config.ClientConfiguration.ClientKey == _ClientKey)
-                .ContinueWith((ClientIdentityTask) =>
+        var clientIdentityConfigurationEntity = await clientIdentityConfigurationRepository
+            .GetAsync(config => config.ClientConfiguration.ClientKey == _clientKey)
+                .ContinueWith((clientIdentityTask) =>
                 {
-                    var ClientIdentityConfigurationEntity
-                        = ClientIdentityTask;
+                    var clientIdentityConfigurationEntity
+                        = clientIdentityTask;
 
-                    return ClientIdentityConfigurationEntity;
+                    return clientIdentityConfigurationEntity;
 
                 }).Result;
 
         UserOptions userOptions
-            = ClientIdentityConfigurationEntity?
+            = clientIdentityConfigurationEntity?
                 .UserIdentityConfiguration;
 
         return await ValidateUserName(customManager, user, userOptions).ContinueWith(
@@ -107,7 +107,7 @@ public class CustomUserValidator<TUser>(
                 {
                     var owner = await manager.FindByNameWithExpressionAsync(
                         userName, UserFilters<TUser>
-                            .FilterSystemOrClientUsers(_ClientKey));
+                            .FilterSystemOrClientUsers(_clientKey));
 
                     if (owner != null &&
                         !string.Equals(await manager.GetUserIdAsync(

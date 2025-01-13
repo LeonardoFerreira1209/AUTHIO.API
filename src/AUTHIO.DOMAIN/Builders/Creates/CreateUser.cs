@@ -31,9 +31,9 @@ public static class CreateUser
     /// Constroi um usuário de Clients.
     /// </summary>
     /// <param name="registerUserRequest"></param>
-    /// <param name="ClientId"></param>
+    /// <param name="clientId"></param>
     /// <returns></returns>
-    public static UserEntity CreateUserClient(this RegisterUserRequest registerUserRequest, Guid ClientId)
+    public static UserEntity CreateUserClient(this RegisterUserRequest registerUserRequest, Guid clientId)
        => new UserBuilder()
             .AddFirstName(registerUserRequest.FirstName)
             .AddUserName(registerUserRequest.UserName)
@@ -43,6 +43,6 @@ public static class CreateUser
             .AddCreated(DateTime.Now)
             .AddEmailConfirmed(true)
             .AddStatus(Status.Ativo)
-            .AddClientId(ClientId)
+            .AddClientId(clientId)
             .Builder();
 }

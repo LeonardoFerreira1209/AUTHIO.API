@@ -34,7 +34,7 @@ namespace AUTHIO.APPLICATION.Services;
 /// </summary>
 /// <param name="appSettings"></param>
 /// <param name="unitOfWork"></param>
-/// <param name="ClientRepository"></param>
+/// <param name="clientRepository"></param>
 /// <param name="eventRepository"></param>
 /// <param name="contextService"></param>
 /// <param name="emailProviderFactory"></param>
@@ -43,7 +43,7 @@ namespace AUTHIO.APPLICATION.Services;
 public class Clientservice(
     IOptions<AppSettings> appSettings,
     IUnitOfWork<AuthIoContext> unitOfWork,
-    IClientRepository ClientRepository,
+    IClientRepository clientRepository,
     IEventRepository eventRepository,
     IContextService contextService,
     IEmailProviderFactory emailProviderFactory,
@@ -97,18 +97,18 @@ public class Clientservice(
 
                     }).Unwrap();
 
-            return await ClientRepository.GetAsync(
-                Client => Client.Name.Equals(
+            return await clientRepository.GetAsync(
+                client => client.Name.Equals(
                     createClientRequest.Name
                 )
             )
-            .ContinueWith(async (ClientResult) =>
+            .ContinueWith(async (clientResult) =>
             {
-                if (ClientResult.Result is not null)
+                if (clientResult.Result is not null)
                     throw new DuplicatedClientException(createClientRequest);
 
-                ClientEntity Client
-                    = await ClientRepository
+                ClientEntity client
+                    = await clientRepository
                         .CreateAsync(
                             createClientRequest.ToEntity(CurrentUserId)
                         );
@@ -120,7 +120,7 @@ public class Clientservice(
                     new ApiResponse<ClientResponse>(
                         true,
                         HttpStatusCode.Created,
-                        Client.ToResponse(), [new DataNotifications("Client criado com sucesso!")]
+                        client.ToResponse(), [new DataNotifications("Client criado com sucesso!")]
                     )
                 );
 
@@ -162,18 +162,18 @@ public class Clientservice(
 
                     }).Unwrap();
 
-            return await ClientRepository.GetByIdAsync(
+            return await clientRepository.GetByIdAsync(
                 updateClientRequest.Id
 
-            ).ContinueWith(async (ClientEntityTask) =>
+            ).ContinueWith(async (clientEntityTask) =>
             {
-                var Client
-                    = ClientEntityTask.Result
+                var client
+                    = clientEntityTask.Result
                     ?? throw new NotFoundClientException();
 
-                await ClientRepository.UpdateAsync(
+                await clientRepository.UpdateAsync(
                     updateClientRequest
-                        .UpdateEntity(Client)
+                        .UpdateEntity(client)
                 );
 
                 await unitOfWork.CommitAsync();
@@ -183,7 +183,7 @@ public class Clientservice(
                     new ApiResponse<ClientResponse>(
                         true,
                         HttpStatusCode.OK,
-                        Client.ToResponse(), [new DataNotifications("Client atualizado com sucesso!")]
+                        client.ToResponse(), [new DataNotifications("Client atualizado com sucesso!")]
                     )
                 );
 
@@ -214,16 +214,16 @@ public class Clientservice(
         string cacheKey =
             $"getall-Clients-{filterRequest.PageNumber}-{filterRequest.PageSize}-{CurrentUserId}";
 
-        ObjectResult ClientsCache =
+        ObjectResult clientCache =
             await cachingService
                 .GetAsync<ObjectResult>(cacheKey);
 
-        if (ClientsCache is not null)
-            return ClientsCache;
+        if (clientCache is not null)
+            return clientCache;
 
         try
         {
-            return await ClientRepository.GetAllAsyncPaginated(
+            return await clientRepository.GetAllAsyncPaginated(
                 filterRequest.PageNumber,
                 filterRequest.PageSize,
                 ClientFilters.FilterByAdmin(
@@ -278,21 +278,21 @@ public class Clientservice(
 
         string cacheKey = $"get-Client-{key}";
 
-        ObjectResult ClientCache =
+        ObjectResult clientCache =
            await cachingService
                .GetAsync<ObjectResult>(cacheKey);
 
-        if (ClientCache is not null)
-            return ClientCache;
+        if (clientCache is not null)
+            return clientCache;
 
         try
         {
-            return await ClientRepository.GetAsync(
+            return await clientRepository.GetAsync(
                 x => x.ClientConfiguration.ClientKey == key
             )
             .ContinueWith(async (taskResult) =>
             {
-                var ClientEntity
+                var clientEntity
                         = taskResult.Result;
 
                 ObjectResponse response = new(
@@ -300,7 +300,7 @@ public class Clientservice(
                     new ApiResponse<ClientResponse>(
                         true,
                         HttpStatusCode.OK,
-                        ClientEntity.ToResponse(), [
+                        clientEntity.ToResponse(), [
                         new DataNotifications("Client recuperado com sucesso!")]
                     )
                 );
@@ -324,7 +324,7 @@ public class Clientservice(
     ///  Método responsável por criar um usuário no Client.
     /// </summary>
     /// <param name="registerUserRequest"></param>
-    /// <param name="ClientKey"></param>
+    /// <param name="clientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     /// <exception cref="NotFoundClientException"></exception>
@@ -332,7 +332,7 @@ public class Clientservice(
     /// <exception cref="CreateUserFailedException"></exception>
     public async Task<ObjectResult> RegisterClientUserAsync(
         RegisterUserRequest registerUserRequest,
-        string ClientKey,
+        string clientKey,
         CancellationToken cancellationToken
     )
     {
@@ -355,22 +355,22 @@ public class Clientservice(
 
                    }).Unwrap();
 
-            return await ClientRepository.GetAsync(
-                Client => Client.ClientConfiguration.ClientKey.Equals(
-                    ClientKey
+            return await clientRepository.GetAsync(
+                client => client.ClientConfiguration.ClientKey.Equals(
+                    clientKey
                 )
             )
             .ContinueWith(async (taskResut) =>
             {
-                var ClientEntity
+                var clientEntity
                     = taskResut.Result
-                        ?? throw new NotFoundClientException(ClientKey);
+                        ?? throw new NotFoundClientException(clientKey);
 
-                if (!ClientEntity.UserId.Equals(contextService.GetCurrentUserId()))
+                if (!clientEntity.UserId.Equals(contextService.GetCurrentUserId()))
                     throw new NotPermissionClientException();
 
                 var userEntity
-                    = registerUserRequest.ToUserClientEntity(ClientEntity.Id);
+                    = registerUserRequest.ToUserClientEntity(clientEntity.Id);
 
                 return await customUserManager.CreateAsync(
                     userEntity, registerUserRequest.Password)

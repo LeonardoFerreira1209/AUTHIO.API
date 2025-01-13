@@ -25,13 +25,13 @@ public class DataBaseJsonWebKeyStore<TContext>(
     IOptions<JwtOptions> options,
     IMemoryCache memoryCache,
     IContextService contextService,
-    IClientRepository ClientRepository) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
+    IClientRepository clientRepository) : IJsonWebKeyStore where TContext : DbContext, ISecurityKeyContext
 {
     /// <summary>
     /// Client atual.
     /// </summary>
     private readonly ClientEntity _currentClient
-        = ClientRepository.GetAsync(
+        = clientRepository.GetAsync(
             x => x.ClientConfiguration.ClientKey
                 == contextService.GetCurrentClientKey()
             

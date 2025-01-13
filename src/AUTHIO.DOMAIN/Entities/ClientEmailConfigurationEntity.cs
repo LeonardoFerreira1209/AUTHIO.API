@@ -16,19 +16,19 @@ public class ClientEmailConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="ClientConfigurationId"></param>
+    /// <param name="clientConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="serdersName"></param>
     /// <param name="serdersEmail"></param>
     /// <param name="isEmailConfirmed"></param>
     public ClientEmailConfigurationEntity(
-        Guid ClientConfigurationId, DateTime created,
+        Guid clientConfigurationId, DateTime created,
         DateTime? updated, string serdersName, string serdersEmail,
         bool isEmailConfirmed,
         SendGridConfigurationEntity sendGridConfiguration)
     {
-        ClientConfigurationId = ClientConfigurationId;
+        ClientConfigurationId = clientConfigurationId;
         Created = created;
         Updated = updated;
         SendersName = serdersName;

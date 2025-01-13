@@ -44,22 +44,22 @@ public class JwtServiceValidationHandler(
         if (contextService.TryGetValueByHeader(
                 "Authorization", out StringValues authHeader))
         {
-            var ClientKey =
+            var clientKey =
                 GetClientKeyByToken(authHeader.ToString()) 
                     ?? contextService.GetCurrentClientKey();
 
-            if (ClientKey is not null && contextService.IsAuthByClientKey)
+            if (clientKey is not null && contextService.IsAuthByClientKey)
             {
-                IClientConfigurationRepository ClientConfigurationRepository =
+                IClientConfigurationRepository clientConfigurationRepository =
                     scope.ServiceProvider
                         .GetRequiredService<IClientConfigurationRepository>();
 
-                var ClientConfigurationEntity =
-                    ClientConfigurationRepository
-                        .GetAsync(x => x.ClientKey == ClientKey).Result;
+                var clientConfigurationEntity =
+                    clientConfigurationRepository
+                        .GetAsync(x => x.ClientKey == clientKey).Result;
 
-                var ClientTokenConfiguration =
-                    ClientConfigurationEntity.ClientTokenConfiguration;
+                var clientTokenConfiguration =
+                    clientConfigurationEntity.ClientTokenConfiguration;
 
                 keyMaterialTask =
                     jwtService.GetLastKeys();
@@ -73,10 +73,10 @@ public class JwtServiceValidationHandler(
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    RequireSignedTokens = !ClientTokenConfiguration.Encrypted,
+                    RequireSignedTokens = !clientTokenConfiguration.Encrypted,
                     ClockSkew = TimeSpan.Zero,
-                    ValidIssuer = ClientTokenConfiguration.Issuer,
-                    ValidAudience = ClientTokenConfiguration.Audience,
+                    ValidIssuer = clientTokenConfiguration.Issuer,
+                    ValidAudience = clientTokenConfiguration.Audience,
                     IssuerSigningKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey()),
                     TokenDecryptionKeys = keyMaterialTask.Result.Select(s => s.GetSecurityKey()),
                 };

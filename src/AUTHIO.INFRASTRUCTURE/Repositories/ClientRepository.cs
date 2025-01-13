@@ -18,12 +18,12 @@ public sealed class ClientRepository(
     /// <summary>
     /// Vincula um usuário admin e um Client.
     /// </summary>
-    /// <param name="ClientId"></param>
+    /// <param name="clientId"></param>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public async Task LinkClientWithUserAdminAsync(Guid ClientId, Guid userId)
+    public async Task LinkClientWithUserAdminAsync(Guid clientId, Guid userId)
         => await _context.AddAsync(
-            new ClientIdentityUserAdminEntity { ClientId = ClientId, UserId = userId });
+            new ClientIdentityUserAdminEntity { ClientId = clientId, UserId = userId });
 
     /// <summary>
     /// Verifica se um Client existe baseado na Client key.

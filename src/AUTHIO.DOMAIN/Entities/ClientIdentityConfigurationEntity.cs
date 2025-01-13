@@ -16,17 +16,17 @@ public class ClientIdentityConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="ClientConfigurationId"></param>
+    /// <param name="clientConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public ClientIdentityConfigurationEntity(
-        Guid ClientConfigurationId,
+        Guid clientConfigurationId,
         DateTime created, DateTime? updated,
         UserIdentityConfigurationEntity userIdentityConfiguration,
         PasswordIdentityConfigurationEntity passwordIdentityConfiguration,
         LockoutIdentityConfigurationEntity lockoutIdentityConfiguration)
     {
-        ClientConfigurationId = ClientConfigurationId;
+        ClientConfigurationId = clientConfigurationId;
         Created = created;
         Updated = updated;
         UserIdentityConfiguration = userIdentityConfiguration;

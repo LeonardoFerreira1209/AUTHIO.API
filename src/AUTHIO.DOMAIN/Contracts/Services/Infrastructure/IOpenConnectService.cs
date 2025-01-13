@@ -7,18 +7,18 @@ public interface IOpenConnectService
     /// <summary>
     /// Recupera as configurações do Open Id.
     /// </summary>
-    /// <param name="ClientKey"></param>
+    /// <param name="clientKey"></param>
     /// <returns></returns>
     Task<OpenIdConnectConfiguration> GetOpenIdConnectConfigurationAsync(
-        string ClientKey = null
+        string clientKey = null
     );
 
     /// <summary>
     ///  Recupera as chaves de segurança para autenticação.
     /// </summary>
-    /// <param name="ClientKey"></param>
+    /// <param name="clientKey"></param>
     /// <returns></returns>
     Task<object> GetJwksAsync(
-        string ClientKey = null
+        string clientKey = null
     );
 }

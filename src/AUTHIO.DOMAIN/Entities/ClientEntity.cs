@@ -16,10 +16,20 @@ public class ClientEntity : IEntityBase
         Roles = [];
     }
 
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="created"></param>
+    /// <param name="updated"></param>
+    /// <param name="status"></param>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="clientConfiguration"></param>
     public ClientEntity(Guid userId, 
         DateTime created, DateTime? updated,
         Status status, string name, string description,
-        ClientConfigurationEntity ClientConfiguration)
+        ClientConfigurationEntity clientConfiguration)
     {
         UserId = userId;
         Created = created;
@@ -27,7 +37,7 @@ public class ClientEntity : IEntityBase
         Status = status;
         Name = name;
         Description = description;
-        this.ClientConfiguration = ClientConfiguration;
+        ClientConfiguration = clientConfiguration;
     }
 
     /// <summary>

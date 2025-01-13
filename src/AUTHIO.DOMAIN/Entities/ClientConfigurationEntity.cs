@@ -16,24 +16,24 @@ public class ClientConfigurationEntity : IEntityPrimaryKey<Guid>, IEntityClient
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="ClientKey"></param>
-    /// <param name="ClientId"></param>
+    /// <param name="clientKey"></param>
+    /// <param name="clientId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public ClientConfigurationEntity(
-        string ClientKey, Guid ClientId,
+        string clientKey, Guid clientId,
         DateTime created, DateTime? updated,
-        ClientIdentityConfigurationEntity ClientIdentityConfiguration,
-        ClientEmailConfigurationEntity ClientEmailConfiguration,
-        ClientTokenConfigurationEntity ClientTokenConfiguration)
+        ClientIdentityConfigurationEntity clientIdentityConfiguration,
+        ClientEmailConfigurationEntity clientEmailConfiguration,
+        ClientTokenConfigurationEntity clientTokenConfiguration)
     {
-        ClientKey = ClientKey;
-        ClientId = ClientId;
+        ClientKey = clientKey;
+        ClientId = clientId;
         Created = created;
         Updated = updated;
-        ClientIdentityConfiguration = ClientIdentityConfiguration;
-        ClientEmailConfiguration = ClientEmailConfiguration;
-        ClientTokenConfiguration = ClientTokenConfiguration;
+        ClientIdentityConfiguration = clientIdentityConfiguration;
+        ClientEmailConfiguration = clientEmailConfiguration;
+        ClientTokenConfiguration = clientTokenConfiguration;
     }
 
     /// <summary>

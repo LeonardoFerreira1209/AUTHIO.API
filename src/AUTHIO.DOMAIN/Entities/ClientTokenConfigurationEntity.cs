@@ -18,7 +18,7 @@ public class ClientTokenConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     ///  ctor
     /// </summary>
-    /// <param name="ClientConfigurationId"></param>
+    /// <param name="clientConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="securityKey"></param>
@@ -28,12 +28,12 @@ public class ClientTokenConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <param name="algorithmJwsType"></param>
     /// <param name="algorithmJweType"></param>
     public ClientTokenConfigurationEntity(
-        Guid ClientConfigurationId, DateTime created,
+        Guid clientConfigurationId, DateTime created,
         DateTime? updated, string securityKey, string issuer,
         string audience, bool encrypted,
         AlgorithmType algorithmJwsType, AlgorithmType algorithmJweType)
     {
-        ClientConfigurationId = ClientConfigurationId;
+        ClientConfigurationId = clientConfigurationId;
         Created = created;
         Updated = updated;
         SecurityKey = securityKey;

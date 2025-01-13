@@ -2,6 +2,7 @@
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Entities;
+using MySqlX.XDevAPI;
 
 namespace AUTHIO.DOMAIN.Helpers.Extensions;
 
@@ -24,13 +25,13 @@ public static class UserExtensions
     /// Converte uma request em uma entidade user Client.
     /// </summary>
     /// <param name="registerUserRequest"></param>
-    /// <param name="ClientId"></param>
+    /// <param name="clientId"></param>
     /// <returns></returns>
     public static UserEntity ToUserClientEntity(
             this RegisterUserRequest registerUserRequest, 
-            Guid ClientId
-        )
-        => registerUserRequest.CreateUserClient(ClientId);
+            Guid clientId
+    )
+        => registerUserRequest.CreateUserClient(clientId);
 
     /// <summary>
     /// Atualiza uma entidade baseada em request.
