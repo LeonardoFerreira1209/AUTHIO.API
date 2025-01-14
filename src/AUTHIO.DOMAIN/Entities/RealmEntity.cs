@@ -3,16 +3,15 @@
 namespace AUTHIO.DOMAIN.Entities;
 
 /// <summary>
-/// Classe de entidade de Client.
+/// Classe de entidade de Realm.
 /// </summary>
-public class ClientEntity : IEntityBase
+public class RealmEntity : IEntityBase
 {
     /// <summary>
     /// ctor
     /// </summary>
-    public ClientEntity()
+    public RealmEntity()
     {
-        Users = [];
         Roles = [];
     }
 
@@ -20,26 +19,21 @@ public class ClientEntity : IEntityBase
     /// ctor
     /// </summary>
     /// <param name="userId"></param>
-    /// <param name="realmId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="status"></param>
     /// <param name="name"></param>
     /// <param name="description"></param>
-    /// <param name="clientConfiguration"></param>
-    public ClientEntity(Guid userId, Guid realmId,
+    public RealmEntity(Guid userId, 
         DateTime created, DateTime? updated,
-        Status status, string name, string description,
-        ClientConfigurationEntity clientConfiguration)
+        Status status, string name, string description)
     {
         UserId = userId;
-        realmId = realmId;
         Created = created;
         Updated = updated;
         Status = status;
         Name = name;
         Description = description;
-        ClientConfiguration = clientConfiguration;
     }
 
     /// <summary>
@@ -51,16 +45,6 @@ public class ClientEntity : IEntityBase
     /// Usuário de criação.
     /// </summary>
     public Guid UserId { get; set; }
-
-    /// <summary>
-    /// Id o realm.
-    /// </summary>
-    public Guid RealmId { get; set; }
-
-    /// <summary>
-    /// Realm a qual o client pertence.
-    /// </summary>
-    public virtual RealmEntity Realm { get; set; }
 
     /// <summary>
     /// Data de criação.
@@ -88,19 +72,9 @@ public class ClientEntity : IEntityBase
     public string Description { get; set; } = null;
 
     /// <summary>
-    /// Comfiguração do Client.
+    /// Clients vinculados ao Realm.
     /// </summary>
-    public virtual ClientConfigurationEntity ClientConfiguration { get; set; }
-
-    /// <summary>
-    /// Users vinculados ao Client.
-    /// </summary>
-    public virtual ICollection<UserEntity> Users { get; private set; }
-
-    /// <summary>
-    /// Users Admins vinculados ao Client.
-    /// </summary>
-    public virtual ICollection<ClientIdentityUserAdminEntity> UserAdmins { get; private set; }
+    public virtual ICollection<ClientEntity> Clients { get; set; }
 
     /// <summary> 
     /// Roles vinculadas ao Client.
