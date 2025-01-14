@@ -18,24 +18,6 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
-                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    Description = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -93,6 +75,24 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Realms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "longtext", nullable: true),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Realms", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "SecurityKeys",
                 columns: table => new
                 {
@@ -110,6 +110,31 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SecurityKeys", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    RealmId = table.Column<Guid>(type: "char(36)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Updated = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    Description = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Clients_Realms_RealmId",
+                        column: x => x.RealmId,
+                        principalTable: "Realms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -145,6 +170,7 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     ClientId = table.Column<Guid>(type: "char(36)", nullable: true),
                     System = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    RealmEntityId = table.Column<Guid>(type: "char(36)", nullable: true),
                     Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
@@ -158,6 +184,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Roles_Realms_RealmEntityId",
+                        column: x => x.RealmEntityId,
+                        principalTable: "Realms",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -543,18 +574,18 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             migrationBuilder.InsertData(
                 table: "Roles",
-                columns: new[] { "Id", "ClientId", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "Status", "System", "Updated" },
-                values: new object[] { new Guid("71fef5b0-f011-422a-961a-2833f52800e3"), null, null, new DateTime(2025, 1, 12, 2, 30, 35, 918, DateTimeKind.Local).AddTicks(3771), "System", "SYSTEM", 1, true, null });
+                columns: new[] { "Id", "ClientId", "ConcurrencyStamp", "Created", "Name", "NormalizedName", "RealmEntityId", "Status", "System", "Updated" },
+                values: new object[] { new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a"), null, null, new DateTime(2025, 1, 13, 23, 13, 32, 777, DateTimeKind.Local).AddTicks(9165), "System", "SYSTEM", null, 1, true, null });
 
             migrationBuilder.InsertData(
                 table: "RoleClaims",
                 columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
                 values: new object[,]
                 {
-                    { 1, "Clients", "POST", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") },
-                    { 2, "Clients", "GET", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") },
-                    { 3, "Clients", "PATCH", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") },
-                    { 4, "Clients", "PUT", new Guid("71fef5b0-f011-422a-961a-2833f52800e3") }
+                    { 1, "Clients", "POST", new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a") },
+                    { 2, "Clients", "GET", new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a") },
+                    { 3, "Clients", "PATCH", new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a") },
+                    { 4, "Clients", "PUT", new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a") }
                 });
 
             migrationBuilder.CreateIndex(
@@ -574,6 +605,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 table: "ClientIdentityConfigurations",
                 column: "ClientConfigurationId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Clients_RealmId",
+                table: "Clients",
+                column: "RealmId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientTokenConfigurations_ClientConfigurationId",
@@ -607,6 +643,11 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                 name: "IX_Roles_ClientId",
                 table: "Roles",
                 column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Roles_RealmEntityId",
+                table: "Roles",
+                column: "RealmEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
@@ -736,6 +777,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
 
             migrationBuilder.DropTable(
                 name: "Clients");
+
+            migrationBuilder.DropTable(
+                name: "Realms");
         }
     }
 }

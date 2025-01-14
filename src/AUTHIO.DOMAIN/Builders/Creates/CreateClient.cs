@@ -13,10 +13,11 @@ public static class CreateClient
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
-    public static ClientEntity CreateDefault(Guid userId,
+    public static ClientEntity CreateDefault(Guid userId, Guid realmId,
         string name, string description,
         ClientConfigurationEntity ClientConfiguration)
         => new ClientBuilder()
+            .AddRealmId(realmId)
             .AddUserId(userId)
             .AddName(name)
             .AddDescription(description)

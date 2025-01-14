@@ -33,7 +33,7 @@ public class ClientEntity : IEntityBase
         ClientConfigurationEntity clientConfiguration)
     {
         UserId = userId;
-        realmId = realmId;
+        RealmId = realmId;
         Created = created;
         Updated = updated;
         Status = status;

@@ -16,16 +16,16 @@ public class SendGridConfigurationEntity : IEntityPrimaryKey<Guid>
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="ClientEmailConfigurationId"></param>
+    /// <param name="clientEmailConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="sendGridApiKey"></param>
     /// <param name="welcomeTemplateId"></param>
     public SendGridConfigurationEntity(
-        Guid ClientEmailConfigurationId, DateTime created,
+        Guid clientEmailConfigurationId, DateTime created,
         DateTime? updated, string sendGridApiKey, string welcomeTemplateId)
     {
-        ClientEmailConfigurationId = ClientEmailConfigurationId;
+        ClientEmailConfigurationId = clientEmailConfigurationId;
         Created = created;
         Updated = updated;
         SendGridApiKey = sendGridApiKey;

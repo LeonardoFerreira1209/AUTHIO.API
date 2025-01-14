@@ -16,7 +16,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace AUTHIO.API.Controllers;
 
 /// <summary>
-/// Controller que cuida do fluxo de autenticação.
+/// Controller que cuida do fluxo de cliente.
 /// </summary>
 /// <param name="featureFlags"></param>
 /// <param name="clientservice"></param>
@@ -29,40 +29,6 @@ public class ClientController(
 {
     private readonly IClientservice
         _clientservice = clientservice;
-
-    /// <summary>
-    /// Endpoint responsável pelo registro de Client.
-    /// </summary>
-    /// <param name="createClientRequest"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    [HttpPost]
-    [EnableRateLimiting("default-fixed-window")]
-    [Authorize(Claims.Clients, "POST")]
-    [SwaggerOperation(Summary = "Registrar Client", Description = "Método responsável por registrar um Client!")]
-    [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync(
-        [FromBody] CreateClientRequest createClientRequest,
-        CancellationToken cancellationToken
-        )
-    {
-        using (LogContext.PushProperty("Controller", "ClientController"))
-        using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(createClientRequest)))
-        using (LogContext.PushProperty("Metodo", "CreateAsync"))
-        {
-            return await ExecuteAsync(
-                nameof(CreateAsync),
-                () => _clientservice.CreateAsync(
-                    createClientRequest,
-                    cancellationToken
-                ),
-                "Registrar Client.",
-                cancellationToken
-            );
-        }
-    }
 
     /// <summary>
     /// Endpoint responsável pela atualização de um Client.

@@ -18,7 +18,7 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="ClientIdentityConfigurationId"></param>
+    /// <param name="clientIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     /// <param name="requiredLength"></param>
@@ -28,12 +28,12 @@ public class PasswordIdentityConfigurationEntity : PasswordOptions, IEntityPrima
     /// <param name="requireLowercase"></param>
     /// <param name="requireUppercase"></param>
     public PasswordIdentityConfigurationEntity(
-        Guid ClientIdentityConfigurationId,
+        Guid clientIdentityConfigurationId,
         DateTime created, DateTime? updated, int requiredLength,
         bool requireDigit, int requiredUniqueChars, bool requireNonAlphanumeric,
         bool requireLowercase, bool requireUppercase)
     {
-        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
+        ClientIdentityConfigurationId = clientIdentityConfigurationId;
         Created = created;
         Updated = updated;
         RequiredLength = requiredLength;

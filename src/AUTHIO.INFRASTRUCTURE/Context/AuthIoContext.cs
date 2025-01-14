@@ -4,7 +4,6 @@ using AUTHIO.DOMAIN.Dtos.Model;
 using AUTHIO.DOMAIN.Entities;
 using AUTHIO.DOMAIN.Enums;
 using AUTHIO.INFRASTRUCTURE.Context.EntityTypeConfigurations;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +37,11 @@ public sealed class AuthIoContext(
 
     public string ClientKey { get; init; }
         = contextService?.GetCurrentClientKey();
+
+    /// <summary>
+    /// Tabela de Realms.
+    /// </summary>
+    public DbSet<RealmEntity> Realms => Set<RealmEntity>();
 
     /// <summary>
     /// Tabela de Clients.
@@ -126,6 +130,7 @@ public sealed class AuthIoContext(
            .ApplyConfiguration(new RoleClaimEntityTypeConfiguration())
            .ApplyConfiguration(new UserClaimEntityTypeConfiguration())
            .ApplyConfiguration(new UserIdentityConfigurationEntityTypeConfiguration())
+           .ApplyConfiguration(new RealmIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new ClientEntityTypeConfiguration())
            .ApplyConfiguration(new ClientIdentityConfigurationEntityTypeConfiguration())
            .ApplyConfiguration(new ClientUserAdminEntityTypeConfiguration())

@@ -22,11 +22,11 @@ public class LockoutIdentityConfigurationEntity : LockoutOptions, IEntityPrimary
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public LockoutIdentityConfigurationEntity(
-        Guid ClientIdentityConfigurationId,
+        Guid clientIdentityConfigurationId,
         DateTime created, DateTime? updated,
         bool allowedForNewUsers, int maxFailedAccessAttempts, TimeSpan defaultLockoutTimeSpan)
     {
-        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
+        ClientIdentityConfigurationId = clientIdentityConfigurationId;
         Created = created;
         Updated = updated;
         AllowedForNewUsers = allowedForNewUsers;
@@ -41,10 +41,10 @@ public class LockoutIdentityConfigurationEntity : LockoutOptions, IEntityPrimary
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public LockoutIdentityConfigurationEntity(
-        Guid ClientIdentityConfigurationId,
+        Guid clientIdentityConfigurationId,
         DateTime created, DateTime? updated)
     {
-        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
+        ClientIdentityConfigurationId = clientIdentityConfigurationId;
         Created = created;
         Updated = updated;
     }

@@ -24,7 +24,7 @@ public class RealmEntity : IEntityBase
     /// <param name="status"></param>
     /// <param name="name"></param>
     /// <param name="description"></param>
-    public RealmEntity(Guid userId, 
+    public RealmEntity(Guid userId, Guid realmId,
         DateTime created, DateTime? updated,
         Status status, string name, string description)
     {

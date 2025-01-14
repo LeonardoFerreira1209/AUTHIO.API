@@ -30,13 +30,13 @@ public class UserEntity
     /// <param name="emailConfirmed"></param>
     /// <param name="subscriptionId"></param>
     /// <param name="updated"></param>
-    /// <param name="ClientId"></param>
+    /// <param name="clientId"></param>
     /// <param name="system"></param>
     public UserEntity(string firstName, string lastName,
         string userName, string email, string phoneNumber, Status status,
         DateTime created, bool emailConfirmed,
         Guid? subscriptionId, DateTime? updated = null,
-        Guid? ClientId = null, bool system = false)
+        Guid? clientId = null, bool system = false)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -48,7 +48,7 @@ public class UserEntity
         Created = created;
         Updated = updated;
         SubscriptionId = subscriptionId;
-        ClientId = ClientId;
+        ClientId = clientId;
         System = system;
     }
 

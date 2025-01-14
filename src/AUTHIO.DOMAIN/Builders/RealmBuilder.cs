@@ -4,9 +4,9 @@ using AUTHIO.DOMAIN.Enums;
 namespace AUTHIO.DOMAIN.Builders;
 
 /// <summary>
-/// Builder de Client.
+/// Builder de Realm.
 /// </summary>
-public sealed class ClientBuilder
+public sealed class RealmBuilder
 {
     /// <summary>
     /// private properties
@@ -18,14 +18,13 @@ public sealed class ClientBuilder
     private Status status;
     private string name;
     private string description;
-    private ClientConfigurationEntity ClientConfiguration;
 
     /// <summary>
     /// Adiciona o id do usuario.
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public ClientBuilder AddUserId(Guid userId)
+    public RealmBuilder AddUserId(Guid userId)
     {
         this.userId = userId;
 
@@ -37,7 +36,7 @@ public sealed class ClientBuilder
     /// </summary>
     /// <param name="realmId"></param>
     /// <returns></returns>
-    public ClientBuilder AddRealmId(Guid realmId)
+    public RealmBuilder AddRealmId(Guid realmId)
     {
         this.realmId = realmId;
 
@@ -49,7 +48,7 @@ public sealed class ClientBuilder
     /// </summary>
     /// <param name="created"></param>
     /// <returns></returns>
-    public ClientBuilder AddCreated(DateTime? created = null)
+    public RealmBuilder AddCreated(DateTime? created = null)
     {
         this.created
             = created
@@ -63,7 +62,7 @@ public sealed class ClientBuilder
     /// </summary>
     /// <param name="updated"></param>
     /// <returns></returns>
-    public ClientBuilder AddUpdated(DateTime? updated = null)
+    public RealmBuilder AddUpdated(DateTime? updated = null)
     {
         this.updated
            = updated
@@ -77,7 +76,7 @@ public sealed class ClientBuilder
     /// </summary>
     /// <param name="status"></param>
     /// <returns></returns>
-    public ClientBuilder AddStatus(Status status)
+    public RealmBuilder AddStatus(Status status)
     {
         this.status = status;
 
@@ -89,7 +88,7 @@ public sealed class ClientBuilder
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public ClientBuilder AddName(string name)
+    public RealmBuilder AddName(string name)
     {
         this.name = name;
 
@@ -101,21 +100,9 @@ public sealed class ClientBuilder
     /// </summary>
     /// <param name="description"></param>
     /// <returns></returns>
-    public ClientBuilder AddDescription(string description)
+    public RealmBuilder AddDescription(string description)
     {
         this.description = description;
-
-        return this;
-    }
-
-    /// <summary>
-    /// Add Client Configuration.
-    /// </summary>
-    /// <param name="ClientConfiguration"></param>
-    /// <returns></returns>
-    public ClientBuilder AddClientConfiguration(ClientConfigurationEntity ClientConfiguration)
-    {
-        this.ClientConfiguration = ClientConfiguration;
 
         return this;
     }
@@ -124,10 +111,10 @@ public sealed class ClientBuilder
     /// Builder
     /// </summary>
     /// <returns></returns>
-    public ClientEntity Builder() =>
+    public RealmEntity Builder() =>
         new(userId, realmId,
             created, updated,
             status, name,
-            description, ClientConfiguration
+            description
         );
 }

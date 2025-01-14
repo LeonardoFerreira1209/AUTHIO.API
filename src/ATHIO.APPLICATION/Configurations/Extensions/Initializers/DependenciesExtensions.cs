@@ -43,6 +43,7 @@ public static class DependenciesExtensions
             .AddTransient<IAuthenticationService, AuthenticationService>()
             .AddTransient<IUserService, UserService>()
             .AddTransient<ITokenService, TokenService>()
+            .AddTransient<IRealmService, RealmService>()
             .AddTransient<IClientservice, Clientservice>()
             .AddTransient<IEventService, EventService>()
             .AddTransient<IStripeService, StripeService>()
@@ -50,6 +51,7 @@ public static class DependenciesExtensions
         // Repository
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
             .AddScoped(typeof(IGenerictEntityCoreRepository<>), typeof(GenericEntityCoreRepository<>))
+            .AddScoped<IRealmRepository, RealmRepository>()
             .AddScoped<IFeatureFlagsRepository, FeatureFlagsRepository>()
             .AddScoped<IClientRepository, ClientRepository>()
             .AddScoped<IClientConfigurationRepository, ClientConfigurationRepository>()

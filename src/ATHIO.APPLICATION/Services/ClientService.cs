@@ -78,6 +78,7 @@ public class Clientservice(
     /// <exception cref="DuplicatedClientException"></exception>
     public async Task<ObjectResult> CreateAsync(
         CreateClientRequest createClientRequest,
+        Guid realmId,
         CancellationToken cancellationToken
     )
     {
@@ -110,7 +111,11 @@ public class Clientservice(
                 ClientEntity client
                     = await clientRepository
                         .CreateAsync(
-                            createClientRequest.ToEntity(CurrentUserId)
+                            createClientRequest
+                                .ToEntity(
+                                    CurrentUserId, 
+                                    realmId
+                                )
                         );
 
                 await unitOfWork.CommitAsync();

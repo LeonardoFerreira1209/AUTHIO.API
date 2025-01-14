@@ -17,9 +17,14 @@ public static class ClientExtensions
     /// <param name="createClientRequest"></param>
     /// <param name="userId"></param>
     /// <returns></returns>
-    public static ClientEntity ToEntity(this CreateClientRequest createClientRequest, Guid userId)
+    public static ClientEntity ToEntity(
+        this CreateClientRequest createClientRequest, 
+        Guid userId, 
+        Guid realmId
+        )
         => CreateClient.CreateDefault(
             userId,
+            realmId,
             createClientRequest.Name,
             createClientRequest.Description,
             CreateClientConfiguration.CreateDefault(

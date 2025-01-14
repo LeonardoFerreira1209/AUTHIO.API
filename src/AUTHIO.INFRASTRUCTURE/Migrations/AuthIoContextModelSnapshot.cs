@@ -137,6 +137,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
+                    b.Property<Guid>("RealmId")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -147,6 +150,8 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RealmId");
 
                     b.ToTable("Clients");
                 });
@@ -399,6 +404,35 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.ToTable("Plans");
                 });
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RealmEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Realms");
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RoleClaimEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -426,28 +460,28 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                             Id = 1,
                             ClaimType = "Clients",
                             ClaimValue = "POST",
-                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                            RoleId = new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a")
                         },
                         new
                         {
                             Id = 2,
                             ClaimType = "Clients",
                             ClaimValue = "GET",
-                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                            RoleId = new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a")
                         },
                         new
                         {
                             Id = 3,
                             ClaimType = "Clients",
                             ClaimValue = "PATCH",
-                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                            RoleId = new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a")
                         },
                         new
                         {
                             Id = 4,
                             ClaimType = "Clients",
                             ClaimValue = "PUT",
-                            RoleId = new Guid("71fef5b0-f011-422a-961a-2833f52800e3")
+                            RoleId = new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a")
                         });
                 });
 
@@ -475,6 +509,9 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
+                    b.Property<Guid?>("RealmEntityId")
+                        .HasColumnType("char(36)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -492,13 +529,15 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
+                    b.HasIndex("RealmEntityId");
+
                     b.ToTable("Roles", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("71fef5b0-f011-422a-961a-2833f52800e3"),
-                            Created = new DateTime(2025, 1, 12, 2, 30, 35, 918, DateTimeKind.Local).AddTicks(3771),
+                            Id = new Guid("10e62932-0d57-4532-9cd3-4bc86d87d82a"),
+                            Created = new DateTime(2025, 1, 13, 23, 13, 32, 777, DateTimeKind.Local).AddTicks(9165),
                             Name = "System",
                             NormalizedName = "SYSTEM",
                             Status = 1,
@@ -809,6 +848,17 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                     b.Navigation("ClientConfiguration");
                 });
 
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientEntity", b =>
+                {
+                    b.HasOne("AUTHIO.DOMAIN.Entities.RealmEntity", "Realm")
+                        .WithMany("Clients")
+                        .HasForeignKey("RealmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Realm");
+                });
+
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.ClientIdentityConfigurationEntity", b =>
                 {
                     b.HasOne("AUTHIO.DOMAIN.Entities.ClientConfigurationEntity", "ClientConfiguration")
@@ -887,6 +937,10 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
                         .WithMany("Roles")
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("AUTHIO.DOMAIN.Entities.RealmEntity", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("RealmEntityId");
 
                     b.Navigation("Client");
                 });
@@ -1021,6 +1075,13 @@ namespace AUTHIO.INFRASTRUCTURE.Migrations
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.PlanEntity", b =>
                 {
                     b.Navigation("Subscriptions");
+                });
+
+            modelBuilder.Entity("AUTHIO.DOMAIN.Entities.RealmEntity", b =>
+                {
+                    b.Navigation("Clients");
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("AUTHIO.DOMAIN.Entities.UserEntity", b =>

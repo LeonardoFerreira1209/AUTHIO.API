@@ -23,7 +23,7 @@ public class KeyMaterial : IEntityClientNullAble
     /// </summary>
     /// <param name="cryptographicKey"></param>
     public KeyMaterial(
-        CryptographicKey cryptographicKey, Guid? ClientId)
+        CryptographicKey cryptographicKey, Guid? clientId)
     {
         CreationDate = DateTime.UtcNow;
 
@@ -36,7 +36,7 @@ public class KeyMaterial : IEntityClientNullAble
 
         KeyId = cryptographicKey.Key.KeyId;
 
-        ClientId = ClientId;
+        ClientId = clientId;
     }
 
     /// <summary>

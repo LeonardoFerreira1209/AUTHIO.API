@@ -16,6 +16,7 @@ public interface IClientservice
     /// <returns></returns>
     Task<ObjectResult> CreateAsync(
         CreateClientRequest createClientRequest, 
+        Guid realmId,
         CancellationToken cancellationToken
     );
 

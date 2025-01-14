@@ -18,14 +18,14 @@ public class UserIdentityConfigurationEntity : UserOptions, IEntityPrimaryKey<Gu
     /// <summary>
     /// ctor
     /// </summary>
-    /// <param name="ClientIdentityConfigurationId"></param>
+    /// <param name="clientIdentityConfigurationId"></param>
     /// <param name="created"></param>
     /// <param name="updated"></param>
     public UserIdentityConfigurationEntity(
-        Guid ClientIdentityConfigurationId,
+        Guid clientIdentityConfigurationId,
         DateTime created, DateTime? updated, bool requireUniqueEmail, string allowedUserNameCharacters)
     {
-        ClientIdentityConfigurationId = ClientIdentityConfigurationId;
+        ClientIdentityConfigurationId = clientIdentityConfigurationId;
         Created = created;
         Updated = updated;
         RequireUniqueEmail = requireUniqueEmail;
