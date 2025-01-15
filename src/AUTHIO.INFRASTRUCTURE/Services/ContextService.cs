@@ -63,21 +63,21 @@ public class ContextService(
     /// </summary>
     public string GetCurrentClientKeyByHeader() => httpContextAccessor.HttpContext?.Request?.Headers
         ?.FirstOrDefault(header => header.Key.Equals(
-            "x-Client-key", StringComparison.OrdinalIgnoreCase)).Value;
+            "x-client-key", StringComparison.OrdinalIgnoreCase)).Value;
 
     /// <summary>
     /// Recupera a ClientKey nas claims.
     /// </summary>
     public string GetCurrentClientKeyByClaims() => httpContextAccessor.HttpContext?.User?.Claims
         ?.FirstOrDefault(claim => claim.Issuer.Equals(
-            "x-Client-key", StringComparison.OrdinalIgnoreCase))?.Value;
+            "x-client-key", StringComparison.OrdinalIgnoreCase))?.Value;
 
     /// <summary>
     /// Recupera a ClientKey nas claims.
     /// </summary>
     public string GetCurrentClientKeyByPath() => httpContextAccessor.HttpContext?.Request?.RouteValues
         ?.FirstOrDefault(route => route.Key.Equals(
-            "x-Client-key", StringComparison.OrdinalIgnoreCase)).Value?.ToString();
+            "x-client-key", StringComparison.OrdinalIgnoreCase)).Value?.ToString();
 
     /// <summary>
     /// Verifica se o usuário esta logado.
@@ -106,7 +106,7 @@ public class ContextService(
                    .Headers.TryGetValue(key, out value);
 
     /// <summary>
-    /// Recupera o x-Client-key do token de usuário atual.
+    /// Recupera o x-client-key do token de usuário atual.
     /// </summary>
     /// <returns></returns>
     public string GetCurrentClientKeyByToken()
@@ -127,7 +127,7 @@ public class ContextService(
 
             return tokenJson.Claims
                 .FirstOrDefault(x =>
-                    x.Type == "x-Client-key")?.Value;
+                    x.Type == "x-client-key")?.Value;
         }
 
         return null;

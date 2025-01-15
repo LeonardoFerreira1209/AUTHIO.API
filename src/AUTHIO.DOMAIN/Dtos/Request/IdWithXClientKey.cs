@@ -3,7 +3,7 @@
 namespace AUTHIO.DOMAIN.Dtos.Request;
 
 /// <summary>
-/// Busca dados por Id e x-Client-key.
+/// Busca dados por Id e x-client-key.
 /// </summary>
 public class IdWithXClientKey
 {
@@ -15,6 +15,6 @@ public class IdWithXClientKey
     /// <summary>
     /// Chave do Client.
     /// </summary>
-    [FromHeader(Name = "x-Client-key")]
+    [FromHeader(Name = "x-client-key")]
     public string ClientKey { get; set; }
 }

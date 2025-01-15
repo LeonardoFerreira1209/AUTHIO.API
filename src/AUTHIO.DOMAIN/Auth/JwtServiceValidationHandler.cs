@@ -126,6 +126,6 @@ public class JwtServiceValidationHandler(
 
         return tokenJson.Claims
             .FirstOrDefault(x =>
-                x.Type == "x-Client-key")?.Value;
+                x.Type == "x-client-key")?.Value;
     }
 }

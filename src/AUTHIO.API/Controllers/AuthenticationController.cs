@@ -68,7 +68,7 @@ public class AuthenticationController(
     /// </summary>
     /// <param name="authenticationRequest"></param>
     /// <returns></returns>
-    [HttpGet("clients/{x-Client-key}/signin")]
+    [HttpGet("clients/{x-client-key}/signin")]
     [SwaggerOperation(
         Summary = "Autenticação do usuário",
         Description = "Endpoint responsável por fazer a autenticação do usuário baseado em um Client, é retornado um token JWT (Json Web Token)."
@@ -79,7 +79,7 @@ public class AuthenticationController(
     [ProducesResponseType(typeof(ApiResponse<LoginRequest>), StatusCodes.Status423Locked)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> SigninByClientAsync(
-        [FromRoute(Name = "x-Client-key")] string clientKey, 
+        [FromRoute(Name = "x-client-key")] string clientKey, 
         AuthenticationRequest authenticationRequest,
         CancellationToken cancellationToken
         )

@@ -51,9 +51,9 @@ public class ClientController(
         CancellationToken cancellationToken
         )
     {
-        using (LogContext.PushProperty("Controller", "ClientController"))
+        using (LogContext.PushProperty("Controller", nameof(ClientController)))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(updateClientRequest)))
-        using (LogContext.PushProperty("Metodo", "UpdateAsync"))
+        using (LogContext.PushProperty("Metodo", nameof(UpdateAsync)))
         {
             return await ExecuteAsync(
                 nameof(UpdateAsync),
@@ -88,8 +88,8 @@ public class ClientController(
            CancellationToken cancellationToken
         )
     {
-        using (LogContext.PushProperty("Controller", "ClientController"))
-        using (LogContext.PushProperty("Metodo", "CreateAsync"))
+        using (LogContext.PushProperty("Controller", nameof(ClientController)))
+        using (LogContext.PushProperty("Metodo", nameof(GetAllAsync)))
         {
             return await ExecuteAsync(
                 nameof(GetAllAsync),
@@ -110,9 +110,9 @@ public class ClientController(
     /// <param name="clientKey"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPatch("users/register")]
+    [HttpPost("{x-client-key}/users/register")]
     [EnableRateLimiting("default-fixed-window")]
-    [Authorize(Claims.Clients, "PATCH")]
+    [Authorize(Claims.Clients, "POST")]
     [SwaggerOperation(
         Summary = "Registrar usuário no Client",
         Description = "Método responsável por registrar um usuário no Client!"
@@ -121,13 +121,13 @@ public class ClientController(
     [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterClientUserAsync(
-        [FromHeader(Name = "x-Client-key")] string clientKey,
+        [FromRoute(Name = "x-client-key")] string clientKey,
         [FromBody] RegisterUserRequest registerUserRequest,
         CancellationToken cancellationToken)
     {
-        using (LogContext.PushProperty("Controller", "ClientController"))
+        using (LogContext.PushProperty("Controller", nameof(ClientController)))
         using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(registerUserRequest)))
-        using (LogContext.PushProperty("Metodo", "RegisterClientUserAsync"))
+        using (LogContext.PushProperty("Metodo", nameof(RegisterClientUserAsync)))
         {
             return await ExecuteAsync(
                 nameof(RegisterClientUserAsync),

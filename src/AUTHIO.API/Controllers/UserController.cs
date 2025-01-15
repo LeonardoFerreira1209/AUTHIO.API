@@ -78,7 +78,7 @@ public class UserController(
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateAsync(
-        [FromHeader(Name = "x-Client-key")] string ClientKey,
+        [FromHeader(Name = "x-client-key")] string ClientKey,
         [FromBody] UpdateUserRequest updateUserRequest,
         CancellationToken cancellationToken)
     {

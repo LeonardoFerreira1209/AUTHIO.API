@@ -61,14 +61,14 @@ public class OIDCController(
     /// </summary>
     /// <param name="clientKey"></param>
     /// <returns></returns>
-    [HttpGet("clients/{x-Client-key}/.well-known/openid-configuration")]
+    [HttpGet("clients/{x-client-key}/.well-known/openid-configuration")]
     [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(
         Summary = "Busca dados do open id connect baseado no tenatKey.",
         Description = "Método responsável por retornar os dados do open id connect por Client key."
     )]
     public async Task<OpenIdConnectConfiguration> OpenIdConfigurationAsync(
-        [FromRoute(Name = "x-Client-key")] string clientKey
+        [FromRoute(Name = "x-client-key")] string clientKey
         )
     {
         using (LogContext.PushProperty("Controller", nameof(OIDCController)))
@@ -86,14 +86,14 @@ public class OIDCController(
     /// </summary>
     /// <param name="ClientKey"></param>
     /// <returns></returns>
-    [HttpGet("clients/{x-Client-key}/jwks")]
+    [HttpGet("clients/{x-client-key}/jwks")]
     [EnableRateLimiting("default-fixed-window")]
     [SwaggerOperation(
         Summary = "Busca dados das chaves de segurança por Client key.",
         Description = "Método responsável por retornar chaves de segurança por Client key."
     )]
     public async Task<object> GetJwksAsync(
-        [FromRoute(Name = "x-Client-key")] string clientKey
+        [FromRoute(Name = "x-client-key")] string clientKey
         )
     {
         using (LogContext.PushProperty("Controller", nameof(OIDCController)))

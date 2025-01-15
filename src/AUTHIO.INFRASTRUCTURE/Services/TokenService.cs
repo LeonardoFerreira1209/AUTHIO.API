@@ -96,7 +96,7 @@ public class TokenService(
         var claims = await Claims(userEntity, roles);
 
         if (userEntity?.Client?.ClientConfiguration is not null)
-            claims.Add(new Claim("x-Client-key", userEntity.Client.ClientConfiguration.ClientKey));
+            claims.Add(new Claim("x-client-key", userEntity.Client.ClientConfiguration.ClientKey));
 
         Log.Information($"[LOG INFORMATION] - Criando o token do usuário.\n");
 

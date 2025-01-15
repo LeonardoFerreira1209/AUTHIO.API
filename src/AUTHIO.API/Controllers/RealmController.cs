@@ -141,9 +141,9 @@ public class RealmController(
     /// <param name="createClientRequest"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [HttpPatch("{realmId}/clients/register")]
+    [HttpPost("{realm-id}/clients/register")]
     [EnableRateLimiting("default-fixed-window")]
-    [Authorize(Claims.Realms, "PATCH")]
+    [Authorize(Claims.Realms, "POST")]
     [SwaggerOperation(
         Summary = "Registrar client no Realm",
         Description = "Método responsável por registrar um client no Realm!"
@@ -152,7 +152,7 @@ public class RealmController(
     [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<ClientResponse>), StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterRealmClientAsync(
-        Guid realmId,
+        [FromRoute(Name = "realm-id")] Guid realmId,
         [FromBody] CreateClientRequest createClientRequest,
         CancellationToken cancellationToken)
     {
