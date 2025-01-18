@@ -8,6 +8,7 @@ using AUTHIO.DOMAIN.Dtos.Response;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Dtos.ServiceBus.Events;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Enums;
 using AUTHIO.DOMAIN.Helpers.Consts;
 using AUTHIO.DOMAIN.Helpers.Expressions;
 using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
@@ -183,10 +184,13 @@ public sealed class UserService(
             return await customUserManager
                 .GetUserByIdAsync(
                     updateUserRequest.Id,
-                    CustomLambdaExpressions.Or(
-                        x => x.Id == currentUserId,
-                        UserFilters<UserEntity>.FilterClientUsers(
-                            ClientKey
+                    CustomLambdaExpressions.And(
+                        x => x.Status == Status.Ativo, 
+                        CustomLambdaExpressions.Or(
+                            x => x.Id == currentUserId,
+                            UserFilters<UserEntity>.FilterClientUsers(
+                                ClientKey
+                            )
                         )
                     ),
                     cancellationToken

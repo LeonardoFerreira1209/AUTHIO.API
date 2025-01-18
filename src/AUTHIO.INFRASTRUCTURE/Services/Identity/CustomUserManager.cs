@@ -119,7 +119,10 @@ public class CustomUserManager<TUser>(
     /// <param name="userName"></param>
     /// <param name="expression"></param>
     /// <returns></returns>
-    public async Task<TUser> FindByNameWithExpressionAsync(string userName, Expression<Func<TUser, bool>> expression)
+    public async Task<TUser> FindByNameWithExpressionAsync(
+        string userName, 
+        Expression<Func<TUser, bool>> expression
+        )
     {
         ThrowIfDisposed();
         userName = NormalizeName(userName);

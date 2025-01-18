@@ -8,7 +8,7 @@ namespace AUTHIO.DOMAIN.Helpers.Expressions;
 public static class CustomLambdaExpressions
 {
     /// <summary>
-    /// Uni duas expressões.
+    /// Uni duas expressões com Or.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="expr1"></param>
@@ -31,6 +31,32 @@ public static class CustomLambdaExpressions
 
         return Expression.Lambda<Func<T, bool>>(
             Expression.OrElse(left, right), parameter);
+    }
+
+    /// <summary>
+    /// Uni duas expressões com And.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="expr1"></param>
+    /// <param name="expr2"></param>
+    /// <returns></returns>
+    public static Expression<Func<T, bool>> And<T>(Expression<Func<T, bool>> expr1, Expression<Func<T, bool>> expr2)
+    {
+        var parameter =
+            Expression.Parameter(typeof(T), "x");
+
+        var leftVisitor =
+            new ReplaceExpressionVisitor(expr1.Parameters[0], parameter);
+
+        var left = leftVisitor.Visit(expr1.Body);
+
+        var rightVisitor =
+            new ReplaceExpressionVisitor(expr2.Parameters[0], parameter);
+
+        var right = rightVisitor.Visit(expr2.Body);
+
+        return Expression.Lambda<Func<T, bool>>(
+            Expression.And(left, right), parameter);
     }
 
     /// <summary>

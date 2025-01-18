@@ -1,5 +1,6 @@
 ﻿using AUTHIO.DOMAIN.Contracts.Repositories;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Enums;
 using AUTHIO.INFRASTRUCTURE.Context;
 using AUTHIO.INFRASTRUCTURE.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,8 @@ public sealed class ClientRepository(
         var exists = await _context
             .Clients.AnyAsync(
                 x => x.ClientConfiguration
-                    .ClientKey.Equals(key)
+                    .ClientKey.Equals(key) 
+                        && x.Status == Status.Ativo
             );
 
         return exists;

@@ -31,7 +31,7 @@ public static class RateLimitExtensions
                     {
                         AutoReplenishment = true,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        QueueLimit = 2,
+                        QueueLimit = 1,
                         PermitLimit = 10,
                         Window = TimeSpan.FromMinutes(3)
                     }

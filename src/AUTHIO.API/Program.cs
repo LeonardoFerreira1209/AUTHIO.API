@@ -84,8 +84,8 @@ try
 
     applicationbuilder.MapControllers();
 
-    applicationbuilder
-        .ConfigureServiceBusSubscriber();
+    //applicationbuilder
+    //    .ConfigureServiceBusSubscriber();
 
     applicationbuilder
        .Lifetime.ApplicationStarted

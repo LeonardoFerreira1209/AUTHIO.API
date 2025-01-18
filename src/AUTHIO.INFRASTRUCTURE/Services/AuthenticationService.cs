@@ -3,6 +3,8 @@ using AUTHIO.DOMAIN.Contracts.Services.Infrastructure;
 using AUTHIO.DOMAIN.Dtos.Request;
 using AUTHIO.DOMAIN.Dtos.Response.Base;
 using AUTHIO.DOMAIN.Entities;
+using AUTHIO.DOMAIN.Enums;
+using AUTHIO.DOMAIN.Helpers.Expressions;
 using AUTHIO.DOMAIN.Helpers.Expressions.Filters;
 using AUTHIO.DOMAIN.Helpers.Extensions;
 using AUTHIO.DOMAIN.Validators;
@@ -57,9 +59,13 @@ public sealed class AuthenticationService(
 
             return await customUserManager.FindByNameWithExpressionAsync(
                 loginRequest.Username,
-                UserFilters<UserEntity>.FilterSystemOrClientUsers(
-                    clientKey
+                CustomLambdaExpressions.And(
+                    x => x.Status == Status.Ativo, 
+                    UserFilters<UserEntity>.FilterSystemOrClientUsers(
+                        clientKey
+                    )
                 )
+               
 
             ).ContinueWith(async (userEntityTask) =>
             {
